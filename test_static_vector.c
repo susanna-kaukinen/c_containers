@@ -47,10 +47,11 @@ void test_struct_print(test_struct* s)
 	}
 }
 
-int test_static_vector(size_t buf_size)
+
+int test_static_vector_with_struct(size_t buf_size)
 {
-	//debugfpln(LVL_FLOOD, "<test_static_vector>");
-	printf("<test_static_vector>\n");
+	//debugfpln(LVL_FLOOD, "<test_static_vector_with_struct>");
+	printf("<test_static_vector_with_struct>\n");
 
 	int buf[buf_size];
 	static_vector_init(&buf, sizeof(buf), sizeof(test_struct));
@@ -89,21 +90,64 @@ int test_static_vector(size_t buf_size)
 
 	}
 
-	//
 
-
-
-	printf("</test_static_vector>\n");
-	//debugfpln(LVL_FLOOD, "</test_static_vector>");
+	printf("</test_static_vector_with_struct>\n");
+	//debugfpln(LVL_FLOOD, "</test_static_vector_with_struct>");
 
 	return 1;
+}
+
+int test_static_vector_with_int(size_t buf_size)
+{
+
+	int buf[buf_size];
+	static_vector_init(&buf, sizeof(buf), sizeof(int));
+
+	int items_free=0;
+	
+	int i,j;
+	int comparison_buf[10];
+	for(i=0,j=0;; i++,j=i*10) {
+
+		if(items_free<0) {
+			break;
+		}
+
+		comparison_buf[i] = j;
+
+		items_free = static_vector_add_item(&j);
+
+		if(i==0) {
+			printf("Vector can hold %d items\n", static_vector_get_max_size());
+		}
+
+	}
+
+	for(i=0;;i++) {
+		int *item = static_vector_get_item(i);
+		if(item) {
+			printf("%2d:%10d (%x)\n", i, *item, (unsigned int) item);
+
+			if(*item != comparison_buf[i]) {
+				printf("ERROR\n");
+				return 1;
+			}
+
+		} else {
+			break;
+		}
+	}
+
+
+	return 0;
 }
 
 
 int main()
 {
-	test_static_vector(10);
-	test_static_vector(1024);
+	test_static_vector_with_struct(10);
+	test_static_vector_with_struct(1024);
+	test_static_vector_with_int(10);
 
 	return 0;
 }

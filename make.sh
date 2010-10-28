@@ -28,15 +28,20 @@
 
 gcc -gstabs+ -Wall static_vector.c test_static_vector.c
 
-RV=$?
-if [ $RV -eq 0 ] ; then
+if [ $1 ] ; then
 
-	RV=`which valgrind`
-	
+	RV=$?
+
 	if [ $RV -eq 0 ] ; then
-		valgrind ./a.out 
-	else
-		./a.out
+
+		RV=`which valgrind`
+		
+		if [ $RV -eq 0 ] ; then
+			valgrind ./a.out 
+		else
+			./a.out
+		fi
 	fi
 fi
+
 

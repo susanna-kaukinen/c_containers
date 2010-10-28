@@ -34,5 +34,6 @@
 int   static_vector_init(void *memblock, size_t sizeof_memblock, size_t item_size);
 void* static_vector_get_item(int index);
 unsigned int static_vector_add_item(void* item);
+unsigned int static_vector_get_max_size();
 
 #endif // __STATIC_LIST_H__

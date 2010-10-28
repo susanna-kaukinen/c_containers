@@ -29,6 +29,7 @@
 
 #include "debug_levels.h"
 #define DBG_LVL LVL_FLOOD
+//#define DBG_LVL LVL_DEBUG
 #include "debug.h"
 
 static void*        memblock_p                 = 0;
@@ -59,8 +60,8 @@ int static_vector_init(void *memblock, size_t sizeof_memblock, size_t item_size)
 	static_vector_forbid_add = 0;
 	static_vector_forbid_insert = 0;
 
-	debugfln(LVL_FLOOD, "memblock_p=(%x), memblock_sz=(%u), memblock_chunk_sz=(%u), memblock_chunks=(%u), memblock_chunks_free=(%u)",
-		memblock_p,
+	debugfln(LVL_FLOOD, "memblock=(%x -> %x), memblock_sz=(%u), memblock_chunk_sz=(%u), memblock_chunks=(%u), memblock_chunks_free=(%u)",
+		memblock_p, (memblock_p + memblock_sz),
 		memblock_sz,
 		memblock_chunk_sz,
 		memblock_chunks,
@@ -92,7 +93,7 @@ unsigned int static_vector_add_item(void* item)
 
 	void* to = memblock_p + (memblock_chunks-memblock_chunks_free)*memblock_chunk_sz;
 
-	debugfln(LVL_FLOOD, "KOIRA {{{%d}}} %u+(%u*%u)",
+	debugfln(LVL_FLOOD, "add: {{{%x}}} %x+(%x*%x)",
 		(to>(memblock_p+(memblock_chunks*memblock_chunk_sz))),
 		to,
 		memblock_chunks,
@@ -109,6 +110,8 @@ unsigned int static_vector_add_item(void* item)
 	}
 
 	static_vector_forbid_insert = 1;
+
+
 
 	memmove(to, item, memblock_chunk_sz);
 
@@ -128,7 +131,7 @@ void* static_vector_get_item(int index)
 		return 0;
 	}
 
-	void *from = memblock_p + (memblock_chunks*index);
+	void *from = memblock_p + (memblock_chunk_sz*index);
 
 	if(from<memblock_p || from>(memblock_p+(memblock_chunks*memblock_chunk_sz))) {
 		debugfln(LVL_WARNING, "Tried to access out of bounds!");
@@ -166,6 +169,7 @@ unsigned int static_vector_insert(void* item, int index)
 
 
 
+unsigned int static_vector_get_max_size() { return memblock_chunks; }
 
 
 
