@@ -102,38 +102,45 @@ static_vector_init (mutable void *raw_memblock, size_t item_size)
  * @return how many memory chunks are left
  *
  */ 
-unsigned int static_vector_add_item(void* item)
+unsigned int
+static_vector_add_item     (mutable static_vector_memblock* memblock_start_addr, void* item)
 {
-	if(static_vector_forbid_add) {
+	static_vector_memblock_header* h = memblock_start_addr->header;
+
+	unsigned int amt_chunks  = svm_head__get_amt_chunks  (h);
+	unsigned int chunks_free = svm_head__get_chunks_free (h);
+	size_t       chunk_size  = svm_head__get_chunk_size  (h);
+	size_t       used_space  = (amt_chunks-chunks_free) * chunk_size;
+
+
+	if(svm_head__is_get_allowed(memblock_start_addr->header)) {
 		debugfln(LVL_ERROR, "Cannot insert, you have used insert.");
 		return 0;
 	}
 
-	void* to = memblock_p + (memblock_chunks-memblock_chunks_free)*memblock_chunk_sz;
+	void* to = memblock_start_addr->data + used_space;
 
 	debugfln(LVL_FLOOD, "add: {{{%x}}} %x+(%x*%x)",
-		(to>(memblock_p+(memblock_chunks*memblock_chunk_sz))),
+		(to>(memblock_start_addr->data + (amt_chunks*chunk_size))),
 		to,
-		memblock_chunks,
-		memblock_chunk_sz
+		amt_chunks,
+		chunk_size
 	);
 
-	if(memblock_chunks==0 ||  (to>(memblock_p+(memblock_chunks*memblock_chunk_sz)))) {
+	if(amt_chunks==0 ||  (to>(memblock_start_addr->data + (amt_chunks*chunk_size)))) {
 		debugfln(LVL_WARNING, "Run out of chunks, chunks total=%u, chunks free=%u",
-			memblock_chunks, memblock_chunks_free);
+			amt_chunks, chunks_free);
 
-		static_vector_forbid_get = 1;
+		svm_head__forbid_get(h);
 	
 		return 0;
 	}
 
-	static_vector_forbid_insert = 1;
+	svm_head__forbid_set(h);
 
+	memmove(to, item, chunk_size);
 
-
-	memmove(to, item, memblock_chunk_sz);
-
-	return --memblock_chunks_free;
+	return --chunks_free;
 }
 
 /**
@@ -142,14 +149,20 @@ unsigned int static_vector_add_item(void* item)
  *         after making sure it's not zero!
  *
  */
-void* static_vector_get_item(int index)
+void*
+static_vector_get_item     (const   static_vector_memblock* memblock_start_addr, int   index)
 {
-	if(static_vector_forbid_get) {
+	
+	static_vector_memblock_header* h = memblock_start_addr->header;
+
+	size_t       chunk_size  = svm_head__get_chunk_size  (h);
+
+	if(svm_head__forbid_get(h)) {
 		debugfln(LVL_ERROR, "Cannot get, something went wrong w/add.");
 		return 0;
 	}
 
-	void *from = memblock_p + (memblock_chunk_sz*index);
+	void *from = memblock_start_addr->data + (chunk_size * index);
 
 	if(from<memblock_p || from>(memblock_p+(memblock_chunks*memblock_chunk_sz))) {
 		debugfln(LVL_WARNING, "Tried to access out of bounds!");
@@ -164,7 +177,12 @@ void* static_vector_get_item(int index)
  *
  *
  */
-unsigned int static_vector_set(void* item, int index)
+unsigned int 
+static_vector_set_item (
+	mutable static_vector_memblock* memblock_start_addr, 
+	void*                           item, 
+	unsigned int                    index
+)
 {
 	if(static_vector_forbid_insert) {
 		debugfln(LVL_ERROR, "Cannot insert, you have used add.");
