@@ -1,0 +1,4 @@
+
+
+- put "object" pointer to first param in methods
+- build struct, or so, w/ header + data, where ctrl info in header

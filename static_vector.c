@@ -32,15 +32,21 @@
 //#define DBG_LVL LVL_DEBUG
 #include "debug.h"
 
-static void*        memblock_p                 = 0;
-static size_t       memblock_sz                = 0;
-static size_t       memblock_chunk_sz          = 0;
-static unsigned int memblock_chunks            = 0;
-static unsigned int memblock_chunks_free       = 0;
+struct memblock
+{
+	void*        memblock_p                 = 0;
+	size_t       memblock_sz                = 0;
+	size_t       memblock_chunk_sz          = 0;
+	unsigned int memblock_chunks            = 0;
+	unsigned int memblock_chunks_free       = 0;
 
-int static_vector_forbid_get    = 0;
-int static_vector_forbid_add    = 0;
-int static_vector_forbid_insert = 0;
+	int static_vector_forbid_get    = 0;
+	int static_vector_forbid_add    = 0;
+	int static_vector_forbid_insert = 0;
+
+	
+};
+
 
 /**
  *
