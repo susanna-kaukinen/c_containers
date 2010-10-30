@@ -32,29 +32,29 @@
 //#define DBG_LVL LVL_DEBUG
 #include "debug.h"
 
-struct memblock
-{
-	void*        memblock_p                 = 0;
-	size_t       memblock_sz                = 0;
-	size_t       memblock_chunk_sz          = 0;
-	unsigned int memblock_chunks            = 0;
-	unsigned int memblock_chunks_free       = 0;
-
-	int static_vector_forbid_get    = 0;
-	int static_vector_forbid_add    = 0;
-	int static_vector_forbid_insert = 0;
-
-	
-};
-
 
 /**
  *
- * @return how many items this list can store w/given memblock
- *
  */
-int static_vector_init(void *memblock, size_t sizeof_memblock, size_t item_size)
+
+static_vector_memblock* 
+static_vector_init (mutable void *raw_memblock, size_t item_size)
 {
+
+	if(sizeof(raw_memblock)<sizeof(static_vector_memblock+static_vector_memblock_header)) {
+		debugfln(LVL_ERROR, "Not enough space, sizeof_memblock=%d, sizeof(static_vector_memblock+static_vector_memblock_header)",
+		sizeof_memblock, sizeof(static_vector_memblock+static_vector_memblock_header));
+		return 0;
+	}
+
+	memset(raw_memblock, 0, sizeof_memblock);
+
+	static_vector_memblock* svm;
+
+	svm->header = (static_vector_memblock*) raw_memblock;
+	svm->data   = (static_vector_memblock_header*) (raw_memblock+sizeof(static_vector_memblock+static_vector_memblock_header);
+
+
 	memblock_p        = memblock;
 	memblock_sz       = sizeof_memblock;
 	memblock_chunk_sz = item_size;
@@ -152,7 +152,7 @@ void* static_vector_get_item(int index)
  *
  *
  */
-unsigned int static_vector_insert(void* item, int index)
+unsigned int static_vector_set(void* item, int index)
 {
 	if(static_vector_forbid_insert) {
 		debugfln(LVL_ERROR, "Cannot insert, you have used add.");

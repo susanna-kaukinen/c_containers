@@ -24,22 +24,41 @@
  *
  */
 
+#include "static_vector_memblock.h"
 
-#ifndef __STATIC_LIST_H__
-#define __STATIC_LIST_H__
+size_t svm_head__set_size(
+	static_vector_memblock_header* obj, 
+	size_t size)
+{
+	obj->size = size;
+	return obj->size;
+}
 
-#include <stdio.h>
+size_t svm_head__set_chunk_size(
+	static_vector_memblock_header* obj, 
+	size_t chunk_size)
+{
+	obj->chunk_size = chunk_size;
+	return obj->chunk_size;
+}
 
-#include "c_containers.h"
 
-static_vector_memblock* static_vector_init (mutable void *raw_memblock, size_t item_size);
-static_vector_memblock* static_vector_init_(mutable void *raw_memblock, size_t sizeof_memblock, size_t item_size);
 
-void*        static_vector_get_item     (const   static_vector_memblock* m, int   index);
-unsigned int static_vector_add_item     (mutable static_vector_memblock* m, void* item);
-unsigned int static_vector_get_max_size (mutable static_vector_memblock* m);
 
-#endif // __STATIC_LIST_H__
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

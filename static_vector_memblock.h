@@ -24,26 +24,28 @@
  *
  */
 
-
-#ifndef __STATIC_LIST_H__
-#define __STATIC_LIST_H__
-
 #include <stdio.h>
 
-#include "c_containers.h"
+typedef struct
+{
+	size_t       size;
+	size_t       chunk_size;
+	unsigned int chunks;
+	unsigned int chunks_free;
 
-static_vector_memblock* static_vector_init (mutable void *raw_memblock, size_t item_size);
-static_vector_memblock* static_vector_init_(mutable void *raw_memblock, size_t sizeof_memblock, size_t item_size);
+	int          forbid_get;
+	int          forbid_add;
+	int          forbid_insert;
 
-void*        static_vector_get_item     (const   static_vector_memblock* m, int   index);
-unsigned int static_vector_add_item     (mutable static_vector_memblock* m, void* item);
-unsigned int static_vector_get_max_size (mutable static_vector_memblock* m);
-
-#endif // __STATIC_LIST_H__
+} static_vector_memblock_header;
 
 
+typedef struct // @TODO consider: __attribute__ ((__packed__))
+{
+	static_vector_memblock_header* header;
+	void*   data;
 
-
+} static_vector_memblock;
 
 
 

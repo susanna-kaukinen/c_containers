@@ -26,7 +26,7 @@
  #
  #
 
-gcc -gstabs+ -Wall static_vector.c test_static_vector.c
+gcc -gstabs+ -Wall static_vector.c test_static_vector.c static_vector_memblock.c
 
 if [ $1 ] ; then
 
