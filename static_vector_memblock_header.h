@@ -24,15 +24,44 @@
  *
  */
 
-#include <sys/types.h>
-#include "static_vector_memblock_header.h"
+#include <stdint.h>
 
 typedef struct
 {
-	static_vector_memblock_header* header;
-	void*   data;
+	size_t       size;
+	size_t       chunk_size;
+	unsigned int chunks;
+	unsigned int chunks_free;
+/*
+	int          forbid_get;
+	int          forbid_add;
+	int          forbid_insert;
+*/
+} static_vector_memblock_header;
 
-} static_vector_memblock;
+uint8_t svm_head__allow_get  (static_vector_memblock_header* obj);
+uint8_t svm_head__allow_add  (static_vector_memblock_header* obj);
+uint8_t svm_head__allow_set  (static_vector_memblock_header* obj);
+uint8_t svm_head__forbid_get (static_vector_memblock_header* obj);
+uint8_t svm_head__forbid_add (static_vector_memblock_header* obj);
+uint8_t svm_head__forbid_set (static_vector_memblock_header* obj);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

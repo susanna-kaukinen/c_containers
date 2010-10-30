@@ -54,17 +54,19 @@ static_vector_init (mutable void *raw_memblock, size_t item_size)
 	svm->header = (static_vector_memblock*) raw_memblock;
 	svm->data   = (static_vector_memblock_header*) (raw_memblock+sizeof(static_vector_memblock+static_vector_memblock_header);
 
+	svm_head__set_size(sizeof_memblock);
+	svm_head__set_chunk_size(item_size);
 
-	memblock_p        = memblock;
-	memblock_sz       = sizeof_memblock;
-	memblock_chunk_sz = item_size;
+	svm_head__set_amt_chunks((memblock_sz / memblock_chunk_sz));
+	svm_head__set_chunks_free(memblock_chunks);
 
-	memblock_chunks   = memblock_sz / memblock_chunk_sz;
-	memblock_chunks_free = memblock_chunks;
+	svm_head__allow_get();
+	svm_head__allow_add();
+	svm_head__allow_set();
 
-	static_vector_forbid_get = 0;
-	static_vector_forbid_add = 0;
-	static_vector_forbid_insert = 0;
+	//static_vector_forbid_get = 0;
+	//static_vector_forbid_add = 0;
+	//static_vector_forbid_insert = 0;
 
 	debugfln(LVL_FLOOD, "memblock=(%x -> %x), memblock_sz=(%u), memblock_chunk_sz=(%u), memblock_chunks=(%u), memblock_chunks_free=(%u)",
 		memblock_p, (memblock_p + memblock_sz),
