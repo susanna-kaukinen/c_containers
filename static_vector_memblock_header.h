@@ -46,24 +46,12 @@ uint8_t svm_head__forbid_get (static_vector_memblock_header* obj);
 uint8_t svm_head__forbid_add (static_vector_memblock_header* obj);
 uint8_t svm_head__forbid_set (static_vector_memblock_header* obj);
 
+size_t svm_head__set_size( static_vector_memblock_header* obj, size_t size);
+size_t svm_head__set_chunk_size( static_vector_memblock_header* obj, size_t chunk_size);
+size_t svm_head__set_amt_chunks( static_vector_memblock_header* obj, unsigned int chunks);
+size_t svm_head__set_chunks_free( static_vector_memblock_header* obj, unsigned int chunks_free);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+size_t svm_head__get_amt_chunks( static_vector_memblock_header* obj);
+size_t svn_head__get_size( static_vector_memblock_header*);
+size_t svm_head__get_chunk_size( static_vector_memblock_header*);
+unsigned int svm_head__get_chunks_free(static_vector_memblock_header* obj);

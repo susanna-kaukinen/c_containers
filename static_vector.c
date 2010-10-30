@@ -41,45 +41,55 @@ static_vector_memblock*
 static_vector_init (mutable void *raw_memblock, size_t item_size)
 {
 
-	if(sizeof(raw_memblock)<sizeof(static_vector_memblock+static_vector_memblock_header)) {
+	/*if(sizeof(raw_memblock)<sizeof(static_vector_memblock+static_vector_memblock_header)) {
 		debugfln(LVL_ERROR, "Not enough space, sizeof_memblock=%d, sizeof(static_vector_memblock+static_vector_memblock_header)",
 		sizeof_memblock, sizeof(static_vector_memblock+static_vector_memblock_header));
 		return 0;
-	}
+	}*/
 
-	memset(raw_memblock, 0, sizeof_memblock);
+	// <init_vars>
 
+	size_t memblock_size = sizeof(raw_memblock);
 	static_vector_memblock* svm;
+	static_vector_memblock_header* head;
 
-	svm->header = (static_vector_memblock*) raw_memblock;
-	svm->data   = (static_vector_memblock_header*) (raw_memblock+sizeof(static_vector_memblock+static_vector_memblock_header);
+	memset(raw_memblock, 0, memblock_size);
 
-	svm_head__set_size(sizeof_memblock);
-	svm_head__set_chunk_size(item_size);
+	debugfln(LVL_DEBUG, "raw_memblock_size=%u\n", memblock_size);
 
-	svm_head__set_amt_chunks((memblock_sz / memblock_chunk_sz));
-	svm_head__set_chunks_free(memblock_chunks);
+	// </init_vars>
 
-	svm_head__allow_get();
-	svm_head__allow_add();
-	svm_head__allow_set();
+	head = (static_vector_memblock_header*) raw_memblock;
+	svm->data   = (void*) (raw_memblock+(sizeof(static_vector_memblock_header)));
+
+	svm_head__set_size         (head, memblock_size);
+	svm_head__set_chunk_size   (head, item_size);
+
+	svm_head__set_amt_chunks   (head, (memblock_size / item_size));
+	svm_head__set_chunks_free  (head, svm_head__get_amt_chunks(head));
+
+	svm_head__allow_get(head);
+	svm_head__allow_add(head);
+	svm_head__allow_set(head);
 
 	//static_vector_forbid_get = 0;
 	//static_vector_forbid_add = 0;
 	//static_vector_forbid_insert = 0;
 
 	debugfln(LVL_FLOOD, "memblock=(%x -> %x), memblock_sz=(%u), memblock_chunk_sz=(%u), memblock_chunks=(%u), memblock_chunks_free=(%u)",
-		memblock_p, (memblock_p + memblock_sz),
-		memblock_sz,
-		memblock_chunk_sz,
-		memblock_chunks,
-		memblock_chunks_free);
+		raw_memblock, 
+		(raw_memblock + memblock_size),
+		svn_head__get_size(head),
+		svm_head__get_chunk_size(head),
+		svm_head__get_amt_chunks(head),
+		svm_head__get_chunks_free(head)
+	);
 
-	if(memblock_chunks_free==0) {
+	if(svm_head__get_chunks_free(head)==0) {
 		debugfln(LVL_WARNING, "No chunks generated, too little memory offered!");
 	}
 
-	return memblock_chunks_free;
+	return svm;
 }
 
 

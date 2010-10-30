@@ -26,6 +26,8 @@
 
 #include "static_vector_memblock_header.h"
 
+// <setters>
+
 size_t svm_head__set_size(
 	static_vector_memblock_header* obj, 
 	size_t size)
@@ -60,12 +62,12 @@ size_t svm_head__set_chunks_free(
 	return chunks_free;
 }
 
-
-uint8_t svm_head__allow_get( static_vector_memblock_header* obj)
+size_t svm_head__get_amt_chunks(static_vector_memblock_header* obj)
 {
-	obj->allow_get = 1;
-	return obj->allow_get;
+	return obj->chunks;
 }
+
+// <forbid_allow>
 
 uint8_t svm_head__allow_add(static_vector_memblock_header* obj)
 {
@@ -101,8 +103,32 @@ uint8_t svm_head__forbid_set(static_vector_memblock_header* obj)
 
 }
 
+// </forbid_allow></setters><getters>
 
 
+uint8_t svm_head__allow_get( static_vector_memblock_header* obj)
+{
+	obj->allow_get = 1;
+	return obj->allow_get;
+}
+
+		
+size_t svn_head__get_size(static_vector_memblock_header* obj)
+{
+	return obj->size;
+}
+
+size_t svm_head__get_chunk_size(static_vector_memblock_header *obj)
+{
+	return obj->chunk_size;
+}
+
+size_t svm_head__get_chunks_free(static_vector_memblock_header* obj)
+{
+	return obj->chunks_free;
+}
+
+// </getters>
 
 
 
