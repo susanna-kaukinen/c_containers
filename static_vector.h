@@ -40,7 +40,7 @@ unsigned int static_vector_add_item     (mutable static_vector_memblock* membloc
 unsigned int static_vector_set_item     (mutable static_vector_memblock* memblock_start_addr, void* item, unsigned int index);
 
 void*        static_vector_get_item     (const   static_vector_memblock* memblock_start_addr, int   index);
-unsigned int static_vector_get_max_size (const   static_vector_memblock* memblock_start_addr);
+unsigned int static_vector_get_max_size (const   static_vector_memblock* memblock_start_addr) { return memblock_start_addr->header->chunks; }
 
 #endif // __STATIC_LIST_H__
 

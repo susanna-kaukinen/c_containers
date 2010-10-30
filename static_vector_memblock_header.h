@@ -24,6 +24,10 @@
  *
  */
 
+#ifndef __STATIC_VECTOR_MEMBLOCK_HEADER__
+#define __STATIC_VECTOR_MEMBLOCK_HEADER__
+
+#include <sys/types.h>
 #include <stdint.h>
 
 typedef struct
@@ -35,7 +39,7 @@ typedef struct
 
 	uint8_t          forbid_get;
 	uint8_t          forbid_add;
-	uint8_t          forbid_insert;
+	uint8_t          forbid_set;
 
 } static_vector_memblock_header;
 
@@ -46,7 +50,8 @@ uint8_t svm_head__forbid_get (static_vector_memblock_header* obj);
 uint8_t svm_head__forbid_add (static_vector_memblock_header* obj);
 uint8_t svm_head__forbid_set (static_vector_memblock_header* obj);
 
-uint8_t svm_head__is_get_allowed(static_vector_memblock_header* obj) { return obj->forbid_get; }
+uint8_t svm_head__is_get_allowed(static_vector_memblock_header* obj);
+uint8_t svm_head__is_set_allowed(static_vector_memblock_header* obj);
 
 
 size_t svm_head__set_size( static_vector_memblock_header* obj, size_t size);
@@ -59,6 +64,6 @@ size_t svn_head__get_size( static_vector_memblock_header*);
 size_t svm_head__get_chunk_size( static_vector_memblock_header*);
 unsigned int svm_head__get_chunks_free(static_vector_memblock_header* obj);
 
-
+#endif // __STATIC_VECTOR_MEMBLOCK_HEADER__
 
 

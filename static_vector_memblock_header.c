@@ -71,35 +71,34 @@ size_t svm_head__get_amt_chunks(static_vector_memblock_header* obj)
 
 uint8_t svm_head__allow_add(static_vector_memblock_header* obj)
 {
-	obj->allow_add = 1;
-	return obj->allow_add;
+	obj->forbid_add = 0;
+	return obj->forbid_add;
 }
 
 uint8_t svm_head__allow_set(static_vector_memblock_header* obj)
 {
-	obj->allow_set = 1;
-	return obj->allow_set;
-
+	obj->forbid_set = 0;
+	return obj->forbid_set;
 }
 
 
 
 uint8_t svm_head__forbid_get( static_vector_memblock_header* obj)
 {
-	obj->allow_get = 0;
-	return obj->allow_get;
+	obj->forbid_get = 1;
+	return obj->forbid_get;
 }
 
 uint8_t svm_head__forbid_add(static_vector_memblock_header* obj)
 {
-	obj->allow_add = 0;
-	return obj->allow_add;
+	obj->forbid_add = 1;
+	return obj->forbid_add;
 }
 
 uint8_t svm_head__forbid_set(static_vector_memblock_header* obj)
 {
-	obj->allow_set = 0;
-	return obj->allow_set;
+	obj->forbid_set = 1;
+	return obj->forbid_set;
 
 }
 
@@ -108,8 +107,8 @@ uint8_t svm_head__forbid_set(static_vector_memblock_header* obj)
 
 uint8_t svm_head__allow_get( static_vector_memblock_header* obj)
 {
-	obj->allow_get = 1;
-	return obj->allow_get;
+	obj->forbid_get = 0;
+	return obj->forbid_get;
 }
 
 		
@@ -146,3 +145,5 @@ size_t svm_head__get_chunks_free(static_vector_memblock_header* obj)
 
 
 
+uint8_t svm_head__is_get_allowed(static_vector_memblock_header* obj) { return obj->forbid_get; }
+uint8_t svm_head__is_set_allowed(static_vector_memblock_header* obj) { return obj->forbid_set; }

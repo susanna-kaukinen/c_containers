@@ -50,8 +50,8 @@ static_vector_init (mutable void *raw_memblock, size_t item_size)
 	// <init_vars>
 
 	size_t memblock_size = sizeof(raw_memblock);
-	static_vector_memblock* svm;
-	static_vector_memblock_header* head;
+	static_vector_memblock* svm = raw_memblock;
+	static_vector_memblock_header* head = svm->header;
 
 	memset(raw_memblock, 0, memblock_size);
 
@@ -59,7 +59,7 @@ static_vector_init (mutable void *raw_memblock, size_t item_size)
 
 	// </init_vars>
 
-	head = (static_vector_memblock_header*) raw_memblock;
+	head        = (static_vector_memblock_header*) raw_memblock;
 	svm->data   = (void*) (raw_memblock+(sizeof(static_vector_memblock_header)));
 
 	svm_head__set_size         (head, memblock_size);
@@ -156,6 +156,7 @@ static_vector_get_item     (const   static_vector_memblock* memblock_start_addr,
 	static_vector_memblock_header* h = memblock_start_addr->header;
 
 	size_t       chunk_size  = svm_head__get_chunk_size  (h);
+	unsigned int amt_chunks  = svm_head__get_amt_chunks  (h);
 
 	if(svm_head__forbid_get(h)) {
 		debugfln(LVL_ERROR, "Cannot get, something went wrong w/add.");
@@ -164,7 +165,8 @@ static_vector_get_item     (const   static_vector_memblock* memblock_start_addr,
 
 	void *from = memblock_start_addr->data + (chunk_size * index);
 
-	if(from<memblock_p || from>(memblock_p+(memblock_chunks*memblock_chunk_sz))) {
+	if(from< (void*) memblock_start_addr || 
+			from>((void*) memblock_start_addr + (amt_chunks * chunk_size))) {
 		debugfln(LVL_WARNING, "Tried to access out of bounds!");
 		return 0;
 	}
@@ -184,28 +186,32 @@ static_vector_set_item (
 	unsigned int                    index
 )
 {
-	if(static_vector_forbid_insert) {
+	static_vector_memblock_header* h = memblock_start_addr->header;
+
+	unsigned int amt_chunks  = svm_head__get_amt_chunks  (h);
+	size_t       chunk_size  = svm_head__get_chunk_size  (h);
+
+	if(svm_head__is_set_allowed(h)) {
 		debugfln(LVL_ERROR, "Cannot insert, you have used add.");
 		return 0;
 	}
 
-	void* to = memblock_p + (memblock_chunks*index);
+	void* to = memblock_start_addr + (amt_chunks*index);
 
-	if(to<memblock_p || to>(memblock_p+(memblock_chunks*memblock_chunk_sz))) {
+	if(to< (void*) memblock_start_addr || to>( (void*) memblock_start_addr+(amt_chunks*chunk_size))) {
 		debugfln(LVL_WARNING, "Tried to access out of bounds!");
 		return 0;
 	}
 
-	static_vector_forbid_add = 1;
+	svm_head__forbid_add(h);
 
-	memmove(to, item, memblock_chunk_sz);
+	memmove(to, item, chunk_size);
 
 	return index;
 }
 
 
 
-unsigned int static_vector_get_max_size() { return memblock_chunks; }
 
 
 
