@@ -31,6 +31,7 @@
 #include <stdio.h>
 
 #include "c_containers.h"
+#include "static_vector_memblock.h"
 
 static_vector_memblock* static_vector_init (mutable void *raw_memblock, size_t item_size);
 static_vector_memblock* static_vector_init_(mutable void *raw_memblock, size_t sizeof_memblock, size_t item_size);

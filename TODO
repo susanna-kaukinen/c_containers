@@ -1,4 +1,12 @@
 
 
+TODO
+
+- figure out where can I find an AIX box for porting this to AIX, too
+- consider using packed or non packed control structs
+- recall to put header guard everywhere
 - put "object" pointer to first param in methods
 - build struct, or so, w/ header + data, where ctrl info in header
+
+DONE
+

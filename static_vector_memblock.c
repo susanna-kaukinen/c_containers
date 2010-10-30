@@ -43,6 +43,26 @@ size_t svm_head__set_chunk_size(
 }
 
 
+size_t svm_head__set_chunks(
+	static_vector_memblock_header* obj, 
+	unsigned int chunks)
+{
+	obj->chunks = chunks;
+	return chunks;
+}
+
+size_t svm_head__set_chunks(
+	static_vector_memblock_header* obj, 
+	unsigned int chunks_free
+	)
+{
+	obj->chunks_free = chunks_free;
+	return chunks_free;
+}
+
+	int          forbid_get;
+	int          forbid_add;
+	int          forbid_insert;
 
 
 
