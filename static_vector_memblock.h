@@ -28,10 +28,17 @@
 #include "c_containers.h"
 #include "static_vector_memblock_header.h"
 
+/**
+ *
+ * This is what we store in the memblock we receive in init
+ *
+ */
 typedef struct
 {
 	static_vector_memblock_header header;
-	byte data[0];
+	byte data[0]; // we allow this portion to have any size, because 
+                      // we don't know in advance what the size of the
+                      // memblock will be
 
 } static_vector_memblock;
 
