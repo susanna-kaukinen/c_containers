@@ -34,16 +34,29 @@ typedef struct _test_struct {
 	char buf[80];
 } test_struct; 
 
-void test_struct_print(test_struct* s)
+void test_struct_print(byte after, test_struct* s)
 {
-	printf("%x\n", (unsigned int) s);
+	if(!after) {
+		printf("<before>");
+	} else {
+		printf("<after_>");
+	}
+		
+
+	printf("%x : ", (unsigned int) s);
 
 	if(s!=0) {
-		printf("<%d,%c,%s,%s>\n",
+		printf("%d,%c,%s,%s>",
 			s->i,
 			s->c,
 			s->str,
 			s->buf);
+	}
+
+	if(!after) {
+		printf("</before>\n");
+	} else {
+		printf("</after_>\n");
 	}
 }
 
@@ -67,15 +80,15 @@ int test_static_vector_with_struct(size_t buf_size)
 		s0.str = "just some test for the str";
 		sprintf(s0.buf, "some texts for the buf, too1 %d bar", i*10);
 
-		test_struct_print(&s0);
+		test_struct_print(0,&s0);
 
 		int chunks_free = static_vector_add_item(obj, &s0);
 
 		printf("chunks free=%u\n", chunks_free); 
 
-		test_struct* s0_p = (void*) static_vector_get_item(obj, 0);
+		test_struct* s0_p = (void*) static_vector_get_item(obj, i);
 
-		test_struct_print(s0_p);
+		test_struct_print(1,s0_p);
 
 		if(chunks_free==0) {
 			if(flag) {
@@ -147,7 +160,7 @@ int main()
 {
 	test_static_vector_with_struct(100);
 	test_static_vector_with_struct(1024);
-	test_static_vector_with_int(100);
+	//test_static_vector_with_int(100);
 
 	return 0;
 }

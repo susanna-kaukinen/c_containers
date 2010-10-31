@@ -38,14 +38,14 @@
 #ifndef __DEBUG_LEVELS_H__
 #define __DEBUG_LEVELS_H__
 
-const int LVL_ALWAYS  = 800;
-const int LVL_ASSERT  = 700;
-const int LVL_PANIC   = 600;
-const int LVL_ERROR   = 500;
-const int LVL_WARNING = 400;
-const int LVL_NOTICE  = 300;
-const int LVL_DEBUG   = 200;
-const int LVL_FLOOD   = 100;
+static const int LVL_ALWAYS  = 800;
+static const int LVL_ASSERT  = 700;
+static const int LVL_PANIC   = 600;
+static const int LVL_ERROR   = 500;
+static const int LVL_WARNING = 400;
+static const int LVL_NOTICE  = 300;
+static const int LVL_DEBUG   = 200;
+static const int LVL_FLOOD   = 100;
 
 #endif // __DEBUG_LEVELS_H__
 

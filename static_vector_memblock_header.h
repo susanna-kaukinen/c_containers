@@ -30,6 +30,8 @@
 #include <sys/types.h>
 #include <stdint.h>
 
+#include "c_containers.h"
+
 typedef struct
 {
 	size_t       size;
@@ -43,26 +45,27 @@ typedef struct
 
 } static_vector_memblock_header;
 
-uint8_t svm_head__allow_get  (static_vector_memblock_header* obj);
-uint8_t svm_head__allow_add  (static_vector_memblock_header* obj);
-uint8_t svm_head__allow_set  (static_vector_memblock_header* obj);
-uint8_t svm_head__forbid_get (static_vector_memblock_header* obj);
-uint8_t svm_head__forbid_add (static_vector_memblock_header* obj);
-uint8_t svm_head__forbid_set (static_vector_memblock_header* obj);
+uint8_t svm_head__allow_get  (mutable static_vector_memblock_header* obj);
+uint8_t svm_head__allow_add  (mutable static_vector_memblock_header* obj);
+uint8_t svm_head__allow_set  (mutable static_vector_memblock_header* obj);
+uint8_t svm_head__forbid_get (mutable static_vector_memblock_header* obj);
+uint8_t svm_head__forbid_add (mutable static_vector_memblock_header* obj);
+uint8_t svm_head__forbid_set (mutable static_vector_memblock_header* obj);
 
-uint8_t svm_head__is_get_allowed(static_vector_memblock_header* obj);
-uint8_t svm_head__is_set_allowed(static_vector_memblock_header* obj);
+uint8_t svm_head__is_get_allowed(const static_vector_memblock_header* obj);
+uint8_t svm_head__is_set_allowed(const static_vector_memblock_header* obj);
 
 
-size_t svm_head__set_size( static_vector_memblock_header* obj, size_t size);
-size_t svm_head__set_chunk_size( static_vector_memblock_header* obj, size_t chunk_size);
-size_t svm_head__set_amt_chunks( static_vector_memblock_header* obj, unsigned int chunks);
-size_t svm_head__set_chunks_free( static_vector_memblock_header* obj, unsigned int chunks_free);
+size_t svm_head__set_size              (mutable static_vector_memblock_header* obj, size_t size);
+size_t svm_head__set_chunk_size        (mutable static_vector_memblock_header* obj, size_t chunk_size);
+size_t svm_head__set_amt_chunks        (mutable static_vector_memblock_header* obj, unsigned int chunks);
+size_t svm_head__set_chunks_free       (mutable static_vector_memblock_header* obj, unsigned int chunks_free);
+size_t svm_head__dec_chunks_free       (mutable static_vector_memblock_header* obj );
 
-size_t svm_head__get_amt_chunks( static_vector_memblock_header* obj);
-size_t svn_head__get_size( static_vector_memblock_header*);
-size_t svm_head__get_chunk_size( static_vector_memblock_header*);
-unsigned int svm_head__get_chunks_free(static_vector_memblock_header* obj);
+size_t svm_head__get_amt_chunks        (const static_vector_memblock_header* obj);
+size_t svn_head__get_size              (const static_vector_memblock_header* obj);
+size_t svm_head__get_chunk_size        (const static_vector_memblock_header* obj);
+unsigned int svm_head__get_chunks_free (const static_vector_memblock_header* obj);
 
 #endif // __STATIC_VECTOR_MEMBLOCK_HEADER__
 
