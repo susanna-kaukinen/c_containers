@@ -38,7 +38,7 @@
  */
 
 static_vector_memblock* 
-static_vector_init (mutable void *raw_memblock, size_t item_size)
+static_vector_init (mutable void *raw_memblock, size_t memblock_size, size_t item_size)
 {
 
 	/*if(sizeof(raw_memblock)<sizeof(static_vector_memblock+static_vector_memblock_header)) {
@@ -49,18 +49,17 @@ static_vector_init (mutable void *raw_memblock, size_t item_size)
 
 	// <init_vars>
 
-	size_t memblock_size = sizeof(raw_memblock);
-	static_vector_memblock* svm = raw_memblock;
-	static_vector_memblock_header* head = svm->header;
-
 	memset(raw_memblock, 0, memblock_size);
+
+	static_vector_memblock* svm = raw_memblock;
+	static_vector_memblock_header* head = &svm->header;
 
 	debugfln(LVL_DEBUG, "raw_memblock_size=%u\n", memblock_size);
 
 	// </init_vars>
 
 	head        = (static_vector_memblock_header*) raw_memblock;
-	svm->data   = (void*) (raw_memblock+(sizeof(static_vector_memblock_header)));
+	//svm.data    = (void*) (raw_memblock+(sizeof(static_vector_memblock_header)));
 
 	svm_head__set_size         (head, memblock_size);
 	svm_head__set_chunk_size   (head, item_size);
@@ -76,9 +75,12 @@ static_vector_init (mutable void *raw_memblock, size_t item_size)
 	//static_vector_forbid_add = 0;
 	//static_vector_forbid_insert = 0;
 
-	debugfln(LVL_FLOOD, "memblock=(%x -> %x), memblock_sz=(%u), memblock_chunk_sz=(%u), memblock_chunks=(%u), memblock_chunks_free=(%u)",
+	debugfln(LVL_FLOOD, "memblock=(%x -> %x), svm=(%x), header=(%x), data=(%x), size=(%u), chunk_size=(%u), amt_chunks=(%u), chunks_free=(%u)",
 		raw_memblock, 
 		(raw_memblock + memblock_size),
+		svm,
+		svm->header,
+		svm->data,
 		svn_head__get_size(head),
 		svm_head__get_chunk_size(head),
 		svm_head__get_amt_chunks(head),
@@ -105,7 +107,9 @@ static_vector_init (mutable void *raw_memblock, size_t item_size)
 unsigned int
 static_vector_add_item     (mutable static_vector_memblock* memblock_start_addr, void* item)
 {
-	static_vector_memblock_header* h = memblock_start_addr->header;
+	static_vector_memblock_header* h = &memblock_start_addr->header;
+
+	debugfln(LVL_DEBUG, "memblock_start_addr=%x, header=%x", memblock_start_addr, h);
 
 	unsigned int amt_chunks  = svm_head__get_amt_chunks  (h);
 	unsigned int chunks_free = svm_head__get_chunks_free (h);
@@ -113,7 +117,7 @@ static_vector_add_item     (mutable static_vector_memblock* memblock_start_addr,
 	size_t       used_space  = (amt_chunks-chunks_free) * chunk_size;
 
 
-	if(svm_head__is_get_allowed(memblock_start_addr->header)) {
+	if(svm_head__is_get_allowed(&memblock_start_addr->header)) {
 		debugfln(LVL_ERROR, "Cannot insert, you have used insert.");
 		return 0;
 	}
@@ -153,7 +157,7 @@ void*
 static_vector_get_item     (const   static_vector_memblock* memblock_start_addr, int   index)
 {
 	
-	static_vector_memblock_header* h = memblock_start_addr->header;
+	static_vector_memblock_header* h = &memblock_start_addr->header;
 
 	size_t       chunk_size  = svm_head__get_chunk_size  (h);
 	unsigned int amt_chunks  = svm_head__get_amt_chunks  (h);
@@ -186,7 +190,7 @@ static_vector_set_item (
 	unsigned int                    index
 )
 {
-	static_vector_memblock_header* h = memblock_start_addr->header;
+	static_vector_memblock_header* h = &memblock_start_addr->header;
 
 	unsigned int amt_chunks  = svm_head__get_amt_chunks  (h);
 	size_t       chunk_size  = svm_head__get_chunk_size  (h);
@@ -211,6 +215,11 @@ static_vector_set_item (
 }
 
 
+
+unsigned int static_vector_get_max_size (const   static_vector_memblock* memblock_start_addr)
+{ 
+	return &memblock_start_addr->header.chunks; 
+}
 
 
 

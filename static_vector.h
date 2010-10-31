@@ -33,14 +33,13 @@
 #include "c_containers.h"
 #include "static_vector_memblock.h"
 
-static_vector_memblock* static_vector_init (mutable void *raw_memblock, size_t item_size);
-//static_vector_memblock* static_vector_init_(mutable void *raw_memblock, size_t sizeof_memblock, size_t item_size);
+static_vector_memblock* static_vector_init (mutable void *raw_memblock, size_t memblock_size, size_t item_size);
 
 unsigned int static_vector_add_item     (mutable static_vector_memblock* memblock_start_addr, void* item);
 unsigned int static_vector_set_item     (mutable static_vector_memblock* memblock_start_addr, void* item, unsigned int index);
 
 void*        static_vector_get_item     (const   static_vector_memblock* memblock_start_addr, int   index);
-unsigned int static_vector_get_max_size (const   static_vector_memblock* memblock_start_addr) { return memblock_start_addr->header->chunks; }
+unsigned int static_vector_get_max_size (const   static_vector_memblock* memblock_start_addr);
 
 #endif // __STATIC_LIST_H__
 

@@ -25,12 +25,13 @@
  */
 
 #include <sys/types.h>
+#include "c_containers.h"
 #include "static_vector_memblock_header.h"
 
 typedef struct
 {
-	static_vector_memblock_header* header;
-	void*   data;
+	static_vector_memblock_header header;
+	byte data[0];
 
 } static_vector_memblock;
 

@@ -54,7 +54,7 @@ int test_static_vector_with_struct(size_t buf_size)
 	printf("<test_static_vector_with_struct>\n");
 
 	int buf[buf_size];
-	static_vector_init(&buf, sizeof(buf), sizeof(test_struct));
+	void* obj = static_vector_init(&buf, sizeof(buf), sizeof(test_struct));
 
 	int flag=0;
 	int i;
@@ -69,11 +69,11 @@ int test_static_vector_with_struct(size_t buf_size)
 
 		test_struct_print(&s0);
 
-		int chunks_free = static_vector_add_item(&s0);
+		int chunks_free = static_vector_add_item(obj, &s0);
 
 		printf("chunks free=%u\n", chunks_free); 
 
-		test_struct* s0_p = (void*) static_vector_get_item(0);
+		test_struct* s0_p = (void*) static_vector_get_item(obj, 0);
 
 		test_struct_print(s0_p);
 
@@ -101,7 +101,7 @@ int test_static_vector_with_int(size_t buf_size)
 {
 
 	int buf[buf_size];
-	static_vector_init(&buf, sizeof(buf), sizeof(int));
+	void* obj = static_vector_init(&buf, sizeof(buf), sizeof(int));
 
 	int items_free=0;
 	
@@ -115,16 +115,16 @@ int test_static_vector_with_int(size_t buf_size)
 
 		comparison_buf[i] = j;
 
-		items_free = static_vector_add_item(&j);
+		items_free = static_vector_add_item(obj, &j);
 
 		if(i==0) {
-			printf("Vector can hold %d items\n", static_vector_get_max_size());
+			printf("Vector can hold %d items\n", static_vector_get_max_size(obj));
 		}
 
 	}
 
 	for(i=0;;i++) {
-		int *item = static_vector_get_item(i);
+		int *item = static_vector_get_item(obj,i);
 		if(item) {
 			printf("%2d:%10d (%x)\n", i, *item, (unsigned int) item);
 
@@ -145,9 +145,9 @@ int test_static_vector_with_int(size_t buf_size)
 
 int main()
 {
-	test_static_vector_with_struct(10);
+	test_static_vector_with_struct(100);
 	test_static_vector_with_struct(1024);
-	test_static_vector_with_int(10);
+	test_static_vector_with_int(100);
 
 	return 0;
 }
