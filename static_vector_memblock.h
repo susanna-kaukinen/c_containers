@@ -39,6 +39,22 @@ typedef struct
 	byte data[0]; // we allow this portion to have any size, because 
                       // we don't know in advance what the size of the
                       // memblock will be
+		      //
+                      // the data portion will contain all the actual items,
+                      //  like [item] [item] ... [lost]
+                      // ,where items have the sizeof(item) given in init and
+                      //  where lost portion will be a residue are that is so
+                      //  so small that another item cannot be stored there.
+                      // 
+                      // optimally, the user should, of course not create a
+                      // lost area at all, but rather have the sizeof the
+                      // memblock to be such that it has the size:
+                      // sizeof(header) + N*item.
+                      //
+                      // There are two helper methods towards this end,
+                      // @see static_vector__get_exact_fit_for_a_buf_size
+                      // @see static_vector__get_exact_fit_for_n_items
+                      // 
 
 } static_vector_memblock;
 

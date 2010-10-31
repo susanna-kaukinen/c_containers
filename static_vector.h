@@ -33,13 +33,16 @@
 #include "c_containers.h"
 #include "static_vector_memblock.h"
 
-static_vector_memblock* static_vector_init (mutable void *raw_memblock, size_t memblock_size, size_t item_size);
+size_t static_vector__get_exact_fit_for_n_items(unsigned int max_items, size_t item_size);
+size_t static_vector__get_exact_fit_for_a_buf_size(size_t buf_size, size_t item_size);
 
-unsigned int static_vector_add_item     (mutable static_vector_memblock* memblock_start_addr, void* item);
-unsigned int static_vector_set_item     (mutable static_vector_memblock* memblock_start_addr, void* item, unsigned int index);
+static_vector_memblock* static_vector__init (mutable void *raw_memblock, size_t memblock_size, size_t item_size);
 
-void*        static_vector_get_item     (const   static_vector_memblock* memblock_start_addr, int   index);
-unsigned int static_vector_get_max_size (const   static_vector_memblock* memblock_start_addr);
+unsigned int static_vector__add_item     (mutable static_vector_memblock* memblock_start_addr, void* item);
+unsigned int static_vector__set_item     (mutable static_vector_memblock* memblock_start_addr, void* item, unsigned int index);
+
+void*        static_vector__get_item     (const   static_vector_memblock* memblock_start_addr, int   index);
+unsigned int static_vector__get_max_size (const   static_vector_memblock* memblock_start_addr);
 
 #endif // __STATIC_LIST_H__
 

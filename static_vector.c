@@ -33,12 +33,47 @@
 #include "debug.h"
 
 
+size_t
+static_vector__get_exact_fit_for_n_items(unsigned int max_items, size_t item_size)
+{
+	return sizeof(static_vector_memblock_header) + max_items*item_size;
+}
+
+size_t
+static_vector__get_exact_fit_for_a_buf_size(size_t buf_size, size_t item_size)
+{
+	size_t header_size = sizeof(static_vector_memblock_header);
+
+	if(buf_size < header_size + item_size) {
+		debugfln(LVL_DEBUG, "At least header and one item must fit! (buf_size=%u < item_size=%u + header_size=%u)", buf_size, item_size, header_size);
+		return 0;
+	}
+
+	if(item_size<1) {
+		debugfln(LVL_DEBUG, "Item must have some size! (item_size=%u)", item_size);
+		return 0;
+	}
+		
+
+	size_t max_items = 0; 
+
+	buf_size -= sizeof(static_vector_memblock_header);
+	max_items = buf_size/item_size;
+
+	size_t exact_fit_buf_size = (max_items*item_size) + sizeof(static_vector_memblock_header);
+	
+	debugfln(LVL_DEBUG, "offered buf_size=%u, exact_fit_buf_size=%u (header_size=%u + max_items=%u * item_size=%u", buf_size, exact_fit_buf_size, header_size, max_items, item_size);
+
+	return exact_fit_buf_size;
+}
+
+
 /**
  *
  */
 
 static_vector_memblock* 
-static_vector_init (mutable void *raw_memblock, size_t memblock_size, size_t item_size)
+static_vector__init (mutable void *raw_memblock, size_t memblock_size, size_t item_size)
 {
 
 	/* if(memblock_size < sizeof(static_vector_memblock)) {
@@ -49,12 +84,27 @@ static_vector_init (mutable void *raw_memblock, size_t memblock_size, size_t ite
 
 	// <init_vars>
 
+	if(!raw_memblock) {
+		debugfln(LVL_ERROR, "Please don't pass 0 as an address here.");
+		return 0;
+	}
+
+	size_t header_size = sizeof(static_vector_memblock_header);
+
+	if(memblock_size < header_size + item_size) {
+		debugfln(LVL_DEBUG, "At least header and one item must fit! (memblock_size=%u < item_size=%u + header_size=%u)", memblock_size, item_size, header_size);
+		return 0;
+	}
+
 	memset(raw_memblock, 0, memblock_size);
 
 	static_vector_memblock* svm = raw_memblock;
 	static_vector_memblock_header* head = &svm->header;
 
-	debugfln(LVL_DEBUG, "raw_memblock_size=%u, header_size=%u, waste=%u%%\n", memblock_size, sizeof(*head), (100*sizeof(*head))/memblock_size);
+	double waste = 100*sizeof(*head);
+	waste /= memblock_size;
+
+	debugfln(LVL_DEBUG, "raw_memblock_size=%u, header_size=%u, waste=%f%%\n", memblock_size, sizeof(*head), waste);
 
 	// </init_vars>
 
@@ -100,13 +150,18 @@ static_vector_init (mutable void *raw_memblock, size_t memblock_size, size_t ite
  * Pushes an item to the back of the container, like STL:s push_back.
  * 
  *
- * @param any pointer that has the size sizeof_memblock you passed to static_vector_init
+ * @param any pointer that has the size sizeof_memblock you passed to static_vector__init
  * @return how many memory chunks are left
  *
  */ 
 unsigned int
-static_vector_add_item     (mutable static_vector_memblock* memblock_start_addr, void* item)
+static_vector__add_item     (mutable static_vector_memblock* memblock_start_addr, void* item)
 {
+	if(!memblock_start_addr) {
+		debugfln(LVL_ERROR, "Please don't pass 0 as an address here.");
+		return 0;
+	}
+
 	static_vector_memblock_header* h = &memblock_start_addr->header;
 
 	debugfln(LVL_DEBUG, "memblock_start_addr=%x, header=%x", memblock_start_addr, h);
@@ -131,7 +186,7 @@ static_vector_add_item     (mutable static_vector_memblock* memblock_start_addr,
 		chunk_size
 	);
 
-	if(chunks_free <=1 ||  ( to > ( ((void*) memblock_start_addr->data) + (amt_chunks*chunk_size)))) {
+	if(chunks_free <1 ||  ( to > ( ((void*) memblock_start_addr->data) + (amt_chunks*chunk_size)))) {
 		debugfln(LVL_WARNING, "Run out of chunks, chunks total=%u, chunks free=%u",
 			amt_chunks, chunks_free);
 
@@ -154,9 +209,14 @@ static_vector_add_item     (mutable static_vector_memblock* memblock_start_addr,
  *
  */
 void*
-static_vector_get_item     (const   static_vector_memblock* memblock_start_addr, int   index)
+static_vector__get_item     (const   static_vector_memblock* memblock_start_addr, int   index)
 {
 	
+	if(!memblock_start_addr) {
+		debugfln(LVL_ERROR, "Please don't pass 0 as an address here.");
+		return 0;
+	}
+
 	const static_vector_memblock_header* h = &memblock_start_addr->header;
 
 	size_t       chunk_size  = svm_head__get_chunk_size  (h);
@@ -184,7 +244,7 @@ static_vector_get_item     (const   static_vector_memblock* memblock_start_addr,
  *
  */
 unsigned int 
-static_vector_set_item (
+static_vector__set_item (
 	mutable static_vector_memblock* memblock_start_addr, 
 	void*                           item, 
 	unsigned int                    index
@@ -216,7 +276,7 @@ static_vector_set_item (
 
 
 
-unsigned int static_vector_get_max_size (const static_vector_memblock* memblock_start_addr)
+unsigned int static_vector__get_max_size (const static_vector_memblock* memblock_start_addr)
 { 
 	const static_vector_memblock_header* h = &memblock_start_addr->header;
 
