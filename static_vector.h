@@ -33,16 +33,63 @@
 #include "c_containers.h"
 #include "static_vector_memblock.h"
 
-size_t static_vector__get_exact_fit_for_n_items(unsigned int max_items, size_t item_size);
-size_t static_vector__get_exact_fit_for_a_buf_size(size_t buf_size, size_t item_size);
+// @TODO consider naming, needed methods, consistency of interface
+//
+// perhaps interesting methods.
+//
+// compare (const static_vector_memblock* v1, const static_vector_memblock* v2);
+// compare_at (const static_vector_memblock* v1, const static_vector_memblock* v2, unsigned int index);
+// zero_item
+// resize
 
-static_vector_memblock* static_vector__init (mutable void *raw_memblock, size_t memblock_size, size_t item_size);
+/**
+ *
+ * Helpers for avoiding choosing a memblock_size that results in a residue part in the memblock
+ * that cannot be used because it's too small to hold an item.
+ *
+ * Call these to get an even size for the buffer that you can give to the static_vector__init method.
+ *
+ */
+size_t static_vector__get_exact_fit_for_n_items     (unsigned int max_items, size_t item_size);
+size_t static_vector__get_exact_fit_for_a_buf_size  (size_t buf_size, size_t item_size);
 
-unsigned int static_vector__add_item     (mutable static_vector_memblock* memblock_start_addr, void* item);
-unsigned int static_vector__set_item     (mutable static_vector_memblock* memblock_start_addr, void* item, unsigned int index);
+/**
+ *
+ * Constructor. Use this to build your vector.
+ *
+ */
+static_vector_memblock* static_vector__init         (mutable void *raw_memblock, size_t memblock_size, size_t item_size);
 
-void*        static_vector__get_item     (const   static_vector_memblock* memblock_start_addr, int   index);
-unsigned int static_vector__get_max_size (const   static_vector_memblock* memblock_start_addr);
+/**
+ *
+ * Adds an item to the end of the vetor.
+ *
+ */
+unsigned int static_vector__add_item                (mutable static_vector_memblock* memblock_start_addr, void* item);
+
+/**
+ *
+ * Sets/overwrite an item at the given index.
+ *
+ */
+unsigned int static_vector__set_item                (mutable static_vector_memblock* memblock_start_addr, void* item, unsigned int index);
+
+/**
+ *
+ * 
+ * Returns an item from the given index. Just cast it to the type you know that item really is.
+ *
+ */
+void*        static_vector__get_item                (const   static_vector_memblock* memblock_start_addr, int   index);
+
+/**
+ *
+ * Tells the capacity of the vector.
+ *
+ */
+unsigned int static_vector__get_max_size            (const   static_vector_memblock* memblock_start_addr);
+
+
 
 #endif // __STATIC_LIST_H__
 
