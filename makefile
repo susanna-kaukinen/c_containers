@@ -40,6 +40,17 @@ $(TEST_EXECUTABLE): $(TESTS_OBJS) $(LIB)
 ###########################################
 #
 
+run_tests: tests
+	./tests
+
+valgrind_run_tests: tests
+	valgrind ./tests
+
+r: run_tests
+
+v: valgrind_run_tests
+
+
 #
 ############################################
 #
