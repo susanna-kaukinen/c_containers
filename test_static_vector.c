@@ -42,16 +42,16 @@ typedef struct _test_struct {
 void test_struct_print(byte after, test_struct* s)
 {
 	if(!after) {
-		printf("<before>");
+		debugfp(LVL_DEBUG, "<before>");
 	} else {
-		printf("<after_>");
+		debugfp(LVL_DEBUG, "<after_>");
 	}
 		
 
-	printf("%x : ", (unsigned int) s);
+	debugfp(LVL_DEBUG, "%x : ", (unsigned int) s);
 
 	if(s!=0) {
-		printf("%d,%c,%s,%s>",
+		debugfp(LVL_DEBUG, "%d,%c,%s,%s>",
 			s->i,
 			s->c,
 			s->str,
@@ -59,9 +59,9 @@ void test_struct_print(byte after, test_struct* s)
 	}
 
 	if(!after) {
-		printf("</before>\n");
+		debugfpln(LVL_DEBUG, "</before>");
 	} else {
-		printf("</after_>\n");
+		debugfpln(LVL_DEBUG, "</after_>");
 	}
 }
 
@@ -90,7 +90,7 @@ int test_static_vector_with_struct(size_t guess_buf_size)
 
 		int chunks_free = static_vector__add_item(obj, &s0);
 
-		printf("chunks free=%u\n", chunks_free); 
+		debugfpln(LVL_DEBUG, "chunks free=%u", chunks_free); 
 
 		test_struct* s0_p = (void*) static_vector__get_item(obj, i);
 
@@ -98,11 +98,11 @@ int test_static_vector_with_struct(size_t guess_buf_size)
 
 		if(chunks_free==0) {
 			if(flag) {
-				printf("no more chunks, done.");
+				debugfpln(LVL_DEBUG, "no more chunks, done.");
 				break;
 			}
 		
-			printf("Let's force one more op to see how it's handled\n");
+			debugfpln(LVL_DEBUG, "Let's force one more op to see how it's handled");
 			flag=1;
 
 		}
@@ -124,7 +124,7 @@ int test_static_vector_for_size_calcs(int amt_items)
 	byte buf[buf_size];
 	void *vector = static_vector__init(&buf, sizeof(buf), sizeof(test_struct));
 
-	printf("amt_items=%d, buf_size=%d, vector max size=%d\n",
+	debugfpln(LVL_DEBUG, "amt_items=%d, buf_size=%d, vector max size=%d",
 		amt_items, buf_size, static_vector__get_max_size(vector)
 	);
 
@@ -146,41 +146,41 @@ int test_static_vector_with_int(size_t buf_size)
 	int comparison_buf[buf_size];
 	for(i=0,j=0;; i++,j=i*10) {
 
-		printf("items_free=%d, ", items_free);
-		printf("i=%d\n", i); fflush(stdout); 
+		debugfp(LVL_DEBUG, "items_free=%d, ", items_free);
+		debugfpln(LVL_DEBUG, "i=%d", i); fflush(stdout); 
 
 		//int c = getchar();
 
 
 		comparison_buf[i] = j;
-		printf("comparison_buf[%d] = %d\n", i, j);
+		debugfpln(LVL_DEBUG, "comparison_buf[%d] = %d", i, j);
 
 		items_free = static_vector__add_item(obj, &j);
 
 		if(items_free<=0) {
-			printf("loop break, i=%d\n", i);
+			debugfpln(LVL_DEBUG, "loop break, i=%d", i);
 			break;
 		}
 
 		if(i==0) {
-			printf("Vector can hold %d items\n", static_vector__get_max_size(obj));
+			debugfpln(LVL_DEBUG, "Vector can hold %d items", static_vector__get_max_size(obj));
 		}
 
 
 	}
 
 	for(i=0;;i++) {
-		printf("i=%d\n", i); fflush(stdout); 
+		debugfpln(LVL_DEBUG, "i=%d", i); fflush(stdout); 
 		//int c = getchar();
 
 		int *item = static_vector__get_item(obj,i);
 
 		if(item) {
-			printf("%2d:%10d (%x)\n", i, *item, (unsigned int) item); fflush(stdout);
-			printf("*item=(%d), comparison_buf[%d]=%d\n", *item, i, comparison_buf[i]);
+			debugfpln(LVL_DEBUG, "%2d:%10d (%x)", i, *item, (unsigned int) item); fflush(stdout);
+			debugfpln(LVL_DEBUG, "*item=(%d), comparison_buf[%d]=%d", *item, i, comparison_buf[i]);
 
 			if(*item != comparison_buf[i]) {
-				printf("mismatch, %d!=%d\n", *item, comparison_buf[i]);
+				debugfpln(LVL_DEBUG, "mismatch, %d!=%d", *item, comparison_buf[i]);
 				return 1;
 			}
 
