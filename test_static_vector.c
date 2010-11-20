@@ -27,6 +27,11 @@
 #include "test_static_vector.h"
 #include "static_vector.h"
 
+#include "debug_levels.h"
+#define DBG_LVL LVL_FLOOD
+//#define DBG_LVL LVL_DEBUG
+#include "debug.h"
+
 typedef struct _test_struct {
 	int i;
 	char c;
@@ -63,8 +68,7 @@ void test_struct_print(byte after, test_struct* s)
 
 int test_static_vector_with_struct(size_t guess_buf_size)
 {
-	//debugfpln(LVL_FLOOD, "<test_static_vector_with_struct>");
-	printf("<test_static_vector_with_struct>\n");
+	debugfpln(LVL_FLOOD, "<test_static_vector_with_struct>");
 
 	size_t buf_size = static_vector__get_exact_fit_for_a_buf_size(guess_buf_size, sizeof(test_struct));
 
@@ -105,11 +109,29 @@ int test_static_vector_with_struct(size_t guess_buf_size)
 
 	}
 
-
-	printf("</test_static_vector_with_struct>\n");
-	//debugfpln(LVL_FLOOD, "</test_static_vector_with_struct>");
+	debugfpln(LVL_FLOOD, "</test_static_vector_with_struct>");
 
 	return 1;
+}
+
+int test_static_vector_for_size_calcs(int amt_items)
+{
+	debugfpln(LVL_DEBUG, "<test_static_vector_for_size_calcs>");
+
+	precondition ((amt_items>0), "amt_items=%d can't be negative", amt_items);
+
+	unsigned int buf_size = static_vector__get_exact_fit_for_n_items(amt_items, sizeof(test_struct));
+	byte buf[buf_size];
+	void *vector = static_vector__init(&buf, sizeof(buf), sizeof(test_struct));
+
+	printf("amt_items=%d, buf_size=%d, vector max size=%d\n",
+		amt_items, buf_size, static_vector__get_max_size(vector)
+	);
+
+	postcondition ((amt_items==static_vector__get_max_size(vector)), 
+		"Size problem, amt_items=%d != vector max size=%d" ,amt_items, static_vector__get_max_size(vector));
+
+	debugfpln(LVL_DEBUG, "</test_static_vector_for_size_calcs>");
 }
 
 int test_static_vector_with_int(size_t buf_size)
@@ -177,6 +199,7 @@ int main()
 	test_static_vector_with_struct(100);
 	test_static_vector_with_struct(1024);
 	test_static_vector_with_int(100);
+	test_static_vector_for_size_calcs(123);
 
 	return 0;
 }

@@ -93,7 +93,7 @@ static void _debugf(int options, int level, const char* file, int line, const ch
 		fprintf(stream, "%s", COLOUR_GREEN); 
 	}
 
-	if(options!=OPTS_PLAIN) {
+	if(!(options & OPTS_PLAIN)) {
 		fprintf(stream, " [ (%5u) ] { %s:%4d } [ %s ] (errno=`%s') : ", getpid(), file, line, function, strerror(errno));
 	}
 
@@ -102,7 +102,7 @@ static void _debugf(int options, int level, const char* file, int line, const ch
 	vfprintf(stream, format, ap);
 	va_end(ap);
 
-	if(options|OPTS_LINEFEED) {
+	if(options & OPTS_LINEFEED) {
 		fprintf(stream, "\n");
 	}
 
@@ -149,12 +149,24 @@ static void _debugf(int options, int level, const char* file, int line, const ch
 
 /**
  *
- * assertf will cause the termination of the program, if the condition is false.
+ * precondition, postcondition and invariant will cause the termination of the program, if the condition is false.
  * 
- * @warning You should call this macro like this: assertf((condition), ...); to make sure your condition gets evaluated correctly.
+ * @warning You should call this macro like this: precondition((condition), ...); to make sure your condition gets evaluated correctly.
  *
  */
-#define assertf(condition, format, args...) \
+#define precondition(condition, format, args...) \
+	if((!condition)) {\
+		_debugf(OPTS_NONE, LVL_ASSERT, __FILE__, __LINE__, __FUNCTION__, format, ## args); \
+		exit(-1);\
+	}
+
+#define postcondition(condition, format, args...) \
+	if((!condition)) {\
+		_debugf(OPTS_NONE, LVL_ASSERT, __FILE__, __LINE__, __FUNCTION__, format, ## args); \
+		exit(-1);\
+	}
+
+#define invariant(condition, format, args...) \
 	if((!condition)) {\
 		_debugf(OPTS_NONE, LVL_ASSERT, __FILE__, __LINE__, __FUNCTION__, format, ## args); \
 		exit(-1);\
