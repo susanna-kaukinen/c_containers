@@ -40,10 +40,10 @@ $(TEST_EXECUTABLE): $(TESTS_OBJS) $(LIB)
 ###########################################
 #
 
-run_tests: tests
+run_tests: clean tests
 	./tests
 
-valgrind_run_tests: tests
+valgrind_run_tests: clean tests
 	valgrind ./tests
 
 r: run_tests
@@ -67,5 +67,5 @@ clean:
 	\rm -f $(LIB)
 	\rm -f $(TEST_EXECUTABLE)
 
-release_clean:
-	\rm *.o *~ .sw?
+release_clean: clean
+	\rm -f *~ .sw?

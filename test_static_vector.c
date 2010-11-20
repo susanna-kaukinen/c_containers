@@ -121,30 +121,44 @@ int test_static_vector_with_int(size_t buf_size)
 	int items_free=0;
 	
 	int i,j;
-	int comparison_buf[10];
+	int comparison_buf[buf_size];
 	for(i=0,j=0;; i++,j=i*10) {
 
-		if(items_free<0) {
-			break;
-		}
+		printf("items_free=%d, ", items_free);
+		printf("i=%d\n", i); fflush(stdout); 
+
+		//int c = getchar();
+
 
 		comparison_buf[i] = j;
+		printf("comparison_buf[%d] = %d\n", i, j);
 
 		items_free = static_vector__add_item(obj, &j);
+
+		if(items_free<=0) {
+			printf("loop break, i=%d\n", i);
+			break;
+		}
 
 		if(i==0) {
 			printf("Vector can hold %d items\n", static_vector__get_max_size(obj));
 		}
 
+
 	}
 
 	for(i=0;;i++) {
+		printf("i=%d\n", i); fflush(stdout); 
+		//int c = getchar();
+
 		int *item = static_vector__get_item(obj,i);
+
 		if(item) {
-			printf("%2d:%10d (%x)\n", i, *item, (unsigned int) item);
+			printf("%2d:%10d (%x)\n", i, *item, (unsigned int) item); fflush(stdout);
+			printf("*item=(%d), comparison_buf[%d]=%d\n", *item, i, comparison_buf[i]);
 
 			if(*item != comparison_buf[i]) {
-				printf("ERROR\n");
+				printf("mismatch, %d!=%d\n", *item, comparison_buf[i]);
 				return 1;
 			}
 
@@ -162,7 +176,7 @@ int main()
 {
 	test_static_vector_with_struct(100);
 	test_static_vector_with_struct(1024);
-	//test_static_vector_with_int(100);
+	test_static_vector_with_int(100);
 
 	return 0;
 }

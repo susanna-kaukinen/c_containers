@@ -173,7 +173,7 @@ static_vector__add_item     (mutable static_vector_memblock* memblock_start_addr
 
 
 	if(svm_head__is_get_allowed(h)) {
-		debugfln(LVL_ERROR, "Cannot insert, you have used insert.");
+		debugfln(LVL_ERROR, "Cannot add, you have used insert or the container is full.");
 		return 0;
 	}
 
@@ -221,11 +221,6 @@ static_vector__get_item     (const   static_vector_memblock* memblock_start_addr
 
 	size_t       chunk_size  = svm_head__get_chunk_size  (h);
 	unsigned int amt_chunks  = svm_head__get_amt_chunks  (h);
-
-	if(!svm_head__is_set_allowed(h)) {
-		debugfln(LVL_ERROR, "Cannot get, something went wrong w/add.");
-		return 0;
-	}
 
 	void *from = ((void*) (memblock_start_addr->data)) + (chunk_size * index);
 
