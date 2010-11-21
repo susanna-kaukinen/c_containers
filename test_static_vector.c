@@ -193,13 +193,24 @@ int test_static_vector_with_int(size_t buf_size)
 	return 0;
 }
 
+int test_static_vector_copy()
+{
+	debugfpln(LVL_DEBUG, "<test_static_vector_copy>");
+	// @TODO
+	debugfln(LVL_PANIC, "@TODO");
+
+	debugfpln(LVL_DEBUG, "</test_static_vector_copy>");
+
+}
+
 
 int main()
 {
+	// @TODO check return values
 	test_static_vector_with_struct(100);
 	test_static_vector_with_struct(1024);
 	test_static_vector_with_int(100);
 	test_static_vector_for_size_calcs(123);
-
+	test_static_vector_copy();
 	return 0;
 }

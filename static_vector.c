@@ -131,7 +131,7 @@ static_vector__init (mutable void *raw_memblock, size_t memblock_size, size_t it
 		svm,
 		svm->header,
 		svm->data,
-		svn_head__get_size(head),
+		svm_head__get_size(head),
 		svm_head__get_chunk_size(head),
 		svm_head__get_amt_chunks(head),
 		svm_head__get_chunks_free(head)
@@ -144,6 +144,40 @@ static_vector__init (mutable void *raw_memblock, size_t memblock_size, size_t it
 	return svm;
 }
 
+static_vector_memblock* 
+static_vector__copy(mutable void *new_raw_memblock, const void* old_raw_memblock, size_t new_memblock_size, size_t new_item_size)
+{
+	debugfpln(LVL_DEBUG, "<static_vector__resize>");
+
+	mutable static_vector_memblock*        new_svm  = new_raw_memblock;
+	mutable static_vector_memblock_header* new_head = &new_svm->header;
+	const   static_vector_memblock*        old_svm  = old_raw_memblock;
+	const   static_vector_memblock_header* old_head = &old_svm->header;
+	
+
+	precondition((new_memblock_size>=svm_head__get_chunk_size(old_head)), "New memblock_size=(%d) must be at least the same size as the old memblock_size=(%d)",
+		new_memblock_size, svm_head__get_chunk_size(old_head));
+
+	memset(new_raw_memblock, 0, new_memblock_size);
+
+	svm_head__clone(new_raw_memblock, old_raw_memblock);
+
+	unsigned int amt_items = svm_head__get_amt_chunks(old_head);
+	if(svm_head__get_amt_chunks(new_head) < amt_items) {
+		amt_items = svm_head__get_amt_chunks(new_head);
+	}
+
+	unsigned int i=0;
+	for(;i<amt_items;i++) {
+
+		static_vector__set_item(new_raw_memblock, static_vector__get_item(old_raw_memblock, i), i);
+
+	}
+	
+	debugfpln(LVL_DEBUG, "</static_vector__resize>");
+
+	return new_svm;
+}
 
 /**
  *

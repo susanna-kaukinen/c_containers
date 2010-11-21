@@ -34,6 +34,8 @@
 #include "static_vector_memblock.h"
 
 // @TODO consider naming, needed methods, consistency of interface
+// @TODO allow set after add. Add could always just add to the end of the container
+//
 //
 // perhaps interesting methods.
 //
@@ -89,6 +91,8 @@ void*        static_vector__get_item                (const   static_vector_membl
  */
 unsigned int static_vector__get_max_size            (const   static_vector_memblock* memblock_start_addr);
 
+
+static_vector_memblock* static_vector__copy(mutable void *new_raw_memblock, const void* old_raw_memblock, size_t new_memblock_size, size_t new_item_size);
 
 
 #endif // __STATIC_LIST_H__

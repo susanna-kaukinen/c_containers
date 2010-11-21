@@ -32,6 +32,14 @@
 #include "debug.h"
 // <setters>
 
+static_vector_memblock_header*
+svm_head__clone(mutable static_vector_memblock_header* new_header, const static_vector_memblock_header* old_header)
+{
+	memmove(new_header, old_header, sizeof(svm_head__get_size(old_header)));
+	return new_header;
+}
+
+
 size_t svm_head__set_size(mutable static_vector_memblock_header* obj, size_t size)
 {
 	obj->size = size;
@@ -113,7 +121,7 @@ uint8_t svm_head__allow_get(mutable static_vector_memblock_header* obj)
 }
 
 		
-size_t svn_head__get_size(const static_vector_memblock_header* obj)
+size_t svm_head__get_size(const static_vector_memblock_header* obj)
 {
 	return obj->size;
 }
@@ -129,6 +137,10 @@ size_t svm_head__get_chunks_free(const static_vector_memblock_header* obj)
 	return obj->chunks_free;
 }
 
+size_t svm_head__get_header_size (const static_vector_memblock_header* obj)
+{
+	return sizeof(static_vector_memblock_header);
+}
 // </getters>
 
 uint8_t svm_head__is_get_allowed(const static_vector_memblock_header* obj) { return obj->forbid_get; }
