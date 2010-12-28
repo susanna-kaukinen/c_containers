@@ -1,3 +1,6 @@
 a.out
 *.swp
 c_containers.tgz
+*.o
+*.a
+tests
