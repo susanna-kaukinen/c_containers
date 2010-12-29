@@ -1,0 +1,4 @@
+
+env = Environment(CPPPATH='src:include:../include:../debug/include')
+env.Library('../libs/vector.a', Glob('src/*.c'))
+env.Library('../libs/test_vector.a', Glob('tests/*.c'))

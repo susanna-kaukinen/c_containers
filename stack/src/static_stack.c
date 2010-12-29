@@ -24,19 +24,10 @@
  *
  */
 
+
 #include "static_stack.h"
-#include "test_static_stack.h"
 
-#include "debug_levels.h"
-#define DBG_LVL LVL_FLOOD
+//#include "debug_levels.h"
+//#define DBG_LVL LVL_FLOOD
 //#define DBG_LVL LVL_DEBUG
-#include "debug.h"
-
-int test_static_stack_main (int argc, char** argv)
-{
-	int rv = 0;
-
-	debugfln(LVL_WARNING, "test_static_vector_main --- NO TESTS");
-	
-	return rv;
-}
+//#include "debug.h"

@@ -46,7 +46,7 @@
 #include <unistd.h>
 
 #ifndef __GNUC__
-#error "Debug.h is GNUC only."
+#error "Debug.h is GNUC only, for now."
 #endif
 
 #ifndef DBG_LVL
