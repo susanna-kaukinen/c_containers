@@ -2,11 +2,19 @@
 
 TODO
 
+- add iterators, maybe just methods begin(obj), end(obj), next(obj), current(obj)
+- figure out if some of the methods can be re-used somehow, shard amongst the containers, even if this is C
+- overall figure out a good interface for the containers
+- write a simple stack
+- make the vector an actual vector, clean up the stupid checks for whether set/add is allowed
+- figure out how to intelligently use sort and perhaps some other basic algorithms with the containers
+- consider, if it would make sense to interface this to some kind of a mem pool
 - figure out where can I find an AIX box for porting this to AIX, too
 - consider using packed or non packed control structs
 - recall to put header guard everywhere
 - put "object" pointer to first param in methods
-- build struct, or so, w/ header + data, where ctrl info in header
 
 DONE
 
+- use subdirs, at least one for src/ include/ tests/ ,or perhaps stack/{src,include/tests}, or so. Figure it out.
+- build struct, or so, w/ header + data, where ctrl info in header

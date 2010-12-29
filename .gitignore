@@ -3,4 +3,4 @@ a.out
 c_containers.tgz
 *.o
 *.a
-tests
+.sconsign.dblite
