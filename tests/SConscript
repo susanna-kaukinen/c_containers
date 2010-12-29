@@ -1,0 +1,3 @@
+
+env = Environment(CPPPATH='../include:../debug/include:../vector/include:../vector/tests:../stack/tests')
+env.Program('tests', ['src/test_main.c', Glob('../libs/*.a')])
