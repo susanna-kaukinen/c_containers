@@ -1,72 +1,104 @@
+/**
+ *
+ * Usage: 
+   gcc -Wall -std=c99 -gstabs+ func_ptr_sample.c && valgrind --leak-check=full ./a.out
+ *
+ * Sample of how to build something object oriented w/C. Sampled are initialising
+ * objects in accordance w/their type using function pointer to achieve this. Just
+ * for fun, I also added a parent class to the mix.
+ *
+ * @author Susanna Kaukinen (Susanna)
+ *
+ * @version 1.0-1 2011-05-16 (Susanna) o Initial sample. Por que no. :-)
+ *
+ */
+
+
 
 #include <stdio.h>
+#include <string.h>
 
 typedef struct
 {
 	int type;
-	char* ptr;
-} s0;
+	const char* ptr; // common
+} parent_class;
 
 typedef struct
 {
-	int type;
-	char* ptr;
-	int i;
-	char c;
+	parent_class* parent;
+	int type; // type to determine object type
+	int i;    // obj data
+	char c;   // obj data
 
-} s1;
+} class_type_1;
 
 typedef struct
 {
+	parent_class* parent;
 	int type;
-	char* ptr;
 	long l;
 	float f;
-} s2;
+} class_type_2;
 
-void* s1_init(void* o, void* buf)
+void parent_initialiser(parent_class* parent)
 {
-	s1* x = (s1*) o;
-
-	x->type = 1;
-	x->i = 3;
-	x->c = 'Z';
-	x->ptr = buf;
-	
-
-	return o;
+	memset(parent, 0, sizeof(parent));
 }
 
-void* s2_init(void* o, void* buf)
+void* class_1_initialiser(void* parent, void* object, const char* buf)
 {
-	s2* x = (s2*) o;
+	class_type_1* o1 = (class_type_1*) object;
 
-	x->type = 2;
-	x->l = 4;
-	x->f = 5.3;
-	x->ptr = buf;
+	o1->parent = parent;   // grab parent
+	o1->parent->type = 0;  // init parent (super) as well
+	o1->parent->ptr = buf; // -""-
 
-	return o;
+	o1->type = 1;          // set my type!
+	o1->i = 3;             // init my data
+	o1->c = 'Z';           // -""-
+
+	return o1;
+}
+
+void* class_2_initialiser(void* parent, void* object, const char* buf)
+{
+	class_type_2* o2 = (class_type_2*) object;
+
+	o2->parent = parent;
+	o2->parent->type = 0;
+	o2->parent->ptr = buf;
+
+	o2->type = 2;
+	o2->l = 4;
+	o2->f = 5.3;
+
+	return o2;
 }
 
 const char* buf = "koira on punainen";
 
-void* (*initialiser)(void*,void*) = NULL;
+// class_object-type agnostic class initialiser 
+void* (*class_initialiser_func)(void* parent_object, void* class_object, const char* sample_string) = NULL;
 
-
-void run_inits(void* (*initialiser)(void*,void*), const char* buf, void* object)
+/**
+ *
+ * Initialises object according to their type. 
+ *
+ */
+void run_inits(parent_class* parent, void* object, void* (*class_initialiser_func)(void*,void*,const char*), const char* buf)
 {
-	s0* v = (s0*) (*initialiser)(object, (void*) buf);
+	(*class_initialiser_func)(parent, object, (void*) buf);
 
-	printf("v0: %s\n", v->ptr);
+	printf("parent: %s\n", parent->ptr);
 
-	if(v->type==1) {
-		s1* v1 = (s1*) v;
-		printf("v1: %d %c %s\n", v1->i, v1->c, v1->ptr);
+	if(parent->type==1) {
+		class_type_1* obj1 = (class_type_1*) parent;
+		printf("obj1: %d %c %s\n", obj1->i, obj1->c, obj1->parent->ptr);
 		
-	} else if (v->type==2) {
-		s2* v2 = (s2*) v;
-		printf("v2: %ld %f %s\n", v2->l, v2->f, v2->ptr);
+	} else if (parent->type==2) {
+		class_type_2* obj2 = (class_type_2*) parent;
+		printf("obj2: %ld %f %s\n", obj2->l, obj2->f, obj2->parent->ptr);
 	}
 
 }
@@ -75,15 +107,18 @@ void run_inits(void* (*initialiser)(void*,void*), const char* buf, void* object)
 int main()
 {
 
-	s1 _s1;
-	s2 _s2;
+	parent_class parent;
+	class_type_1 object_type_1;
+	run_inits(&parent, &object_type_1, &class_1_initialiser, buf);
 
-	run_inits(&s1_init, buf, &_s1);
-	run_inits(&s2_init, buf, &_s2);
+	printf("class_type_1: %d %c %s\n",  object_type_1.i, object_type_1.c, object_type_1.parent->ptr);
 
-	printf("s1: %d %c %s\n", _s1.i, _s1.c, _s1.ptr);
-	printf("s2: %ld %f %s\n", _s2.l, _s2.f, _s2.ptr);
+	parent_initialiser(&parent); // zero parent for the clarity of the exanple, but no real reason for this.
 
+	class_type_2 object_type_2;
+	run_inits(&parent, &object_type_2, &class_2_initialiser, buf);
+
+	printf("class_type_2: %ld %f %s\n", object_type_2.l, object_type_2.f, object_type_2.parent->ptr);
 
 	return 0;
 }
