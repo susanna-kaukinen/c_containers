@@ -46,14 +46,14 @@
 
 typedef struct
 {
-	int type;
+	int type; // @warning: this is a bit of a hack, all struct _must_ start w/this field or this will not work.
 	const char* ptr; // common
 } parent_class;
 
 typedef struct
 {
-	parent_class* parent;
 	int type; // type to determine object type
+	parent_class* parent;
 	int i;    // obj data
 	char c;   // obj data
 
@@ -61,8 +61,8 @@ typedef struct
 
 typedef struct
 {
-	parent_class* parent;
 	int type;
+	parent_class* parent;
 	long l;
 	float f;
 } class_type_2;
@@ -80,7 +80,7 @@ void* class_1_initialiser(void* parent, void* object, const char* buf)
 	o1->parent = parent;             // grab parent
 	parent_initialiser(o1->parent,buf);  // init parent (super) as well
 
-	o1->type = 1;          // set my type!
+	o1->type = 1;          // set my type
 	o1->i = 3;             // init my data
 	o1->c = 'Z';           // -""-
 
@@ -115,15 +115,20 @@ void run_inits(parent_class* parent, void* object, void* (*class_initialiser_fun
 {
 	(*class_initialiser_func)(parent, object, (void*) buf);
 
-	printf("parent: %s\n", parent->ptr);
+	printf("parent: %s\n", parent->ptr); // ok, we can access parent
 
-	if(parent->type==1) {
-		class_type_1* obj1 = (class_type_1*) parent;
+	// figure out what type our child is:
+	parent_class* obj = (parent_class*) object; 
+
+	if(obj->type==1) {
+		class_type_1* obj1 = (class_type_1*) object;
 		printf("obj1: %d %c %s\n", obj1->i, obj1->c, obj1->parent->ptr);
 		
-	} else if (parent->type==2) {
-		class_type_2* obj2 = (class_type_2*) parent;
+	} else if (obj->type==2) {
+		class_type_2* obj2 = (class_type_2*) object;
 		printf("obj2: %ld %f %s\n", obj2->l, obj2->f, obj2->parent->ptr);
+	} else {
+		printf("Unknown obj type=(%d)\n", obj->type);
 	}
 
 }
