@@ -67,18 +67,18 @@ typedef struct
 	float f;
 } class_type_2;
 
-void parent_initialiser(parent_class* parent)
+void parent_initialiser(parent_class* parent, const char* buf)
 {
-	memset(parent, 0, sizeof(parent));
+	parent->type = 0;
+	parent->ptr = buf;	
 }
 
 void* class_1_initialiser(void* parent, void* object, const char* buf)
 {
 	class_type_1* o1 = (class_type_1*) object;
 
-	o1->parent = parent;   // grab parent
-	o1->parent->type = 0;  // init parent (super) as well
-	o1->parent->ptr = buf; // -""-
+	o1->parent = parent;             // grab parent
+	parent_initialiser(o1->parent,buf);  // init parent (super) as well
 
 	o1->type = 1;          // set my type!
 	o1->i = 3;             // init my data
@@ -92,8 +92,7 @@ void* class_2_initialiser(void* parent, void* object, const char* buf)
 	class_type_2* o2 = (class_type_2*) object;
 
 	o2->parent = parent;
-	o2->parent->type = 0;
-	o2->parent->ptr = buf;
+	parent_initialiser(o2->parent,buf);
 
 	o2->type = 2;
 	o2->l = 4;
@@ -139,7 +138,7 @@ int main()
 
 	printf("class_type_1: %d %c %s\n",  object_type_1.i, object_type_1.c, object_type_1.parent->ptr);
 
-	parent_initialiser(&parent); // zero parent for the clarity of the exanple, but no real reason for this.
+	parent_initialiser(&parent,""); // zero parent for the clarity of the exanple, but no real reason for this.
 
 	class_type_2 object_type_2;
 	run_inits(&parent, &object_type_2, &class_2_initialiser, buf);
