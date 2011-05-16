@@ -46,7 +46,8 @@
 
 typedef struct
 {
-	int type; // @warning: this is a bit of a hack, all struct _must_ start w/this field or this will not work.
+	int type; // @warning: This is a bit of a hack, this struct and all child structs _must_ start w/this field or this will not work.
+                  //           The other option is to have a type-field only in the parent and set that from the init funcs of the children. 
 	const char* ptr; // common
 } parent_class;
 
