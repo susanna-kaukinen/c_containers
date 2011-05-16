@@ -74,7 +74,7 @@ void parent_initialiser(parent_class* parent, const char* buf)
 	parent->ptr = buf;	
 }
 
-void* class_1_initialiser(void* parent, void* object, const char* buf)
+void* class_1_initialiser(parent_class* parent, void* object, const char* buf)
 {
 	class_type_1* o1 = (class_type_1*) object;
 
@@ -88,7 +88,7 @@ void* class_1_initialiser(void* parent, void* object, const char* buf)
 	return o1;
 }
 
-void* class_2_initialiser(void* parent, void* object, const char* buf)
+void* class_2_initialiser(parent_class* parent, void* object, const char* buf)
 {
 	class_type_2* o2 = (class_type_2*) object;
 
@@ -105,16 +105,16 @@ void* class_2_initialiser(void* parent, void* object, const char* buf)
 const char* buf = "koira on punainen";
 
 // class_object-type agnostic class initialiser 
-void* (*class_initialiser_func)(void* parent_object, void* class_object, const char* sample_string) = NULL;
+void* (*class_initialiser_func)(parent_class* parent_object, void* class_object, const char* sample_string) = NULL;
 
 /**
  *
  * Initialises object according to their type. 
  *
  */
-void run_inits(parent_class* parent, void* object, void* (*class_initialiser_func)(void*,void*,const char*), const char* buf)
+void run_inits(parent_class* parent, void* object, void* (*class_initialiser_func)(parent_class*,void*,const char*), const char* buf)
 {
-	(*class_initialiser_func)(parent, object, (void*) buf);
+	(*class_initialiser_func)(parent, object, buf);
 
 	printf("parent: %s\n", parent->ptr); // ok, we can access parent
 
