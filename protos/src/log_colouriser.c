@@ -8,10 +8,15 @@
 
 // http://www.gnu.org/s/hello/manual/libc/Creating-a-Pipe.html
 
-static const char* COLOUR_RED        = "\033[22;31m";
-static const char* COLOUR_GREEN      = "\033[22;32m";
-static const char* COLOUR_YELLOW     = "\033[01;33m";
-static const char* COLOUR_RESET      = "\033[0m";
+#define COLOUR_RED    "\033[22;31m"
+#define COLOUR_GREEN  "\033[22;32m"
+#define COLOUR_YELLOW "\033[01;33m"
+#define COLOUR_RESET  "\033[0m"
+
+const char* needle1        = "demeter";
+const char* needle1_colour = COLOUR_RED;
+const char* needle2        = "kernel";
+const char* needle2_colour = COLOUR_YELLOW;
 
 const int limit = 1024*1024;
 
@@ -57,19 +62,13 @@ void write_to_pipe (int file)
 		}
 		n_read += sz;
 
-		char* needle;
-		const char* needle1  = "demeter";
-		const char* needle2 = "kernel";
-
-		char* needle_colour;
-		const char* needle1_colour = COLOUR_RED;
-		const char* needle2_colour = COLOUR_YELLOW;
-
-
 		size_t offset = 0;
 		char* at = (char*) (NULL + 1);
 
 		while(at!=NULL) {
+
+			char* needle;
+			char* needle_colour;
 
 			at = strstr(&buf[offset], needle1);
 			char* at2 = strstr(&buf[offset], needle2);
