@@ -1,6 +1,7 @@
-env = Environment(CPPPATH='src:include')
-env.Append(CCFLAGS='-Wall -std=c99 -gstabs+')
+env = Environment(CPPPATH='src:include:../debug/include')
+env.Append(CCFLAGS='-Wall -std=c99 -gstabs+ -U__STRICT_ANSI__')
 env.Program('proto_safe_str', ['src/safe_str.c'])
 env.Program('proto_gcc_var_len_arrays', ['src/gcc_var_len_arrays.c'])
 env.Program('proto_func_ptr_sample', ['src/func_ptr_sample.c'])
+env.Program('proto_log_colouriser', ['src/log_colouriser.c'])
 

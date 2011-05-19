@@ -119,17 +119,17 @@ void run_inits(parent_class* parent, void* object, void* (*class_initialiser_fun
 	printf("parent: %s\n", parent->ptr); // ok, we can access parent
 
 	// figure out what type our child is:
-	parent_class* obj = (parent_class*) object; 
+	int type = ((parent_class*) object)->type; 
 
-	if(obj->type==1) {
+	if(type==1) {
 		class_type_1* obj1 = (class_type_1*) object;
 		printf("obj1: %d %c %s\n", obj1->i, obj1->c, obj1->parent->ptr);
 		
-	} else if (obj->type==2) {
+	} else if (type==2) {
 		class_type_2* obj2 = (class_type_2*) object;
 		printf("obj2: %ld %f %s\n", obj2->l, obj2->f, obj2->parent->ptr);
 	} else {
-		printf("Unknown obj type=(%d)\n", obj->type);
+		printf("Unknown obj type=(%d)\n", type);
 	}
 
 }
