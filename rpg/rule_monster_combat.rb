@@ -456,6 +456,25 @@ def print_combatants(combatants)
 	}
 end
 
+def check_dead_and_unco(pcs, npcs)
+
+	pcs.each { | index, character |
+		if(character !=nil) 
+			if(character.unconscious or character.dead)
+				pcs.delete(index)
+			end
+		end
+	}
+
+	npcs.each { | index, character |
+		if(character !=nil) 
+			if(character.unconscious or character.dead)
+				npcs.delete(index)
+			end
+		end
+	}
+end
+
 def main()
 
 	print "version:\n"
@@ -497,26 +516,16 @@ def main()
 		i=i+1
 		print "======================= Round: #" + i.to_s() + "============================\n\n"
 
-		pcs.each  { | name, character | actions(character, npcs)  }
-		npcs.each { | name, character | actions(character, pcs) }
+		pcs.each  { | name, character | 
+			actions(character, npcs)
+			check_dead_and_unco(pcs, npcs)
+		}
+		npcs.each { | name, character | 
+			actions(character, pcs)
+			check_dead_and_unco(pcs, npcs)
+		}
 
 		gets
-
-		pcs.each { | index, character |
-			if(character !=nil) 
-				if(character.unconscious or character.dead)
-					pcs.delete(index)
-				end
-			end
-		}
-
-		npcs.each { | index, character |
-			if(character !=nil) 
-				if(character.unconscious or character.dead)
-					npcs.delete(index)
-				end
-			end
-		}
 
 		players_left = pcs.length()
 		enemies_left = npcs.length()
