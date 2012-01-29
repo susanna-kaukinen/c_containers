@@ -354,6 +354,11 @@ end
 
 def attack(attacker, defender)
 
+	if(defender==nil)
+		print "No-one to attack!"
+		return
+	end
+
 	print attacker.name + " ATTACKS " + defender.name + " with " + attacker.active_weapon.name + "\n"
 
 	__roll  = roll(attacker.active_weapon, attacker)
