@@ -194,39 +194,44 @@ class Weapon
 				target_bonus = 60
 		end
 
+		wound.target = '<<<none>>>'
 		target_result = 1 + rand(100) + target_bonus
 		case target_result
 			when -9999 ... 7
-				target = 'secondary arm'
-			when 8 ... 14
-				target = 'weapon arm'
-			when 15 ... 21
-				target = 'left leg'
-			when 22 ... 28
-				target = 'right leg'
-			when 29 ... 35 
-				target = 'stomach'
-			when 36 ... 42
-				target = 'side'
-			when 43 ... 48
-				target = 'back'
-			when 49 ... 55
-				target = 'neck'
-			when 56  ... 62
-				target = 'shoulder'
-			when 63 ... 70
-				target = 'elbow'
-			when 71 ... 77
-				target = 'knee'	
-			when 78 ... 84
-				target = 'throat'
-			when 85 ... 91
-				target = 'skull'
-			when 92 ... 9999
-				target = 'groin'
+				wound.target = 'secondary arm'
+			when 7 ... 14
+				wound.target = 'weapon arm'
+			when 14 ... 21
+				wound.target = 'left leg'
+			when 21 ... 28
+				wound.target = 'right leg'
+			when 28 ... 35 
+				wound.target = 'stomach'
+			when 35 ... 42
+				wound.target = 'side'
+			when 42 ... 48
+				wound.target = 'back'
+			when 48 ... 55
+				wound.target = 'neck'
+			when 55 ... 62
+				wound.target = 'shoulder'
+			when 62 ... 70
+				wound.target = 'elbow'
+			when 70 ... 77
+				wound.target = 'knee'	
+			when 77 ... 84
+				wound.target = 'throat'
+			when 84 ... 91
+				wound.target = 'skull'
+			when 91 ... 9999
+				wound.target = 'groin'
 		end
 
-		wound.apply(defender, target)
+		if(wound.target=='<<<none>>>')
+			print "target_result=" + target_result.to_s() + "\n"
+		end
+
+		wound.apply(defender, wound.target)
 	end
 
 	def deal_damage(result, defender)
@@ -400,7 +405,7 @@ def consider_wounds(character)
 		character.current_db -= 20
 		reason     = "stunned"
 		
-		if(character.uparry)
+		if(character.uparry > 0)
 			character.uparry -= 1
 			reason += " and unable to parry"
 		end
