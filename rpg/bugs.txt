@@ -1,0 +1,24 @@
+======================= Round: #40============================
+
+Hargor ATTACKS orc1 with sword
+Roll:95 => result:99
+        sword deals 9 hit points of damage.
+orc1 has 3 hit points left
+
+orc1 ATTACKS Hargor with sword
+OPEN-ENDED: 98
+Roll:120 => result:93
+        sword deals 6 hit points of damage.
+Hargor has -1 hit points left
+Hargor falls unconscious.
+
+./rule_monster_combat.rb:357:in `attack': undefined method `name' for nil:NilClass (NoMethodError)
+        from ./rule_monster_combat.rb:440:in `actions'
+        from ./rule_monster_combat.rb:524:in `main'
+        from ./rule_monster_combat.rb:523:in `each'
+        from ./rule_monster_combat.rb:523:in `main'
+        from ./rule_monster_combat.rb:551
+
+---
+
+
