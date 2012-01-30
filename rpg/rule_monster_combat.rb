@@ -1,5 +1,9 @@
 #!/usr/bin/ruby
 
+#
+# TODO: severed, crushed, bruised, miinukset: e.g. char at -10%, blind toteuttamatta (-100)
+#
+
 
 # ==<COLOURS>===
 
@@ -107,10 +111,12 @@ class Wound
 			throw :no_character
 		end
 
+		@text = character.name + " was hit in the " + target
+
 		if(@damage)
 			character.current_hp -= @damage
 	
-			@text += character.name + " was hit in the " + target + " and was dealt " + @damage.to_s() + " extra damage"
+			@text += " and was dealt " + @damage.to_s() + " extra damage"
 		end
 
 		if(@stun > 0)
@@ -209,23 +215,16 @@ class Weapon
 
 	def resolve_critical(critical, defender)
 
-		print '*** CRITICAL *** ' + "\n"
-		print '*** CRITICAL *** ' + "\n"
-		print '*** CRITICAL *** ' + "\n"
+		#print '*** CRITICAL *** ' + "\n"
+		#print '*** CRITICAL *** ' + "\n"
+		#print '*** CRITICAL *** ' + "\n"
 
 	
-		colour = ''	
 		_roll = roll(nil, nil)[1] 
+
 
 		crit_bonus = 0
 		case critical.level
-			when "A"
-				case _roll
-					when 80 ... 90
-						colour = COLOUR_YELLOW
-					when 90 ... 100
-						colour = COLOUR_RED
-				end
 			when "B"
 				crit_bonus += 5
 			when "C"
@@ -235,29 +234,26 @@ class Weapon
 			when "E"
 				crit_bonus += 20
 		end
-
 	
-		print colour + "Crit roll=" + _roll.to_s() + COLOUR_RESET + "\n"
 		result = _roll + crit_bonus
 
 		wound = Wound.new()
 
-
 		target_bonus = 0
 		case result
 			when 0 ... 10
-				print 'Zip!'
-			when 11 ... 20
+				print 'Zip!' + "\n"
+			when 10 ... 20
 				wound.damage = 1 + rand(10)	
-			when 21 ... 40
+			when 20 ... 40
 				wound.damage = 1 + rand(10)	
 				wound.stun   = 1
-			when 41 ... 60
+			when 40 ... 60
 				wound.damage = 1 + rand(10) + 10
 				wound.stun   = 2
 				wound.uparry = 1
 				target_bonus = 5
-			when 61 ... 80
+			when 60 ... 80
 				wound.damage = 1 + rand(15) + 10
 				wound.stun   = 3
 				wound.uparry = 2
@@ -265,11 +261,11 @@ class Weapon
 			when 80 ... 90
 				wound.damage = 1 + rand(15) + 15	
 				target_bonus = 25
-			when 91 ... 95
+			when 90 ... 95
 				wound.damage = 1 + 30
 				wound.prone = 3
 				target_bonus = 35
-			when 96 ... 99
+			when 95 ... 100
 				wound.damage = 1 + rand(30) + 30
 				wound.unconscious = true
 				target_bonus = 40
@@ -286,7 +282,6 @@ class Weapon
 		end
 		
 
-		wound.target = '<<<none>>>'
 		target_result = 1 + rand(100) + target_bonus
 		case target_result
 			when -9999 ... 7
@@ -317,10 +312,6 @@ class Weapon
 				wound.target = 'skull'
 			when 91 ... 9999
 				wound.target = 'groin'
-		end
-
-		if(wound.target=='<<<none>>>')
-			print "target_result=" + target_result.to_s() + "\n"
 		end
 
 		wound.apply(defender, wound.target)
@@ -356,12 +347,12 @@ class Weapon
 
 		if(defender.current_hp<0 and defender.dead == false)
 			defender.unconscious = true
-			print defender.name + " falls unconscious.\n"
+			cprint COLOUR_YELLOW_BLINK + defender.name + " falls unconscious.\n"
 		end
 
 		if(defender.current_hp < -defender.hp or defender.dead == true)
-			print defender.name + " is DEAD!\n"
 			defender.dead = true
+			cprint COLOUR_RED_BLINK + defender.name + " is DEAD!\n"
 		end
 
 	end
@@ -446,13 +437,36 @@ def roll(weapon, attacker)
 
 		result += roll
 
+		if(critical_roll)
+
+			colour = ''	
+			case roll
+				when 80 ... 90
+					colour = COLOUR_YELLOW
+				when 90 ... 100
+					colour = COLOUR_RED
+			end
+
+			print colour + "Crit roll=" + roll.to_s() + COLOUR_RESET + "\n"
+		else
+
+			if(roll>=96)
+				print COLOUR_GREEN + "OPEN-ENDED: " + roll.to_s() + "\n" + COLOUR_RESET
+			else
+				if(result!=roll)
+					print "Roll:" + roll.to_s + "/" + result.to_s + "(tot)"
+				else
+					print "Roll:" + roll.to_s
+				end
+			end
+		end
+
+
 		if (roll<96)
 			return result, first_roll, fumble
 		end
 
-		if(not critical_roll)
-			print COLOUR_GREEN + "OPEN-ENDED: " + roll.to_s() + "\n" + COLOUR_RESET
-		end
+
 	end
 end
 
@@ -475,7 +489,7 @@ def attack(attacker, defender)
 
 	result = attacker.ob - defender.current_db + _roll
 
-	print "Roll:" + _roll.to_s() + " => result:" + result.to_s() + "\n"
+	print  " => result:" + result.to_s() + "\n"
 
 	attacker.active_weapon.deal_damage(result, defender)
 end
@@ -623,6 +637,7 @@ def main()
 		end
 	end
 
+	print SCREEN_CLEAR + CURSOR_UP
 	print_combatants(combatants)
 	gets	
 	print SCREEN_CLEAR + CURSOR_UP
@@ -630,15 +645,17 @@ def main()
 	i=0
 	while true
 		i=i+1
-		print "======================= Round: #" + i.to_s() + "============================\n\n"
+		print "========================= Round: #" + i.to_s() + " ==============================\n\n"
 
 		pcs.each  { | name, character | 
 			actions(character, npcs)
 			check_dead_and_unco(pcs, npcs)
+			print "\n----------------------------------------------------------------\n\n"
 		}
 		npcs.each { | name, character | 
 			actions(character, pcs)
 			check_dead_and_unco(pcs, npcs)
+			print "\n----------------------------------------------------------------\n\n"
 		}
 
 		gets
