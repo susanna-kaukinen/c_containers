@@ -1,5 +1,71 @@
 #!/usr/bin/ruby
 
+
+# ==<COLOURS>===
+
+=begin
+https://en.wikipedia.org/wiki/ANSI_escape_code
+
+0	1	2	3	4	5	6	7
+Black	Red	Green	Yellow	Blue	Magenta	Cyan	White
+=end
+
+COLOUR_BLACK      = "\033[01;30m";
+COLOUR_RED        = "\033[01;31m";
+COLOUR_GREEN      = "\033[01;32m";
+COLOUR_YELLOW     = "\033[01;33m";
+COLOUR_BLUE       = "\033[01;34m";
+COLOUR_MAGENTA    = "\033[01;35m";
+COLOUR_CYAN       = "\033[01;36m";
+COLOUR_WHITE      = "\033[01;37m";
+
+COLOUR_BLACK_BRIGHT      = "\033[22;30m";
+COLOUR_RED_BRIGHT        = "\033[22;31m";
+COLOUR_GREEN_BRIGHT      = "\033[22;32m";
+COLOUR_YELLOW_BRIGHT     = "\033[22;33m";
+COLOUR_BLUE_BRIGHT       = "\033[22;34m";
+COLOUR_MAGENTA_BRIGHT    = "\033[22;35m";
+COLOUR_CYAN_BRIGHT       = "\033[22;36m";
+COLOUR_WHITE_BRIGHT      = "\033[22;37m";
+
+COLOUR_BLACK_BLINK      = "\033[05;30m";
+COLOUR_RED_BLINK        = "\033[05;31m";
+COLOUR_GREEN_BLINK      = "\033[05;32m";
+COLOUR_YELLOW_BLINK     = "\033[05;33m";
+COLOUR_BLUE_BLINK       = "\033[05;34m";
+COLOUR_MAGENTA_BLINK    = "\033[05;35m";
+COLOUR_CYAN_BLINK       = "\033[05;36m";
+COLOUR_WHITE_BLINK      = "\033[05;37m";
+
+COLOUR_RED_REVERSE      = "\033[7m";
+
+COLOUR_RESET      = "\033[0m"
+
+SCREEN_CLEAR      = "\033[2J";
+CURSOR_UP         = "\033[0;0H";
+
+def cprint(*vargs)
+
+	colour    = ''
+	str_vargs = ''
+
+	i=0
+	vargs.each { | sub_str |
+		if(i==0)
+			colour = sub_str
+			break
+		end	
+		str_vargs += sub_str
+		i += 1
+	}
+	print colour + str_vargs + COLOUR_RESET
+end
+
+# ==</COLOURS>===
+
+
+	
+
 def count(what)
 	case
 		when "hp"
@@ -14,12 +80,13 @@ class Critical
 end
 
 class Wound
-	attr_accessor :damage, :stun, :uparry, :downed, :prone, :unconscious, :dead	
+	attr_accessor :damage, :stun, :bleeding, :uparry, :downed, :prone, :unconscious, :dead	
 	attr_accessor :target
 	attr_accessor :text
 
 	def initialize()
 		@damage = 0
+		@bleeding = 0 # how many hp:s per round
 		@stun   = 0
 		@uparry = 0
 		@downed = 0
@@ -49,6 +116,11 @@ class Wound
 		if(@stun > 0)
 			character.stun += @stun
 			@text += " and is stunned for " + @stun.to_s() + " rounds"
+		end
+
+		if(@bleeding > 0)
+			character.bleeding += @bleeding
+			@text += " and is bleeding " + @bleeding.to_s() + " hits worth each round"
 		end
 		
 		if(@uparry > 0)
@@ -80,7 +152,7 @@ class Wound
 		
 		#p self
 		
-		print "\t===> " + @text + "\n"
+		print COLOUR_CYAN + "\t===> " + @text + "\n" + COLOUR_RESET
 
 	end
 end
@@ -112,6 +184,8 @@ class Weapon
 			crit.type = "krush"
 		end
 
+		#print COLOUR_YELLOW + crit.type + COLOUR_RESET + "\n"
+
 		case result
 			when -9999 .. 100
 				crit = nil
@@ -139,21 +213,31 @@ class Weapon
 		print '*** CRITICAL *** ' + "\n"
 		print '*** CRITICAL *** ' + "\n"
 
+	
+		colour = ''	
+		_roll = roll(nil, nil)[1] 
+
 		crit_bonus = 0
-		
 		case critical.level
+			when "A"
+				case _roll
+					when 80 ... 90
+						colour = COLOUR_YELLOW
+					when 90 ... 100
+						colour = COLOUR_RED
+				end
 			when "B"
-			crit_bonus += 5
+				crit_bonus += 5
 			when "C"
-			crit_bonus += 10
+				crit_bonus += 10
 			when "D"
-			crit_bonus += 15
+				crit_bonus += 15
 			when "E"
-			crit_bonus += 20
+				crit_bonus += 20
 		end
 
-		_roll = roll(nil, nil)[1] 
-		print "Crit roll=" + _roll.to_s() + "\n"
+	
+		print colour + "Crit roll=" + _roll.to_s() + COLOUR_RESET + "\n"
 		result = _roll + crit_bonus
 
 		wound = Wound.new()
@@ -193,6 +277,14 @@ class Weapon
 				wound.dead   = true
 				target_bonus = 60
 		end
+
+		if(critical.type == 'slash')
+			wound.bleeding = wound.stun
+			wound.stun = 0
+
+			wound.uparry /= 2
+		end
+		
 
 		wound.target = '<<<none>>>'
 		target_result = 1 + rand(100) + target_bonus
@@ -240,7 +332,7 @@ class Weapon
 		defender.current_hp -= hp_damage
 
 		if(hp_damage>0)
-			print "\t" + name + " deals " + hp_damage.to_s() + " hit points of damage.\n"
+			print "\t" + name + " deals " + COLOUR_RED + hp_damage.to_s() + COLOUR_RESET + " hit points of damage.\n"
 		else
 			if(rand(2)==1)
 				evade = "dodges"
@@ -251,11 +343,16 @@ class Weapon
 		end
 
 		if(critical)
-			print "\nCritical: " + critical.level + ' ' + critical.type + "es\n"
+			print COLOUR_WHITE_BLINK + "\nCritical: " + critical.level + ' ' + critical.type + "es\n" + COLOUR_RESET
 			resolve_critical(critical, defender)
 		end
 
- 		print defender.name + " has " + defender.current_hp.to_s() + " hit points left\n"
+		colour = COLOUR_GREEN
+		if(defender.current_hp <= 0) 
+			colour = COLOUR_RED	
+		end
+		
+ 		print defender.name + " has " + colour + defender.current_hp.to_s() + COLOUR_RESET + " hit points left\n"
 
 		if(defender.current_hp<0 and defender.dead == false)
 			defender.unconscious = true
@@ -278,7 +375,7 @@ class Character
 	attr_accessor :ob, :db, :ac, :hp
 
 	# current/active
-	attr_accessor :stun, :uparry, :downed, :prone, :blind
+	attr_accessor :stun, :bleeding, :uparry, :downed, :prone, :blind
 	attr_accessor :unconscious, :dead
 	attr_accessor :current_db, :active_weapon, :current_hp
 	attr_accessor :wounds
@@ -291,6 +388,7 @@ class Character
 		@hp	= count("hp")
 
 		@stun = 0
+		@bleeding = 0
 		@uparry = 0
 		@downed = 0
 		@prone  = 0
@@ -327,6 +425,11 @@ end
 
 def roll(weapon, attacker)
 
+	critical_roll = false
+	if(weapon==nil and attacker==nil)
+		critical_roll = true
+	end
+
 	first_roll=0
 	result=0
 	while true
@@ -347,8 +450,9 @@ def roll(weapon, attacker)
 			return result, first_roll, fumble
 		end
 
-
-		print "OPEN-ENDED: " + roll.to_s() + "\n"
+		if(not critical_roll)
+			print COLOUR_GREEN + "OPEN-ENDED: " + roll.to_s() + "\n" + COLOUR_RESET
+		end
 	end
 end
 
@@ -416,6 +520,11 @@ def consider_wounds(character)
 		end
 	end
 
+	if(character.bleeding > 0)
+		cprint COLOUR_RED_REVERSE + character.name + ' loses ' + character.bleeding.to_s() + ' hits due to bleeding!' + "\n"
+		character.current_hp -= character.bleeding
+	end
+
 	if(character.downed>0)
 
 		can_attack = false
@@ -444,7 +553,7 @@ def actions(character, opponents)
 	if(can_attack)
 		attack(character, get_next(opponents))
 	else
-		print character.name + " cannot attack, reason: " + reason + "\n"
+		print COLOUR_BLUE + character.name + " cannot attack, reason: " + reason + "\n" + COLOUR_RESET
 	end
 
 	print "\n"
@@ -515,6 +624,8 @@ def main()
 	end
 
 	print_combatants(combatants)
+	gets	
+	print SCREEN_CLEAR + CURSOR_UP
 
 	i=0
 	while true
@@ -546,8 +657,13 @@ def main()
 			print "PCs won!\n"
 			break
 		end
+
+		print SCREEN_CLEAR + CURSOR_UP
+		
 	end
-	
+
+	gets	
+	print SCREEN_CLEAR + CURSOR_UP
 	print_combatants(combatants)
 
 end
