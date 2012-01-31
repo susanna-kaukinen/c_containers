@@ -105,8 +105,6 @@ class Wound
 
 	def apply(character, target)
 
-		p self
-
 		if(character == nil)
 			throw :no_character
 		end
@@ -240,6 +238,39 @@ class Weapon
 		wound = Wound.new()
 
 		target_bonus = 0
+=begin
+		# wounds should have severity, perhaps 1 to 3
+		# 1 = bruised/cut, 2 = crushed/sliced, 3 = shattered/severed 4 = lethal direct
+		# these need to be considered in combination w/wound targets
+
+
+so eg
+
+class knee
+
+	@bruisable     = true
+	@cuttable      = true
+	@crushable     = true
+	@slicable      = true
+	@shatterable   = true
+	@severable     = true # "leg severed from knee down"
+	@lethal_direct = false
+end
+
+class head
+
+	@bruisable     = true # "face bruised"
+	@cuttable      = true # "face cut"
+	@crushable     = true # "skull fracture"
+	@slicable      = false 
+	@shatterable   = true # "skull shattered" => lethal_direct
+	@severable     = true # "head severed"
+	@lethal_direct = true, shatterable, severable
+end
+
+ => something like that, por ejemplo
+
+=end		
 		case result
 			when 0 ... 10
 				print 'Zip!' + "\n"
@@ -289,29 +320,30 @@ class Weapon
 			when 7 ... 14
 				wound.target = 'weapon arm'
 			when 14 ... 21
-				wound.target = 'left leg'
+				wound.target = 'left leg' # thigh, calf, foot, ankle, knee (is below)
 			when 21 ... 28
 				wound.target = 'right leg'
 			when 28 ... 35 
-				wound.target = 'stomach'
+				wound.target = 'stomach' # @see side below
 			when 35 ... 42
-				wound.target = 'side'
+				wound.target = 'side' # can be cut to organs, ribs can break
 			when 42 ... 48
 				wound.target = 'back'
 			when 48 ... 55
-				wound.target = 'neck'
+				wound.target = 'neck' # compare: throat. neck breaks/throat is sliced
 			when 55 ... 62
-				wound.target = 'shoulder'
+				wound.target = 'shoulder' # can break or shatter
 			when 62 ... 70
-				wound.target = 'elbow'
+				wound.target = 'elbow'   # can break or shatter
 			when 70 ... 77
-				wound.target = 'knee'	
-			when 77 ... 84
-				wound.target = 'throat'
+				wound.target = 'knee'	 # joints can be shattered or perhaps severed, these need to be object w/properties, perhaps - have
+			when 77 ... 84                   # properties like severable and crushable and so forth
+				wound.target = 'throat'  # can be crushed or slashed or punctured
 			when 84 ... 91
-				wound.target = 'skull'
+				wound.target = 'skull'   # can be crushed, should be head if severed and head punctured
 			when 91 ... 9999
-				wound.target = 'groin'
+				wound.target = 'groin'   # for slash wounds, can bleed profusely
+
 		end
 
 		wound.apply(defender, wound.target)
@@ -535,7 +567,7 @@ def consider_wounds(character)
 	end
 
 	if(character.bleeding > 0)
-		cprint COLOUR_RED_REVERSE + character.name + ' loses ' + character.bleeding.to_s() + ' hits due to bleeding!' + "\n"
+		cprint COLOUR_RED_REVERSE + character.name + ' loses ' + character.bleeding.to_s() + ' hits due to bleeding!' + "\n\n"
 		character.current_hp -= character.bleeding
 	end
 
