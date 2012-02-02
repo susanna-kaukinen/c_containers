@@ -758,7 +758,7 @@ def verify_handshake(hello)
 	return "ok"
 end
 
-server  = TCPServer.open(2015)
+server  = TCPServer.open(20015)
 
 
 class Clients
@@ -825,7 +825,7 @@ class Clients
 	end
 end
 
-clients    = Clients.new
+$clients    = Clients.new
 pcs        = Hash.new()
 npcs       = Hash.new()	
 combatants = Hash.new()
@@ -834,19 +834,28 @@ def sockprint(socket, *vargs)
 	socket.puts(vargs)
 end
 
+def server_print(*vargs)
+	puts(vargs)
+end
+
+def print(*vargs)
+	$clients.print_all(vargs)
+	server_print(vargs) # server window
+end
 
 Thread.abort_on_exception = true
 
 loop {                        
+	sleep(1)
 
 	Thread.start(server.accept) do | sock |
 
-		clients.addClient(Thread.current,sock)
-		print clients.getSocket(Thread.current)
+		$clients.addClient(Thread.current,sock)
+		server_print $clients.getSocket(Thread.current)
 		
 		sock.puts 'Welcome!'
 
-		if(clients.length>0) then
+		if($clients.length>0) then
 
 			pcs[0] = Character.new('Aragorn')
 			pcs[1] = Character.new('Hargor')
@@ -874,13 +883,12 @@ loop {
 				end
 			end
 
-			clients.print_all(SCREEN_CLEAR + CURSOR_UP + "NEW FIGHT!")
-			clients.print_all(combatants_to_s(combatants) + "\nHIT ENTER TO BEGIN" )
-			clients.gets_all
-			clients.print_all(SCREEN_CLEAR + CURSOR_UP)
+			print(SCREEN_CLEAR + CURSOR_UP + "NEW FIGHT!")
+			print(combatants_to_s(combatants) + "\nHIT ENTER TO BEGIN" )
+			$clients.gets_all
+			print(SCREEN_CLEAR + CURSOR_UP)
 		end
 
-#TODO => These to clients, now prints on server:
 		i=0
 		while true
 			i=i+1
@@ -897,7 +905,7 @@ loop {
 				print "\n----------------------------------------------------------------\n\n"
 			}
 
-			gets
+			$clients.gets_all()	
 
 			players_left = pcs.length()
 			enemies_left = npcs.length()
@@ -918,9 +926,9 @@ loop {
 			
 		end
 
-		gets	
+		$clients.gets_all
 		print SCREEN_CLEAR + CURSOR_UP
-		print_combatants(combatants)
+		print(combatants_to_s(combatants))
 	end
 
 }
