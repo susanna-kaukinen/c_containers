@@ -637,7 +637,7 @@ def combatants_to_s (combatants)
 		str += character.name + " " + character.to_s() + "\n" 
 		character.wounds.each { | wound |
 			if(wound)
-				str += "Wound as json =>" + wound.to_json
+				str += "Wound as json =>" + wound.to_json + "\n"
 			end
 		}
 	}
@@ -801,13 +801,49 @@ class Clients
 	end
 
 	def gets_all()
+
+		#print_all "==<Enter to contine, 'say: ...' to coment (broken currently)>=="
+
+		someone_said = false
+
 		lock.synchronize {
 			clients.each{ | thread_id, socket | 
+
+				msg = ''
+
 				if(thread_id.alive?)
-					socket.gets
+					msg = socket.gets
+				end
+
+				if(msg >= '\r\n') 
+
+					someone_said = true
+
+					server_print(msg)
+
+					clients.each{ | _thread_id, _socket | 
+						if(thread_id.alive?)
+							#socket.puts("\t===>" + msg + "<===(" + "#{thread_id}" + "/" + "#{socket}" + ")=====>\n\n")
+							if(thread_id==_thread_id)
+								_socket.puts("\n")
+							else
+								_socket.puts(msg)
+							end
+								
+						end
+					}
+				else
+					server_print("no msg? =>", msg)
 				end
 			}
 		}
+
+		if(someone_said)
+			return true
+		else
+			return false
+		end
+
 	end
 
 	def gets(key)
@@ -905,7 +941,10 @@ loop {
 				print "\n----------------------------------------------------------------\n\n"
 			}
 
-			$clients.gets_all()	
+			someone_talked = true
+			while someone_talked
+				someone_talked = $clients.gets_all()	
+			end
 
 			players_left = pcs.length()
 			enemies_left = npcs.length()
