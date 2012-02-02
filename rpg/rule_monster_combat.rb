@@ -49,20 +49,8 @@ SCREEN_CLEAR      = "\033[2J";
 CURSOR_UP         = "\033[0;0H";
 
 def cprint(*vargs)
-
-	colour    = ''
-	str_vargs = ''
-
-	i=0
-	vargs.each { | sub_str |
-		if(i==0)
-			colour = sub_str
-			break
-		end	
-		str_vargs += sub_str
-		i += 1
-	}
-	print colour + str_vargs + COLOUR_RESET
+	vargs.each { |param| print param }
+ 	print COLOUR_RESET
 end
 
 # ==</COLOURS>===

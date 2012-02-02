@@ -1,7 +1,7 @@
-#!/usr/bin/ruby
+#!/usr/bin/ruby1.9.2
 
 require 'socket'                # Get sockets from stdlib
-#require 'json_pure'
+require 'json'
 
 #
 # TODO: severed, crushed, bruised, miinukset: e.g. char at -10%, blind toteuttamatta (-100)
@@ -51,14 +51,6 @@ COLOUR_RESET      = "\033[0m"
 SCREEN_CLEAR      = "\033[2J";
 CURSOR_UP         = "\033[0;0H";
 
-def print(*vargs)
-	CLIENT.puts(vargs)	
-end
-
-def gets(*vargs)
-	CLIENT.gets
-end
-
 def cprint(*vargs)
 	vargs.each { |param| print param }
  	print COLOUR_RESET
@@ -100,6 +92,38 @@ class Wound
 		@target = ''
 
 		@text = ''
+	end
+
+	def to_s()
+
+		str='Wound:'
+
+		if(@damage>0)
+			str += @damage.to_s
+		end
+
+		return str
+	end
+
+	def to_json(*a)
+		{
+			'class'       => self.class.name,
+			'damage'      => "#{@damage}",
+			'bleeding'    => "#{@bleeding}",
+			'stun'        => "#{@stun}",
+			'uparry'      => "#{@uparry}",
+			'downed'      => "#{@downed}",
+			'prone'       => "#{@prone}",
+			'unconscious' => "#{@unconscious}",
+			'dead'        => "#{@dead}",
+			'target'      => "#{@target}",
+			'text'        => "#{@dead}",
+
+		}.to_json(*a)
+	end
+
+	def self.json_create(o)
+		new(*o['data'])
 	end
 
 	def apply(character, target)
@@ -158,6 +182,7 @@ class Wound
 		print COLOUR_CYAN + "\t===> " + @text + "\n" + COLOUR_RESET
 
 	end
+
 end
 
 class Weapon
@@ -604,15 +629,21 @@ def actions(character, opponents)
 	print "\n"
 end
 
-def print_combatants(combatants)
+def combatants_to_s (combatants)
+	
+	str = ''
+
 	combatants.each  { | index, character |  
-		print character.name + " " + character.to_s() + "\n" 
+		str += character.name + " " + character.to_s() + "\n" 
 		character.wounds.each { | wound |
 			if(wound)
-				p wound
+				str += "Wound as json =>" + wound.to_json
 			end
 		}
 	}
+
+	return str
+
 end
 
 def check_dead_and_unco(pcs, npcs)
@@ -634,13 +665,7 @@ def check_dead_and_unco(pcs, npcs)
 	}
 end
 
-def main(client)
-
-	client.puts "<MAIN>\n"
-
-	print "version:\n"
-	print "version: 2 pcs and 2 orcs can fight till end based on hitpoints\n"
-	print "version:\n"
+def main()
 
 	pcs = Hash.new()
 	pcs[0] = Character.new('Aragorn')
@@ -733,26 +758,170 @@ def verify_handshake(hello)
 	return "ok"
 end
 
-server = TCPServer.open(2000)
+server  = TCPServer.open(2015)
 
-id=-1
-loop {                        
-	id+=1
-	Thread.start(server.accept) do |client|
 
-		CLIENT = client
+class Clients
 
-		#handshake = client.gets
+	attr_accessor :lock, :clients
 
-		#if(verify_handshake(handshake) != 'ok') then
-			#client.puts "INVALID HANDSHAKE - GOOD BYE!"
-			#client.close                # Disconnect from the client
-		#end
-
-		client.puts "WELCOME!\n"
-		main(client)
-		client.close
-	
-
+	def initialize
+		@lock    = Mutex.new
+		@clients = Hash.new
 	end
+
+	def addClient(key, value)
+		@lock.synchronize {
+			clients[key] = value
+		}
+	end
+
+	def getSocket(key)
+		sock = ''
+		@lock.synchronize {
+			sock = clients[key]
+		}
+		return sock
+	end
+
+	def print(key, vargs)
+		sock = getSocket(key)
+		sock.puts(vargs)
+	end
+
+	def print_all(vargs)
+		@lock.synchronize {
+			clients.each{ | thread_id, socket | 
+				if(thread_id.alive?)
+					socket.puts(vargs) 
+				end
+			}
+
+		}
+	end
+
+	def gets_all()
+		lock.synchronize {
+			clients.each{ | thread_id, socket | 
+				if(thread_id.alive?)
+					socket.gets
+				end
+			}
+		}
+	end
+
+	def gets(key)
+		sock = getSocket(key)
+		str = sock.gets
+		return str
+	end
+
+	def length
+		len=0
+		@lock.synchronize {
+			len = clients.length	
+		}
+		return len
+	end
+end
+
+clients    = Clients.new
+pcs        = Hash.new()
+npcs       = Hash.new()	
+combatants = Hash.new()
+
+def sockprint(socket, *vargs)
+	socket.puts(vargs)
+end
+
+
+Thread.abort_on_exception = true
+
+loop {                        
+
+	Thread.start(server.accept) do | sock |
+
+		clients.addClient(Thread.current,sock)
+		print clients.getSocket(Thread.current)
+		
+		sock.puts 'Welcome!'
+
+		if(clients.length>0) then
+
+			pcs[0] = Character.new('Aragorn')
+			pcs[1] = Character.new('Hargor')
+
+
+			npcs[0] = Character.new('orc1')
+			npcs[1] = Character.new('orc2')
+
+
+			i=0
+			j=0
+			while true
+				if(pcs[i] != nil)
+					combatants[j] = pcs[i]
+					j += 1
+				end
+				if(npcs[i] != nil)
+					combatants[j] = npcs[i]
+					j += 1
+				end
+				i += 1
+
+				if(i==(pcs.length() + npcs.length()))
+					break
+				end
+			end
+
+			clients.print_all(SCREEN_CLEAR + CURSOR_UP + "NEW FIGHT!")
+			clients.print_all(combatants_to_s(combatants) + "\nHIT ENTER TO BEGIN" )
+			clients.gets_all
+			clients.print_all(SCREEN_CLEAR + CURSOR_UP)
+		end
+
+#TODO => These to clients, now prints on server:
+		i=0
+		while true
+			i=i+1
+			print "========================= Round: #" + i.to_s() + " ==============================\n\n"
+
+			pcs.each  { | name, character | 
+				actions(character, npcs)
+				check_dead_and_unco(pcs, npcs)
+				print "\n----------------------------------------------------------------\n\n"
+			}
+			npcs.each { | name, character | 
+				actions(character, pcs)
+				check_dead_and_unco(pcs, npcs)
+				print "\n----------------------------------------------------------------\n\n"
+			}
+
+			gets
+
+			players_left = pcs.length()
+			enemies_left = npcs.length()
+
+			print "enemies left:" + enemies_left.to_s() + ", players left: " + players_left.to_s() + "\n"
+
+			if(players_left<=0)
+				print "NPCs won!\n"
+				break
+			end
+
+			if(enemies_left<=0)
+				print "PCs won!\n"
+				break
+			end
+
+			print SCREEN_CLEAR + CURSOR_UP
+			
+		end
+
+		gets	
+		print SCREEN_CLEAR + CURSOR_UP
+		print_combatants(combatants)
+	end
+
 }
+
