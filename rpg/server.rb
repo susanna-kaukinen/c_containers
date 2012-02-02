@@ -426,6 +426,16 @@ class Character
 	attr_accessor :unconscious, :dead
 	attr_accessor :current_db, :active_weapon, :current_hp
 	attr_accessor :wounds
+	attr_accessor :tactic
+
+	def get_personality
+		personality = rand(3)
+
+		case personality
+			when 0 return 'smart'
+			when 1 return 'evil'
+			when 2 return 'stupid'
+	end
 
 	def initialize(name)
 		@name	= name
@@ -449,6 +459,8 @@ class Character
 		@current_db     = @db # at this point
 
 		@wounds = []
+
+		@personality = get_personality
 	end
 
 	def to_s
@@ -550,27 +562,30 @@ def attack(attacker, defender)
 	attacker.active_weapon.deal_damage(result, defender)
 end
 
-def get_next(hash)
-	if(hash.length<=0)
-		return nil
+def choose_opponent(character, opponents)
+
+	case character.personality
+		when 'smart'
+		when 'evil'
+		when 'stupid'
 	end
 
-	i=0
-	while true
-		if(hash[i] != nil)
-			return hash[i]
+
+
+	opponents.each_with_index { | character, index |
+		if(character !=nil) 
+			if(character.unconscious or character.dead)
+
+			end
 		end
-		i += 1
-	end
+	}
+end
+
+
 end
 
 def consider_wounds(character)
-=begin
-	if(character.wounds.length()>0) 
-		print 'considering wounds for ' + character.name + "\n"
-		p character	
-	end
-=end
+
 	can_attack = true
 	reason     = "no reason"
 
@@ -621,7 +636,7 @@ def actions(character, opponents)
 	can_attack, reason = consider_wounds(character)
 
 	if(can_attack)
-		attack(character, get_next(opponents))
+		attack(character, choose_opponent(character, opponents))
 	else
 		print COLOUR_BLUE + character.name + " cannot attack, reason: " + reason + "\n" + COLOUR_RESET
 	end
@@ -633,7 +648,7 @@ def combatants_to_s (combatants)
 	
 	str = ''
 
-	combatants.each  { | index, character |  
+	combatants.each_with_index  { | character, index |  
 		str += character.name + " " + character.to_s() + "\n" 
 		character.wounds.each { | wound |
 			if(wound)
@@ -646,107 +661,7 @@ def combatants_to_s (combatants)
 
 end
 
-def check_dead_and_unco(pcs, npcs)
 
-	pcs.each { | index, character |
-		if(character !=nil) 
-			if(character.unconscious or character.dead)
-				pcs.delete(index)
-			end
-		end
-	}
-
-	npcs.each { | index, character |
-		if(character !=nil) 
-			if(character.unconscious or character.dead)
-				npcs.delete(index)
-			end
-		end
-	}
-end
-
-def main()
-
-	pcs = Hash.new()
-	pcs[0] = Character.new('Aragorn')
-	pcs[1] = Character.new('Hargor')
-
-	npcs = Hash.new()	
-	npcs[0] = Character.new('orc1')
-	npcs[1] = Character.new('orc2')
-
-	combatants = Hash.new()
-
-	i=0
-	j=0
-	while true
-		if(pcs[i] != nil)
-			combatants[j] = pcs[i]
-			j += 1
-		end
-		if(npcs[i] != nil)
-			combatants[j] = npcs[i]
-			j += 1
-		end
-		i += 1
-
-		if(i==(pcs.length() + npcs.length()))
-			break
-		end
-	end
-
-	print SCREEN_CLEAR + CURSOR_UP
-	print_combatants(combatants)
-	gets	
-	print SCREEN_CLEAR + CURSOR_UP
-
-	i=0
-	while true
-		i=i+1
-		print "========================= Round: #" + i.to_s() + " ==============================\n\n"
-
-		pcs.each  { | name, character | 
-			actions(character, npcs)
-			check_dead_and_unco(pcs, npcs)
-			print "\n----------------------------------------------------------------\n\n"
-		}
-		npcs.each { | name, character | 
-			actions(character, pcs)
-			check_dead_and_unco(pcs, npcs)
-			print "\n----------------------------------------------------------------\n\n"
-		}
-
-		gets
-
-		players_left = pcs.length()
-		enemies_left = npcs.length()
-
-		print "enemies left:" + enemies_left.to_s() + ", players left: " + players_left.to_s() + "\n"
-
-		if(players_left<=0)
-			print "NPCs won!\n"
-			break
-		end
-
-		if(enemies_left<=0)
-			print "PCs won!\n"
-			break
-		end
-
-		print SCREEN_CLEAR + CURSOR_UP
-		
-	end
-
-	gets	
-	print SCREEN_CLEAR + CURSOR_UP
-	print_combatants(combatants)
-
-end
-
-
-
-
-######<SERVER>
 
 def verify_handshake(hello)
 
@@ -758,7 +673,7 @@ def verify_handshake(hello)
 	return "ok"
 end
 
-server  = TCPServer.open(20015)
+server  = TCPServer.open(20016)
 
 
 class Clients
@@ -770,9 +685,9 @@ class Clients
 		@clients = Hash.new
 	end
 
-	def addClient(key, value)
+	def addClient(player)
 		@lock.synchronize {
-			clients[key] = value
+			clients[player.thread_id] = player.socket
 		}
 	end
 
@@ -862,9 +777,9 @@ class Clients
 end
 
 $clients    = Clients.new
-pcs        = Hash.new()
-npcs       = Hash.new()	
-combatants = Hash.new()
+pcs         = Array.new()
+npcs        = Array.new()	
+combatants  = Array.new()
 
 def sockprint(socket, *vargs)
 	socket.puts(vargs)
@@ -879,65 +794,173 @@ def print(*vargs)
 	server_print(vargs) # server window
 end
 
+
+def server_get_cmd
+	begin
+		system("stty raw -echo")
+		str = STDIN.getc
+
+		if(str == 'q') then
+		exit
+		end
+
+
+	ensure
+		system("stty -raw echo")
+	end
+		p str.chr
+end
+
+#server_get_cmd
+
 Thread.abort_on_exception = true
+
+
+class Player
+	attr_accessor :character
+	attr_accessor :thread_id, :socket
+
+	def initialize(thread_id, socket)
+		@thread_id = thread_id
+		@socket    = socket
+	end
+
+	def write(*vargs)
+		socket.gets(vargs)
+	end
+
+end
+	
+def prompt(sock, str)
+
+	str.each_byte do |c|
+		sock.putc c
+	end
+
+	sock.putc ' '
+	sock.putc '>'
+	sock.putc ' '
+
+	response = sock.gets
+
+	return response.strip!
+end
+
+def menu(player)
+
+	thread_id = player.thread_id
+	sock      = player.socket
+
+	Mutex.new.synchronize {
+
+		sock.puts(SCREEN_CLEAR + CURSOR_UP)
+	
+		i=0	
+		File.open('motd.txt').each_line{ |s|
+
+			strC = COLOUR_GREEN_BLINK      + 'C' + COLOUR_RESET
+			strW = COLOUR_YELLOW_BLINK     + 'W' + COLOUR_RESET
+			strN = COLOUR_GREEN_BLINK      + 'N' + COLOUR_RESET
+			strQ = COLOUR_RED_BLINK        + 'Q' + COLOUR_RESET
+
+			if(i>=20)
+				s = s.gsub('C', strC)
+				s = s.gsub('W', strW)
+				s = s.gsub('N', strN)
+				s = s.gsub('Q', strQ)
+			end
+
+			sock.puts s
+
+			i+=1
+		}
+
+		cmd = prompt(sock, 'cmd')
+		
+		case cmd[0]
+			when 'n'
+				name = prompt(sock, 'name')
+				return Character.new(name)
+								
+			when 'q'
+				sock.puts 'bye'
+				sock.close
+				Thread.current.exit
+			else
+				sock.puts 'Not implemented'
+				sleep(2)
+				redo
+		end
+	}
+end
+
+def play_again(thread_id, sock)
+
+end
+
+def rename_npcs(npcs)
+
+	surname = ' the Orc'
+
+	npcs.each_with_index { |npc , i |
+
+		case i
+		
+			when 0
+				npc.name = 'Gurlar'   + surname
+			when 1
+				npc.name = 'Bronthor' + surname
+			when 2
+				npc.name = 'Visnasch' + surname
+			when 3
+				npc.name = 'Hugnarl'  +  surname
+			else
+				npc.name = 'Unknown'  + i + surname
+		end
+	}	
+end
 
 loop {                        
 	sleep(1)
 
 	Thread.start(server.accept) do | sock |
 
-		$clients.addClient(Thread.current,sock)
-		server_print $clients.getSocket(Thread.current)
-		
-		sock.puts 'Welcome!'
+		player = Player.new(Thread.current, sock)
 
-		if($clients.length>0) then
+		$clients.addClient(player)
 
-			pcs[0] = Character.new('Aragorn')
-			pcs[1] = Character.new('Hargor')
+		server_print $clients.getSocket(player.thread_id)
 
+		character = menu(player)
+		pcs.push(character)
 
-			npcs[0] = Character.new('orc1')
-			npcs[1] = Character.new('orc2')
-
-
-			i=0
-			j=0
-			while true
-				if(pcs[i] != nil)
-					combatants[j] = pcs[i]
-					j += 1
-				end
-				if(npcs[i] != nil)
-					combatants[j] = npcs[i]
-					j += 1
-				end
-				i += 1
-
-				if(i==(pcs.length() + npcs.length()))
-					break
-				end
-			end
-
-			print(SCREEN_CLEAR + CURSOR_UP + "NEW FIGHT!")
-			print(combatants_to_s(combatants) + "\nHIT ENTER TO BEGIN" )
-			$clients.gets_all
-			print(SCREEN_CLEAR + CURSOR_UP)
+		if(pcs.length<2) 
+			pcs.push(Character.new('Hargor'))
 		end
+
+		pcs.each { |pc| npcs.push(Character.new('dummy')) }
+		
+		rename_npcs(npcs)
+
+		pcs.each  { |pc|  combatants.push(pc)  }
+		npcs.each { |npc| combatants.push(npc) }
+
+		print(SCREEN_CLEAR + CURSOR_UP + "NEW FIGHT!")
+		print(combatants_to_s(combatants) + "\nHIT ENTER TO BEGIN" )
+		$clients.gets_all
+		print(SCREEN_CLEAR + CURSOR_UP)
 
 		i=0
 		while true
 			i=i+1
 			print "========================= Round: #" + i.to_s() + " ==============================\n\n"
 
-			pcs.each  { | name, character | 
+			pcs.each  { | character | 
 				actions(character, npcs)
-				check_dead_and_unco(pcs, npcs)
 				print "\n----------------------------------------------------------------\n\n"
 			}
-			npcs.each { | name, character | 
+			npcs.each { | character | 
 				actions(character, pcs)
-				check_dead_and_unco(pcs, npcs)
 				print "\n----------------------------------------------------------------\n\n"
 			}
 
@@ -946,8 +969,21 @@ loop {
 				someone_talked = $clients.gets_all()	
 			end
 
-			players_left = pcs.length()
-			enemies_left = npcs.length()
+			players_left = false
+			pcs.each { | pc |
+				if(not pc.unconscious and not pc.dead)
+					players_left = true
+					break
+				end
+			}
+
+			enemies_left = false
+			pcs.each { | pc |
+				if(not pc.unconscious and not pc.dead)
+					enemies_left = true
+					break
+				end
+			}
 
 			print "enemies left:" + enemies_left.to_s() + ", players left: " + players_left.to_s() + "\n"
 
@@ -968,6 +1004,7 @@ loop {
 		$clients.gets_all
 		print SCREEN_CLEAR + CURSOR_UP
 		print(combatants_to_s(combatants))
+
 	end
 
 }
