@@ -950,12 +950,13 @@ def menu(player, ask_play_again)
 		rescue
 		end
 
-		player.remove = nil
+		_player = player.remove
+		_player = nil
 
 		Thread.current.exit
 	end
 
-	def _print_motd(player,ask_play_again)
+	def _print_motd_1(player, ask_play_again)
 
 		sock      = player.socket
 
@@ -965,31 +966,38 @@ def menu(player, ask_play_again)
 		File.open('motd.txt').each_line{ |line_in_file|
 
 			strMONSTER = COLOUR_RED_BLINK + 'MONSTER' + COLOUR_RESET
-			strI = COLOUR_GREEN_BLINK      + ' I ' + COLOUR_RESET
-			strW = COLOUR_YELLOW_BLINK     + ' W ' + COLOUR_RESET
-			strN = COLOUR_GREEN_BLINK      + ' N ' + COLOUR_RESET
-			strQ = COLOUR_RED_BLINK        + ' Q ' + COLOUR_RESET
 
 			line_in_file = line_in_file.gsub('MONSTER', strMONSTER)
-
-			if(i>=20)
-				 line_in_file = line_in_file.gsub(' I ', strI)
-				 line_in_file = line_in_file.gsub(' W ', strW)
-				 line_in_file = line_in_file.gsub(' N ', strN)
-			end
 
 			sock.puts line_in_file 
 
 			i+=1
 		}
 
+		sock.puts COLOUR_YELLOW_BLINK + ' N' + COLOUR_RESET + ' = New character'
 		sock.puts COLOUR_RED_BLINK + " Q" + COLOUR_RESET + ' = Quit'
 
 		if(ask_play_again)
 			sock.puts COLOUR_YELLOW_BLINK + ' S' + COLOUR_RESET + ' = Show character'
 			sock.puts "\n " + COLOUR_GREEN_BLINK + 'P' + COLOUR_RESET + 'lay again? (same character)'
 		end
+	end
 
+	def _print_motd_2(player)
+
+		sock      = player.socket
+
+		sock.puts(SCREEN_CLEAR + CURSOR_UP)
+	
+		File.open('motd.txt').each_line{ |line_in_file|
+
+			strMONSTER = COLOUR_RED_BLINK + 'MONSTER' + COLOUR_RESET
+
+			sock.puts line_in_file 
+		}
+
+		sock.puts COLOUR_YELLOW_BLINK + ' W' + COLOUR_RESET + ' = Wait for other players'
+		sock.puts COLOUR_RED_BLINK + " F" + COLOUR_RESET + ' = Force start'
 
 	end
 
@@ -1025,11 +1033,30 @@ def menu(player, ask_play_again)
 		end
 	end
 
-	show_player = false
-	ready       = false
+	def _handle_2nd_cmd(player)
 
-	while not ready
-		_print_motd(player,ask_play_again)
+		sock = player.socket
+
+		cmd = prompt(sock, 'cmd')
+
+		case cmd[0]
+			when 'w'
+				return true
+			when 'f'
+				$forced_start_fight = true
+				return true
+			else
+				sock.puts 'Not implemented'
+				sleep(1)
+				return false, false
+		end
+	end
+
+	show_player = false
+	go          = false
+
+	while not go
+		_print_motd_1(player, ask_play_again)
 
 		if(show_player)
 			player.socket.puts player.character.to_s
@@ -1037,16 +1064,21 @@ def menu(player, ask_play_again)
 
 		ready, show_player = _handle_cmd(player, ask_play_again)
 
+		if(ready)
+			_print_motd_2(player)
+			go = _handle_2nd_cmd(player)
+		end
 	end
 end
 
 
 def rename_pcs(pcs)
 
+	skip = pcs.length
+
 	pcs.each_with_index { |pc , i |
 
-		
-		unless(i==0) 
+		unless(i<skip)
 
 			case i
 			
@@ -1181,7 +1213,8 @@ def fight_all_rounds(pcs,npcs,combatants)
 			break
 		end
 
-		$clients.gets_all
+		#$clients.gets_all
+		sleep(0.5)
 
 		print SCREEN_CLEAR + CURSOR_UP
 		
@@ -1193,30 +1226,6 @@ def fight_all_rounds(pcs,npcs,combatants)
 	$clients.gets_all
 
 end
-
-
-def wait_fight_start(players, player)
-
-	server_print 'koira'
-	player.write('koira')
-
-	Mutex.new.synchronize {
-
-		player.write('Waiting for fight to start...')
-
-		while true
-			if(players.length>0) # FIXME, should players be synched
-				return true
-			end
-
-			player.write('.')
-			sleep(1)	
-
-		end
-	}
-
-end
-
 
 $clients    = Clients.new
 
@@ -1242,8 +1251,7 @@ def main()
 
 			monitor.synchronize {
 
-
-				if(players.length>0)
+				if($forced_start_fight or players.length>1)
 
 					init_round(pcs, npcs, combatants)
 
@@ -1287,10 +1295,12 @@ def main()
 					menu(player, ask_play_again)
 					pcs.push(player.character)
 
-					player.write('Waiting for fight to start...')
+					player.write('Waiting for fight to start..')
+	
 					ask_play_again = true
 				}
 				fight_thread.run
+
 				Thread.stop
 			}
 		end

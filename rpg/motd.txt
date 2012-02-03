@@ -18,6 +18,3 @@
        of February, 1984
 
 
- I = Identify character
- W = Wait players
- N = New character
