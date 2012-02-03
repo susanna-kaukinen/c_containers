@@ -426,15 +426,16 @@ class Character
 	attr_accessor :unconscious, :dead
 	attr_accessor :current_db, :active_weapon, :current_hp
 	attr_accessor :wounds
-	attr_accessor :tactic
+	attr_accessor :personality
 
 	def get_personality
 		personality = rand(3)
 
 		case personality
-			when 0 return 'smart'
-			when 1 return 'evil'
-			when 2 return 'stupid'
+			when 0 ; return 'smart'
+			when 1 ; return 'evil'
+			when 2 ; return 'stupid'
+		end
 	end
 
 	def initialize(name)
@@ -498,7 +499,7 @@ def roll(weapon, attacker)
 			print result.to_s() + " => FUMBLE\n"
 			if(attacker != nil) then
 				print attacker.name + " deals himself a blow:\n"
-				attack(attacker, attacker)
+				attack(attacker, attacker, 'fumblingly')
 			end
 			fumble=true
 		end
@@ -530,7 +531,7 @@ def roll(weapon, attacker)
 		end
 
 
-		if (roll<96)
+		if (critical_roll or roll<96)
 			return result, first_roll, fumble
 		end
 
@@ -538,14 +539,14 @@ def roll(weapon, attacker)
 	end
 end
 
-def attack(attacker, defender)
+def attack(attacker, opponent, manner)
 
-	if(defender==nil)
+	if(opponent==nil)
 		print "No-one to attack!"
 		return
 	end
 
-	print attacker.name + " ATTACKS " + defender.name + " with " + attacker.active_weapon.name + "\n"
+	print attacker.name + " ATTACKS " + opponent.name + " with " + attacker.active_weapon.name + " in a " + manner + " manner..\n"
 
 	__roll  = roll(attacker.active_weapon, attacker)
 	_roll   = __roll[0]
@@ -555,32 +556,70 @@ def attack(attacker, defender)
 		return
 	end 
 
-	result = attacker.ob - defender.current_db + _roll
+	result = attacker.ob - opponent.current_db + _roll
 
 	print  " => result:" + result.to_s() + "\n"
 
-	attacker.active_weapon.deal_damage(result, defender)
+	attacker.active_weapon.deal_damage(result, opponent)
 end
 
-def choose_opponent(character, opponents)
+def choose_opponent(att, opponents)
 
-	case character.personality
-		when 'smart'
-		when 'evil'
-		when 'stupid'
+	opps = opponents.clone
+	choice=''
+
+	if(att.personality == 'evil')
+
+		choice = 'weakest'
+
+		opps.each_with_index { |opp,i|
+			if (opp.dead)
+				p opps[i]
+				opps.delete_at(i)
+			end
+		}
+	else
+		opps.each_with_index { |opp,i|
+			if (opp.current_hp<=0 or opp.dead or opp.unconscious)
+				p opps[i]
+				opps.delete_at(i)
+			end
+		}
+
+		if(att.personality == 'smart')
+			choice = 'weakest'
+		else
+			choice = 'strongest'
+		end
+
 	end
 
+	case choice
+		when 'weakest'
+			idx_weakest_opp = opps.each_with_index.inject(0) { |min_i, (opp, idx) |
+				if (opp.current_hp < opps[min_i].current_hp)
+					idx
+				else
+					min_i
+				end
+			}
+			opp = opps[idx_weakest_opp]
+
+		when 'strongest'
+			idx_weakest_opp = opps.each_with_index.inject(0) { |max_i, (opp, idx) |
+				if (opp.current_hp > opps[max_i].current_hp)
+					idx
+				else
+					max_i
+				end
+				
+			}
+			opp = opps[idx_weakest_opp]
 
 
-	opponents.each_with_index { | character, index |
-		if(character !=nil) 
-			if(character.unconscious or character.dead)
+	end
 
-			end
-		end
-	}
-end
-
+	return opp, att.personality
 
 end
 
@@ -628,6 +667,39 @@ def consider_wounds(character)
 		reason += " and prone"
 	end
 
+	if(character.unconscious == true)
+
+		can_attack = false
+		character.current_db -= 100
+		reason += " and unconscious "
+	end
+
+	if(character.dead == true)
+
+		can_attack = false
+		character.current_db -= 100
+		reason += " and dead "
+	end
+
+	if(character.current_hp<0)
+
+		if((character.hp + character.current_hp) <0)
+
+			character.dead = true
+
+			can_attack = false
+			character.current_db -= 100
+			reason += " and dead due to excessive hp dmage"
+		else
+			character.unconscious = true
+
+			can_attack = false
+			character.current_db -= 100
+			reason += " and unconscious due to excessive hp dmage"
+
+		end
+	end
+
 	return can_attack, reason
 end
 
@@ -636,7 +708,8 @@ def actions(character, opponents)
 	can_attack, reason = consider_wounds(character)
 
 	if(can_attack)
-		attack(character, choose_opponent(character, opponents))
+		opponent, manner = choose_opponent(character, opponents)
+		attack(character, opponent, manner)
 	else
 		print COLOUR_BLUE + character.name + " cannot attack, reason: " + reason + "\n" + COLOUR_RESET
 	end
@@ -673,7 +746,7 @@ def verify_handshake(hello)
 	return "ok"
 end
 
-server  = TCPServer.open(20016)
+server  = TCPServer.open(20015)
 
 
 class Clients
@@ -729,7 +802,7 @@ class Clients
 				if(thread_id.alive?)
 					msg = socket.gets
 				end
-
+=begin
 				if(msg >= '\r\n') 
 
 					someone_said = true
@@ -750,6 +823,7 @@ class Clients
 				else
 					server_print("no msg? =>", msg)
 				end
+=end
 			}
 		}
 
@@ -898,11 +972,37 @@ def play_again(thread_id, sock)
 
 end
 
+def rename_pcs(pcs)
+
+	pcs.each_with_index { |pc , i |
+
+		
+		unless(i==0) 
+
+			case i
+			
+				when 0
+					pc.name = 'Aramir the Invincible'
+				when 1
+					pc.name = 'Drendon the Old'
+				when 2
+					pc.name = 'Ezmu the Small'
+				when 3
+					pc.name = 'Bereth the Strong'
+				else
+					pc.name = 'Unknown'  + i.to_s + surname
+			end
+
+		end
+	}	
+end
+
 def rename_npcs(npcs)
 
 	surname = ' the Orc'
 
 	npcs.each_with_index { |npc , i |
+
 
 		case i
 		
@@ -915,9 +1015,36 @@ def rename_npcs(npcs)
 			when 3
 				npc.name = 'Hugnarl'  +  surname
 			else
-				npc.name = 'Unknown'  + i + surname
+				npc.name = 'Unknown'  + i.to_s + surname
 		end
 	}	
+end
+
+def pcs_left(pcs)
+
+	pcs.each { |pc|
+		if(pc.current_hp>0 and pc.dead==false and pc.unconscious==false)
+			return true
+		end
+	}
+	return false
+end
+
+def npcs_left(npcs)
+
+	res = false
+
+	npcs.each { |npc|
+		print print npc.name + ' ' + npc.current_hp.to_s + ' ' + npc.dead.to_s + ' ' + npc.unconscious.to_s + ' '
+		if(npc.current_hp>0 and npc.dead==false and npc.unconscious==false)
+			res = true
+		end
+	}
+
+	print res.to_s
+	
+	return res
+
 end
 
 loop {                        
@@ -934,9 +1061,11 @@ loop {
 		character = menu(player)
 		pcs.push(character)
 
-		if(pcs.length<2) 
-			pcs.push(Character.new('Hargor'))
+		while (pcs.length<2) 
+			pcs.push(Character.new('dummy'))
 		end
+
+		rename_pcs(pcs)
 
 		pcs.each { |pc| npcs.push(Character.new('dummy')) }
 		
@@ -955,12 +1084,24 @@ loop {
 			i=i+1
 			print "========================= Round: #" + i.to_s() + " ==============================\n\n"
 
+			players_left = false
+			enemies_left = false
+
 			pcs.each  { | character | 
-				actions(character, npcs)
+
+				if(npcs_left(npcs))
+					actions(character, npcs)
+				end
+
 				print "\n----------------------------------------------------------------\n\n"
 			}
+
 			npcs.each { | character | 
-				actions(character, pcs)
+
+				if(pcs_left(pcs))
+					actions(character, pcs)
+				end
+
 				print "\n----------------------------------------------------------------\n\n"
 			}
 
@@ -969,30 +1110,15 @@ loop {
 				someone_talked = $clients.gets_all()	
 			end
 
-			players_left = false
-			pcs.each { | pc |
-				if(not pc.unconscious and not pc.dead)
-					players_left = true
-					break
-				end
-			}
 
-			enemies_left = false
-			pcs.each { | pc |
-				if(not pc.unconscious and not pc.dead)
-					enemies_left = true
-					break
-				end
-			}
+			#print "enemies left:" + enemies_left.to_s() + ", players left: " + players_left.to_s() + "\n"
 
-			print "enemies left:" + enemies_left.to_s() + ", players left: " + players_left.to_s() + "\n"
-
-			if(players_left<=0)
+			if(not pcs_left(pcs))
 				print "NPCs won!\n"
 				break
 			end
 
-			if(enemies_left<=0)
+			if(not npcs_left(npcs))
 				print "PCs won!\n"
 				break
 			end
@@ -1004,6 +1130,15 @@ loop {
 		$clients.gets_all
 		print SCREEN_CLEAR + CURSOR_UP
 		print(combatants_to_s(combatants))
+
+		sock.puts 'bye'
+		sock.close
+
+		pcs        = Array.new
+		npcs       = Array.new
+		combatants = Array.new
+
+		Thread.current.exit
 
 	end
 

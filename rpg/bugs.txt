@@ -1,0 +1,23 @@
+
+
+crit roll open ended yields 2nd roll
+
+---
+
+AI seems broken?
+
+---
+
+bleeding seems to be printed as stun
+
+---
+
+2 vs 2 works, 3 vs 3 is broken, for some reason, hp goes negative
+
+ take that back, sometimes even 2 vs 2 has attackers attacking dead characters
+
+or w 2 clients it mostly goes to hell
+
+ => bad synch bugs, need to start locking things down :-)
+
+--
