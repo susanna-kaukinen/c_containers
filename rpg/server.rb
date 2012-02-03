@@ -1227,7 +1227,8 @@ def fight_all_rounds(pcs,npcs,combatants)
 
 end
 
-$clients    = Clients.new
+$forced_start_fight = false
+$clients            = Clients.new
 
 def main()
 
@@ -1257,9 +1258,13 @@ def main()
 
 					fight_all_rounds(pcs,npcs,combatants)
 
+					# <cleanup>
 					pcs        = Array.new
 					npcs       = Array.new
 					combatants = Array.new
+
+					$forced_start_fight = false
+					# </cleanup>
 				end
 
 				players.each { |p| p.thread_id.run }
