@@ -21,3 +21,11 @@ or w 2 clients it mostly goes to hell
  => bad synch bugs, need to start locking things down :-)
 
 --
+
+\n => \n\r - asia, jollain voi olla billy
+
+-- 
+
+uus game jos haluaa, jollain voi olla olematta CLI 
+
+--
