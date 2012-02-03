@@ -1,8 +1,9 @@
-#!/usr/bin/ruby1.9.2
+#!/home/susanna/.rvm/rubies/ruby-1.9.3-p0/bin/ruby
 
 require 'socket'                # Get sockets from stdlib
+require 'monitor'
+require 'rubygems'
 require 'json'
-
 #
 # TODO: severed, crushed, bruised, miinukset: e.g. char at -10%, blind toteuttamatta (-100)
 #
@@ -44,7 +45,8 @@ COLOUR_MAGENTA_BLINK    = "\033[05;35m";
 COLOUR_CYAN_BLINK       = "\033[05;36m";
 COLOUR_WHITE_BLINK      = "\033[05;37m";
 
-COLOUR_RED_REVERSE      = "\033[7m";
+COLOUR_REVERSE       = "\033[7m";
+COLOUR_RED_REVERSE_BLINK = COLOUR_RED_BLINK + COLOUR_REVERSE 
 
 COLOUR_RESET      = "\033[0m"
 
@@ -117,7 +119,7 @@ class Wound
 			'unconscious' => "#{@unconscious}",
 			'dead'        => "#{@dead}",
 			'target'      => "#{@target}",
-			'text'        => "#{@dead}",
+			'text'        => "#{@text}",
 
 		}.to_json(*a)
 	end
@@ -427,6 +429,7 @@ class Character
 	attr_accessor :current_db, :active_weapon, :current_hp
 	attr_accessor :wounds
 	attr_accessor :personality
+	attr_accessor :cant_attack_reason
 
 	def get_personality
 		personality = rand(3)
@@ -438,13 +441,7 @@ class Character
 		end
 	end
 
-	def initialize(name)
-		@name	= name
-		@ob	= count("ob")
-		@db	= count("db")
-		@ac	= count("ac")
-		@hp	= count("hp")
-
+	def heal
 		@stun = 0
 		@bleeding = 0
 		@uparry = 0
@@ -460,8 +457,19 @@ class Character
 		@current_db     = @db # at this point
 
 		@wounds = []
+	end
+
+	def initialize(name)
+		@name	= name
+		@ob	= count("ob")
+		@db	= count("db")
+		@ac	= count("ac")
+		@hp	= count("hp")
 
 		@personality = get_personality
+		@cant_attack_reason = 'no reason'
+
+		heal
 	end
 
 	def to_s
@@ -475,12 +483,107 @@ class Character
 		"\n\t !p:" + @uparry.to_s()+ 
 		"\n\t dw:" + @downed.to_s()+ 
 		"\n\t pr:" + @prone.to_s()+ 
-		"\n\t bl:" + @blind.to_s()
+		"\n\t bl:" + @blind.to_s()+
+		"\n\t wo:" + @wounds.to_json()
 	end
 
 	def add_wound(wound)
 		@wounds.push(wound)
 	end
+
+	def apply_wounds_effects_round_start
+
+		if(@bleeding > 0)
+			cprint COLOUR_RED + COLOUR_REVERSE + @name + ' loses ' + @bleeding.to_s() + ' hits due to bleeding!' + "\n\n" ### FIXME
+			@current_hp -= @bleeding
+		end
+	end
+
+
+	def apply_wound_effects_after_attack
+
+		@current_db = @db
+
+	# FIXME: can char be downed and prone?
+	# FIXME: if char suffers one prone and one downed, should they take a total of 1 or 2 rounds to recover from?
+		if(@stun>0)
+
+			@stun -= 1
+			@current_db -= 20
+			
+			if(@uparry > 0)
+				@uparry -= 1
+			end
+		end
+
+		if(@downed>0)
+			@downed -= 1
+			@current_db -= 30
+		end
+
+		if(@prone>0)
+			@prone -= 1
+			@current_db -= 50
+		end
+
+		if(@current_hp<0)
+			if((@hp + @current_hp) <0)
+				@dead = true
+			else
+				@unconscious = true
+			end
+		end
+
+		if(@unconscious or @dead)
+			@current_db -= 100
+		end
+
+	end
+
+
+	def can_attack() # i.e. can this character attack now
+
+		can_attack = true
+		@cant_attack_reason = ''
+
+		def _add_reason(reason)
+
+			if(reason.length>0)
+				@cant_attack_reason += " and " + reason
+			else
+				@cant_attack_reason = reason
+			end
+		
+			can_attack = false
+		end
+
+		if(@stun > 0)
+			_add_reason("stunned")
+			
+			if(@uparry > 0)
+				 _add_reason "unable to parry"
+			end
+		end
+
+  		_add_reason "downed"       if @downed>0
+		_add_reason "prone"        if @prone>0
+		_add_reason "unconscious"  if (@unconscious == true)
+		_add_reason "dead"         if (@dead        == true)
+
+		if(@current_hp<0)
+
+			if((@hp + @current_hp) <0)
+				_add_reason "dead due to excessive hp dmage"
+			else
+				_add_reason "unconscious due to excessive hp dmage"
+			end
+		end
+
+		return can_attack, @cant_attack_reason
+
+	end
+
+
 end
 
 def roll(weapon, attacker)
@@ -574,14 +677,14 @@ def choose_opponent(att, opponents)
 
 		opps.each_with_index { |opp,i|
 			if (opp.dead)
-				p opps[i]
+				#p opps[i]
 				opps.delete_at(i)
 			end
 		}
 	else
 		opps.each_with_index { |opp,i|
 			if (opp.current_hp<=0 or opp.dead or opp.unconscious)
-				p opps[i]
+				#p opps[i]
 				opps.delete_at(i)
 			end
 		}
@@ -623,95 +726,17 @@ def choose_opponent(att, opponents)
 
 end
 
-def consider_wounds(character)
 
-	can_attack = true
-	reason     = "no reason"
 
-	character.current_db = character.db
-
-	if(character.stun > 0)
-
-		can_attack = false
-
-		character.stun -= 1
-		character.current_db -= 20
-		reason     = "stunned"
-		
-		if(character.uparry > 0)
-			character.uparry -= 1
-			reason += " and unable to parry"
-		end
-	end
-
-	if(character.bleeding > 0)
-		cprint COLOUR_RED_REVERSE + character.name + ' loses ' + character.bleeding.to_s() + ' hits due to bleeding!' + "\n\n"
-		character.current_hp -= character.bleeding
-	end
-
-	if(character.downed>0)
-
-		can_attack = false
-
-		character.downed -= 1
-		character.current_db -= 30
-		reason += " and downed"
-	end
-
-	if(character.prone>0)
-	
-		can_attack = false
-
-		character.prone -= 1
-		character.current_db -= 50
-		reason += " and prone"
-	end
-
-	if(character.unconscious == true)
-
-		can_attack = false
-		character.current_db -= 100
-		reason += " and unconscious "
-	end
-
-	if(character.dead == true)
-
-		can_attack = false
-		character.current_db -= 100
-		reason += " and dead "
-	end
-
-	if(character.current_hp<0)
-
-		if((character.hp + character.current_hp) <0)
-
-			character.dead = true
-
-			can_attack = false
-			character.current_db -= 100
-			reason += " and dead due to excessive hp dmage"
-		else
-			character.unconscious = true
-
-			can_attack = false
-			character.current_db -= 100
-			reason += " and unconscious due to excessive hp dmage"
-
-		end
-	end
-
-	return can_attack, reason
-end
 
 def actions(character, opponents)
-	
-	can_attack, reason = consider_wounds(character)
 
-	if(can_attack)
+	if(character.can_attack())
 		opponent, manner = choose_opponent(character, opponents)
 		attack(character, opponent, manner)
+		opponent.apply_wound_effects_after_attack
 	else
-		print COLOUR_BLUE + character.name + " cannot attack, reason: " + reason + "\n" + COLOUR_RESET
+		print COLOUR_BLUE + character.name + " cannot attack, reason: " + character.cant_attack_reason + "\n" + COLOUR_RESET
 	end
 
 	print "\n"
@@ -734,51 +759,41 @@ def combatants_to_s (combatants)
 
 end
 
-
-
-def verify_handshake(hello)
-
-	p hello
-
-	if(hello != "helo\r\n")
-		return false
-	end
-	return "ok"
-end
-
-server  = TCPServer.open(20015)
-
-
 class Clients
 
-	attr_accessor :lock, :clients
+	include MonitorMixin
 
-	def initialize
-		@lock    = Mutex.new
+	attr_accessor :clients
+
+	def initialize(*args)
+		super(*args)
+
 		@clients = Hash.new
 	end
 
 	def addClient(player)
-		@lock.synchronize {
+		self.synchronize do
 			clients[player.thread_id] = player.socket
-		}
+		end
 	end
 
 	def getSocket(key)
 		sock = ''
-		@lock.synchronize {
+		synchronize {
 			sock = clients[key]
 		}
 		return sock
 	end
 
 	def print(key, vargs)
-		sock = getSocket(key)
-		sock.puts(vargs)
+		synchronize {
+			sock = getSocket(key)
+			sock.puts(vargs)
+		}
 	end
 
 	def print_all(vargs)
-		@lock.synchronize {
+		synchronize {
 			clients.each{ | thread_id, socket | 
 				if(thread_id.alive?)
 					socket.puts(vargs) 
@@ -789,12 +804,7 @@ class Clients
 	end
 
 	def gets_all()
-
-		#print_all "==<Enter to contine, 'say: ...' to coment (broken currently)>=="
-
-		someone_said = false
-
-		lock.synchronize {
+		synchronize {
 			clients.each{ | thread_id, socket | 
 
 				msg = ''
@@ -802,65 +812,41 @@ class Clients
 				if(thread_id.alive?)
 					msg = socket.gets
 				end
-=begin
-				if(msg >= '\r\n') 
-
-					someone_said = true
-
-					server_print(msg)
-
-					clients.each{ | _thread_id, _socket | 
-						if(thread_id.alive?)
-							#socket.puts("\t===>" + msg + "<===(" + "#{thread_id}" + "/" + "#{socket}" + ")=====>\n\n")
-							if(thread_id==_thread_id)
-								_socket.puts("\n")
-							else
-								_socket.puts(msg)
-							end
-								
-						end
-					}
-				else
-					server_print("no msg? =>", msg)
-				end
-=end
 			}
 		}
-
-		if(someone_said)
-			return true
-		else
-			return false
-		end
-
 	end
 
 	def gets(key)
-		sock = getSocket(key)
-		str = sock.gets
-		return str
+		synchronize {
+			sock = getSocket(key)
+			str = sock.gets
+			return str
+		}
 	end
 
 	def length
 		len=0
-		@lock.synchronize {
+		synchronize {
 			len = clients.length	
 		}
 		return len
 	end
 end
 
-$clients    = Clients.new
-pcs         = Array.new()
-npcs        = Array.new()	
-combatants  = Array.new()
-
-def sockprint(socket, *vargs)
-	socket.puts(vargs)
-end
 
 def server_print(*vargs)
+
+	putc 's'
+	putc 'e'
+	putc 'r'
+	putc 'v'
+	putc 'e'
+	putc 'r'
+	putc '>'
+	putc ' '
+
 	puts(vargs)
+	
 end
 
 def print(*vargs)
@@ -893,14 +879,38 @@ Thread.abort_on_exception = true
 class Player
 	attr_accessor :character
 	attr_accessor :thread_id, :socket
+	attr_accessor :character
+	attr_accessor :players
 
-	def initialize(thread_id, socket)
-		@thread_id = thread_id
-		@socket    = socket
+	def initialize(players, thread_id, socket)
+		@thread_id   = thread_id
+		@socket      = socket
+		@character   = nil
+
+		players.push(self)
+		@players = players
 	end
+	
+	def remove()
+
+		players.each_with_index { |player,i|
+			if(player.thread_id = @thread_id)
+				players.delete_at(i)
+			end
+		}
+
+		return self
+
+	end	
 
 	def write(*vargs)
-		socket.gets(vargs)
+		vargs.each { |param|
+			if(vargs.is_a? String)
+				socket.puts(param)
+			else
+				socket.puts(param.to_s)
+			end
+		}
 	end
 
 end
@@ -920,57 +930,116 @@ def prompt(sock, str)
 	return response.strip!
 end
 
-def menu(player)
+def pre_menu(sock)
 
-	thread_id = player.thread_id
-	sock      = player.socket
+	i=0
+	File.open('motd.txt').each_line{ |line_in_file|
 
-	Mutex.new.synchronize {
-
-		sock.puts(SCREEN_CLEAR + CURSOR_UP)
-	
-		i=0	
-		File.open('motd.txt').each_line{ |s|
-
-			strC = COLOUR_GREEN_BLINK      + 'C' + COLOUR_RESET
-			strW = COLOUR_YELLOW_BLINK     + 'W' + COLOUR_RESET
-			strN = COLOUR_GREEN_BLINK      + 'N' + COLOUR_RESET
-			strQ = COLOUR_RED_BLINK        + 'Q' + COLOUR_RESET
-
-			if(i>=20)
-				s = s.gsub('C', strC)
-				s = s.gsub('W', strW)
-				s = s.gsub('N', strN)
-				s = s.gsub('Q', strQ)
-			end
-
-			sock.puts s
-
-			i+=1
-		}
-
-		cmd = prompt(sock, 'cmd')
-		
-		case cmd[0]
-			when 'n'
-				name = prompt(sock, 'name')
-				return Character.new(name)
-								
-			when 'q'
-				sock.puts 'bye'
-				sock.close
-				Thread.current.exit
-			else
-				sock.puts 'Not implemented'
-				sleep(2)
-				redo
+		if(i>=15)
+			sock.puts line_in_file 
 		end
 	}
 end
 
-def play_again(thread_id, sock)
+def menu(player, ask_play_again)
 
+	def _exit(player)
+		begin
+			player.socket.puts 'bye'
+			player.socket.close
+		rescue
+		end
+
+		player.remove = nil
+
+		Thread.current.exit
+	end
+
+	def _print_motd(player,ask_play_again)
+
+		sock      = player.socket
+
+		sock.puts(SCREEN_CLEAR + CURSOR_UP)
+	
+		i=0	
+		File.open('motd.txt').each_line{ |line_in_file|
+
+			strMONSTER = COLOUR_RED_BLINK + 'MONSTER' + COLOUR_RESET
+			strI = COLOUR_GREEN_BLINK      + ' I ' + COLOUR_RESET
+			strW = COLOUR_YELLOW_BLINK     + ' W ' + COLOUR_RESET
+			strN = COLOUR_GREEN_BLINK      + ' N ' + COLOUR_RESET
+			strQ = COLOUR_RED_BLINK        + ' Q ' + COLOUR_RESET
+
+			line_in_file = line_in_file.gsub('MONSTER', strMONSTER)
+
+			if(i>=20)
+				 line_in_file = line_in_file.gsub(' I ', strI)
+				 line_in_file = line_in_file.gsub(' W ', strW)
+				 line_in_file = line_in_file.gsub(' N ', strN)
+			end
+
+			sock.puts line_in_file 
+
+			i+=1
+		}
+
+		sock.puts COLOUR_RED_BLINK + " Q" + COLOUR_RESET + ' = Quit'
+
+		if(ask_play_again)
+			sock.puts COLOUR_YELLOW_BLINK + ' S' + COLOUR_RESET + ' = Show character'
+			sock.puts "\n " + COLOUR_GREEN_BLINK + 'P' + COLOUR_RESET + 'lay again? (same character)'
+		end
+
+
+	end
+
+	def _handle_cmd(player, ask_play_again)	
+
+		sock = player.socket
+
+		cmd = prompt(sock, 'cmd')
+
+		case cmd[0]
+			when 'n'
+				name = prompt(sock, 'name')
+				player.character= Character.new(name)
+				return true, false
+								
+			when 'q'
+				_exit(player)
+			when 'n'
+				_exit(player)
+			when 'p'
+				return true, false if ask_play_again
+			when 's'
+				return false, true
+			when ''
+				return false, false
+			when 'h'
+				player.character.heal
+				return false, false
+			else
+				sock.puts 'Not implemented'
+				sleep(1)
+				return false, false
+		end
+	end
+
+	show_player = false
+	ready       = false
+
+	while not ready
+		_print_motd(player,ask_play_again)
+
+		if(show_player)
+			player.socket.puts player.character.to_s
+		end
+
+		ready, show_player = _handle_cmd(player, ask_play_again)
+
+	end
 end
+
 
 def rename_pcs(pcs)
 
@@ -1035,112 +1104,200 @@ def npcs_left(npcs)
 	res = false
 
 	npcs.each { |npc|
-		print print npc.name + ' ' + npc.current_hp.to_s + ' ' + npc.dead.to_s + ' ' + npc.unconscious.to_s + ' '
+		#print print npc.name + ' ' + npc.current_hp.to_s + ' ' + npc.dead.to_s + ' ' + npc.unconscious.to_s + ' '
 		if(npc.current_hp>0 and npc.dead==false and npc.unconscious==false)
 			res = true
 		end
 	}
 
-	print res.to_s
+	#print res.to_s
 	
 	return res
 
 end
 
-loop {                        
-	sleep(1)
+def init_round(pcs, npcs, combatants)
 
-	Thread.start(server.accept) do | sock |
-
-		player = Player.new(Thread.current, sock)
-
-		$clients.addClient(player)
-
-		server_print $clients.getSocket(player.thread_id)
-
-		character = menu(player)
-		pcs.push(character)
-
-		while (pcs.length<2) 
-			pcs.push(Character.new('dummy'))
-		end
-
-		rename_pcs(pcs)
-
-		pcs.each { |pc| npcs.push(Character.new('dummy')) }
-		
-		rename_npcs(npcs)
-
-		pcs.each  { |pc|  combatants.push(pc)  }
-		npcs.each { |npc| combatants.push(npc) }
-
-		print(SCREEN_CLEAR + CURSOR_UP + "NEW FIGHT!")
-		print(combatants_to_s(combatants) + "\nHIT ENTER TO BEGIN" )
-		$clients.gets_all
-		print(SCREEN_CLEAR + CURSOR_UP)
-
-		i=0
-		while true
-			i=i+1
-			print "========================= Round: #" + i.to_s() + " ==============================\n\n"
-
-			players_left = false
-			enemies_left = false
-
-			pcs.each  { | character | 
-
-				if(npcs_left(npcs))
-					actions(character, npcs)
-				end
-
-				print "\n----------------------------------------------------------------\n\n"
-			}
-
-			npcs.each { | character | 
-
-				if(pcs_left(pcs))
-					actions(character, pcs)
-				end
-
-				print "\n----------------------------------------------------------------\n\n"
-			}
-
-			someone_talked = true
-			while someone_talked
-				someone_talked = $clients.gets_all()	
-			end
-
-
-			#print "enemies left:" + enemies_left.to_s() + ", players left: " + players_left.to_s() + "\n"
-
-			if(not pcs_left(pcs))
-				print "NPCs won!\n"
-				break
-			end
-
-			if(not npcs_left(npcs))
-				print "PCs won!\n"
-				break
-			end
-
-			print SCREEN_CLEAR + CURSOR_UP
-			
-		end
-
-		$clients.gets_all
-		print SCREEN_CLEAR + CURSOR_UP
-		print(combatants_to_s(combatants))
-
-		sock.puts 'bye'
-		sock.close
-
-		pcs        = Array.new
-		npcs       = Array.new
-		combatants = Array.new
-
-		Thread.current.exit
-
+	while (pcs.length<2) 
+		pcs.push(Character.new('dummy'))
 	end
 
-}
+	rename_pcs(pcs)
 
+	pcs.each { |pc| npcs.push(Character.new('dummy')) }
+	
+	rename_npcs(npcs)
+
+	pcs.each  { |pc|  combatants.push(pc)  }
+	npcs.each { |npc| combatants.push(npc) }
+
+	print(SCREEN_CLEAR + CURSOR_UP + "NEW FIGHT!")
+	print(combatants_to_s(combatants) + "\nHIT ENTER TO BEGIN" )
+	$clients.gets_all
+	print(SCREEN_CLEAR + CURSOR_UP)
+end
+
+def fight_all_rounds(pcs,npcs,combatants)
+
+	i=0
+	while true
+		i=i+1
+		print "========================= Round: #" + i.to_s() + " ==============================\n\n"
+
+		players_left = false
+		enemies_left = false
+
+		combatants.each { |character|
+			character.apply_wounds_effects_round_start
+		}
+
+		pcs.each  { | character | 
+
+			if(npcs_left(npcs))
+				actions(character, npcs)
+			end
+
+			print "\n----------------------------------------------------------------\n\n"
+		}
+
+		npcs.each { | character | 
+
+			if(pcs_left(pcs))
+				actions(character, pcs)
+			end
+
+			print "\n----------------------------------------------------------------\n\n"
+		}
+
+		#print "enemies left:" + enemies_left.to_s() + ", players left: " + players_left.to_s() + "\n"
+
+		if(not pcs_left(pcs))
+			print "NPCs won!\n"
+			break
+		end
+
+		if(not npcs_left(npcs))
+			print "PCs won!\n"
+			break
+		end
+
+		$clients.gets_all
+
+		print SCREEN_CLEAR + CURSOR_UP
+		
+	end
+
+	$clients.gets_all
+	print SCREEN_CLEAR + CURSOR_UP
+	print(combatants_to_s(combatants))
+	$clients.gets_all
+
+end
+
+
+def wait_fight_start(players, player)
+
+	server_print 'koira'
+	player.write('koira')
+
+	Mutex.new.synchronize {
+
+		player.write('Waiting for fight to start...')
+
+		while true
+			if(players.length>0) # FIXME, should players be synched
+				return true
+			end
+
+			player.write('.')
+			sleep(1)	
+
+		end
+	}
+
+end
+
+
+$clients    = Clients.new
+
+def main()
+
+
+	server      = TCPServer.open(20015)
+	players     = Array.new
+	pcs         = Array.new
+	npcs        = Array.new
+	combatants  = Array.new
+	monitor     = Monitor.new
+
+	fight_thread = ''
+
+	Thread.start() do 
+
+		fight_thread = Thread.current
+
+		loop { # one iteration is one fight
+
+			Thread.stop
+
+			monitor.synchronize {
+
+
+				if(players.length>0)
+
+					init_round(pcs, npcs, combatants)
+
+					fight_all_rounds(pcs,npcs,combatants)
+
+					pcs        = Array.new
+					npcs       = Array.new
+					combatants = Array.new
+				end
+
+				players.each { |p| p.thread_id.run }
+			}
+
+		}
+	end
+
+	loop { # accept new players                       
+
+		Thread.start(server.accept) do | sock |
+
+			player = ''
+			ask_play_again = false
+
+			pre_menu(sock)
+
+			monitor.synchronize {
+
+				player = Player.new(players, Thread.current, sock)
+
+				$clients.addClient(player)
+
+				server_print $clients.getSocket(player.thread_id)
+
+
+			}
+
+			loop {
+
+				monitor.synchronize {
+
+					menu(player, ask_play_again)
+					pcs.push(player.character)
+
+					player.write('Waiting for fight to start...')
+					ask_play_again = true
+				}
+				fight_thread.run
+				Thread.stop
+			}
+		end
+	}
+
+	
+
+end
+
+main

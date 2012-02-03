@@ -18,8 +18,6 @@
        of February, 1984
 
 
- c = identify Character
- w = Wait players
- n = New character
- q = Quit        
-
+ I = Identify character
+ W = Wait players
+ N = New character
