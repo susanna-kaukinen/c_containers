@@ -941,7 +941,7 @@ def pre_menu(sock)
 	}
 end
 
-def menu(player, ask_play_again)
+def menu(monitor, player, ask_play_again)
 
 	def _exit(player)
 		begin
@@ -979,6 +979,7 @@ def menu(player, ask_play_again)
 
 		if(ask_play_again)
 			sock.puts COLOUR_YELLOW_BLINK + ' S' + COLOUR_RESET + ' = Show character'
+			sock.puts COLOUR_GREEN_BLINK + ' H' + COLOUR_RESET + ' = Heal character'
 			sock.puts "\n " + COLOUR_GREEN_BLINK + 'P' + COLOUR_RESET + 'lay again? (same character)'
 		end
 	end
@@ -1001,72 +1002,92 @@ def menu(player, ask_play_again)
 
 	end
 
-	def _handle_cmd(player, ask_play_again)	
+	def _handle_cmd(monitor, player, ask_play_again)	
 
 		sock = player.socket
 
 		cmd = prompt(sock, 'cmd')
 
-		case cmd[0]
-			when 'n'
-				name = prompt(sock, 'name')
-				player.character= Character.new(name)
-				return true, false
-								
-			when 'q'
-				_exit(player)
-			when 'n'
-				_exit(player)
-			when 'p'
-				return true, false if ask_play_again
-			when 's'
-				return false, true
-			when ''
-				return false, false
-			when 'h'
-				player.character.heal
-				return false, false
-			else
-				sock.puts 'Not implemented'
-				sleep(1)
-				return false, false
-		end
+		monitor.synchronize {
+
+			case cmd[0]
+				when 'n'
+					name = prompt(sock, 'name')
+					player.character= Character.new(name)
+					return true, false
+									
+				when 'q'
+					_exit(player)
+				when 'n'
+					_exit(player)
+				when 'p'
+					return true, false if ask_play_again
+				when 's'
+					return false, true
+				when ''
+					return false, false
+				when 'h'
+					player.character.heal
+					return false, false
+				else
+					sock.puts 'Not implemented'
+					sleep(1)
+					return false, false
+			end
+		}
 	end
 
-	def _handle_2nd_cmd(player)
+	def _handle_2nd_cmd(monitor, player)
 
 		sock = player.socket
 
 		cmd = prompt(sock, 'cmd')
 
-		case cmd[0]
-			when 'w'
+		monitor.synchronize {
+
+			case cmd[0]
+				when 'w'
+					return true
+				when 'f'
+					$forced_start_fight = true
+					return true
+				else
+					sock.puts 'Not implemented'
+					sleep(1)
+					return false, false
+			end
+		}
+	end
+
+	def _ready_to_break(monitor, bool)
+		monitor.synchronize { 
+			if(bool) 
 				return true
-			when 'f'
-				$forced_start_fight = true
-				return true
-			else
-				sock.puts 'Not implemented'
-				sleep(1)
-				return false, false
-		end
+			end 
+		}
 	end
 
 	show_player = false
-	go          = false
 
-	while not go
-		_print_motd_1(player, ask_play_again)
+	while true
 
-		if(show_player)
-			player.socket.puts player.character.to_s
-		end
+		monitor.synchronize {
+			_print_motd_1(player, ask_play_again)
 
-		ready, show_player = _handle_cmd(player, ask_play_again)
+			if(show_player)
+				player.socket.puts player.character.to_s
+			end
+		}
+
+		ready, show_player = _handle_cmd(monitor, player, ask_play_again)
 
 		if(ready)
-			_print_motd_2(player)
-			go = _handle_2nd_cmd(player)
+			monitor.synchronize { _print_motd_2(player) }
+			bool = _handle_2nd_cmd(monitor, player)
+		end
+
+		if(_ready_to_break(monitor, bool))
+			break
 		end
 	end
 end
@@ -1252,7 +1273,8 @@ def main()
 
 			monitor.synchronize {
 
-				if($forced_start_fight or players.length>1)
+				if($forced_start_fight and players.length>0)
+					$forced_start_fight = false
 
 					init_round(pcs, npcs, combatants)
 
@@ -1263,7 +1285,6 @@ def main()
 					npcs       = Array.new
 					combatants = Array.new
 
-					$forced_start_fight = false
 					# </cleanup>
 				end
 
@@ -1295,9 +1316,9 @@ def main()
 
 			loop {
 
-				monitor.synchronize {
+				menu(monitor, player, ask_play_again)
 
-					menu(player, ask_play_again)
+				monitor.synchronize {
 					pcs.push(player.character)
 
 					player.write('Waiting for fight to start..')
