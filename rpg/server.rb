@@ -421,7 +421,7 @@ end
 class Character
 
 	# base, or so
-	attr_accessor :name
+	attr_accessor :name, :party, :brains
 	attr_accessor :ob, :db, :ac, :hp
 
 	# current/active
@@ -463,8 +463,10 @@ class Character
 		@wounds = []
 	end
 
-	def initialize(name)
+	def initialize(name, party, brains)
 		@name	= name
+		@party  = party
+		@brains = brains
 		@ob	= count("ob")
 		@db	= count("db")
 		@ac	= count("ac")
@@ -495,19 +497,17 @@ class Character
 
 	def recover_from_wounds
 
-		if(@bleeding > 0)
-			@current_hp -= @bleeding
-		end
+		@prone  -= 1 and return if(@prone>0)
+		@downed -= 1 and return if(@downed>0)
 
 		@stun   -= 1 if(@stun>0)
-		@downed -= 1 if(@downed>0)
-		@prone  -= 1 if(@prone>0)
 		@uparry -= 1 if(@uparry > 0)
 
 	end
 
-	def show_wound_effects
+	def do_bleed
 		if(@bleeding > 0)
+			@current_hp -= @bleeding
 			print "\n" + COLOUR_RED + COLOUR_REVERSE + @name + ' loses ' + @bleeding.to_s() + ' hits due to bleeding!' + "\n\n" + COLOUR_RESET
 		end
 	end
@@ -737,6 +737,9 @@ end
 
 
 def actions(character, opponents)
+
+	character.do_bleed
+	character.recover_from_wounds
 
 	can_attack, why = character.can_attack_now()
 
@@ -1079,7 +1082,7 @@ def menu(monitor, player, ask_play_again)
 			case cmd[0]
 				when 'n'
 					name = prompt(sock, 'name')
-					player.character= Character.new(name)
+					player.character= Character.new(name, 'pc', 'biological')
 					return true, false
 									
 				when 'q'
@@ -1161,12 +1164,9 @@ end
 
 def rename_pcs(pcs)
 
-	skip = pcs.length
-
 	pcs.each_with_index { |pc , i |
 
-		unless(i<skip)
-
+		if (pc.brains == 'artificial')
 			case i
 			
 				when 0
@@ -1180,7 +1180,6 @@ def rename_pcs(pcs)
 				else
 					pc.name = 'Unknown'  + i.to_s + surname
 			end
-
 		end
 	}	
 end
@@ -1238,12 +1237,12 @@ end
 def init_round(pcs, npcs, combatants)
 
 	while (pcs.length<2) 
-		pcs.push(Character.new('dummy'))
+		pcs.push(Character.new('dummy', 'pc', 'artificial'))
 	end
 
 	rename_pcs(pcs)
 
-	pcs.each { |pc| npcs.push(Character.new('dummy')) }
+	pcs.each { |pc| npcs.push(Character.new('dummy', 'npc', 'artificial')) }
 	
 	rename_npcs(npcs)
 
@@ -1324,6 +1323,17 @@ def fight_all_rounds(monitor, pcs,npcs,combatants)
 
 	end
 
+	def _act(actor, round, combatants, opponents, sub_round)
+		_draw_subround(actor, round, combatants, sub_round)
+
+		if(npcs_left(opponents))
+			actions(actor, opponents)
+		end
+
+		$clients.gets_any
+
+	end
+
 	i=0
 	catch (:done) do
 		while true
@@ -1335,31 +1345,13 @@ def fight_all_rounds(monitor, pcs,npcs,combatants)
 
 				sub_round=1
 
-				pcs.each  { | character | 
-
-					_draw_subround(character, i, combatants, sub_round)
-
-					if(npcs_left(npcs))
-						actions(character, npcs)
-					end
-
-					$clients.gets_any
-
+				pcs.each  { | actor | 
+					_act(actor, i, combatants, npcs, sub_round)
 					sub_round += 1
 				}
 
-				npcs.each { | character |
-
-					character.recover_from_wounds
-
-					_draw_subround(character, i, combatants, sub_round)
-
-					if(pcs_left(pcs))
-						actions(character, pcs)
-					end
-
-					$clients.gets_any
-
+				npcs.each { | actor |
+					_act(actor, i, combatants, pcs, sub_round)
 					sub_round += 1
 				}
 

@@ -4,14 +4,9 @@
 
 Q from admin console doesn't take instant effect when in a fight
 
-cannot see bleeding at all
-
-stuns, prones, etc don't decrement on fight screen
-
 evils attack dead people
 
 smart attack dead people
-
 
 --
 
