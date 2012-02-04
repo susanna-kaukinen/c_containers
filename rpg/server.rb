@@ -426,10 +426,11 @@ class Character
 
 	# current/active
 	attr_accessor :stun, :bleeding, :uparry, :downed, :prone, :blind
-	attr_accessor :unconscious, :dead
+	attr_accessor :unconscious, :unconscious_why
+	attr_accessor :dead, :dead_why
 	attr_accessor :current_db, :active_weapon, :current_hp
 	attr_accessor :personality
-	attr_accessor :can_attack, :cant_attack_reason
+	attr_accessor :can_attack, :cant_attack_text, :cant_attack_reasons
 	attr_accessor :wounds
 
 	def get_personality
@@ -450,15 +451,19 @@ class Character
 		@prone  = 0
 		@blind  = 0
 
-		@unconscious = false
+		@unconscious     = false
+		@unconscious_why = ''
+
 		@dead	     = false
+		@dead_why    = ''
 		
 		@current_hp    = @hp
 		@active_weapon = Weapon.new("sword")
 		@current_db    = @db # at this point
 
 		@can_attack = true
-		@cant_attack_reason = 'no reason'
+		@cant_attack_text    = 'no reason'
+		@cant_attack_reasons = Hash.new
 
 		@wounds = []
 	end
@@ -512,6 +517,17 @@ class Character
 		end
 	end
 
+	def check_hitpoints
+		if(@current_hp<0)
+			if((@hp + @current_hp) <0)
+				@dead     = true
+				@dead_why = 'hp'
+			else
+				@unconscious     = true
+				@unconscious_why = 'hp'
+			end
+		end
+	end
 
 	def apply_wound_effects_after_attack
 
@@ -531,13 +547,7 @@ class Character
 			@current_db -= 50
 		end
 
-		if(@current_hp<0)
-			if((@hp + @current_hp) <0)
-				@dead = true
-			else
-				@unconscious = true
-			end
-		end
+		check_hitpoints
 
 		if(@unconscious or @dead)
 			@current_db -= 100
@@ -548,45 +558,43 @@ class Character
 
 	def can_attack_now() # i.e. can this character attack now
 
-		def _add_reason(reason)
+		def _add_reason (value, text)
 
-			if(reason.length>0)
-				@cant_attack_reason += " and " + reason
+			if(text.length>0)
+				@cant_attack_text += " and " + text
 			else
-				@cant_attack_reason = reason
+				@cant_attack_text = text
 			end
+
+			p text + value.to_s
+
+			@cant_attack_reasons[text] = value
+
+			p @cant_attack_reasons
 		
 			@can_attack = false
 		end
 
 		@can_attack = true
-		@cant_attack_reason = ''
+		@cant_attack_text = ''
 
 		if(@stun > 0)
-			_add_reason("stunned")
+			_add_reason @stun, "stunned"
 			
 			if(@uparry > 0)
-				 _add_reason "unable to parry"
+				 _add_reason @uparry, "unable to parry"
 			end
 		end
 
-  		_add_reason "downed"       if @downed>0
-		_add_reason "prone"        if @prone>0
-		_add_reason "unconscious"  if (@unconscious == true)
-		_add_reason "dead"         if (@dead        == true)
+  		_add_reason @downed, "downed" if @downed>0
+		_add_reason @prone,  "prone"  if @prone>0
 
-		if(@current_hp<0)
+		check_hitpoints
 
-			if((@hp + @current_hp) <0)
-				_add_reason "dead due to excessive hp dmage"
-			else
-				_add_reason "unconscious due to excessive hp dmage"
-			end
-		end
+		_add_reason @unconscious ,"unconscious"  if (@unconscious == true)
+		_add_reason @dead        ,"dead"         if (@dead        == true)
 
-		#print 'MUST NOT ATTACK ' + @can_attack.to_s + ' ' + @cant_attack_reason
-
-		return @can_attack, @cant_attack_reason
+		return @can_attack, @cant_attack_reasons, @cant_attack_text
 
 	end
 
@@ -741,17 +749,50 @@ def actions(character, opponents)
 	character.do_bleed
 	character.recover_from_wounds
 
-	can_attack, why = character.can_attack_now()
+	can_attack, why, text = character.can_attack_now()
 
 	if(can_attack)
 		opponent, manner = choose_opponent(character, opponents)
 		attack(character, opponent, manner)
 		opponent.apply_wound_effects_after_attack
 	else
-		print COLOUR_BLUE + character.name + " cannot attack, reason: " + why + "\n" + COLOUR_RESET
-	end
+		str = COLOUR_WHITE + COLOUR_REVERSE + character.name + COLOUR_RESET + " cannot attack, reason: "
 
-	print "\n"
+		if (why.has_key?('dead') and why['dead'])
+			str += COLOUR_RED + COLOUR_REVERSE + "DEAD" + COLOUR_RESET
+			print str
+			p str
+			return
+		end
+
+		if (why.has_key?('unconscious') and why['unconscious']) 
+			str += COLOUR_RED + "unconscious" + COLOUR_RESET
+			print str
+			p str
+			return
+		end
+
+		if (why.has_key?('prone') and why['prone'] > 0) 
+			str += COLOUR_YELLOW + COLOUR_REVERSE + "prone" + COLOUR_RESET
+			print str
+			p str
+			return
+		end
+
+		if (why.has_key?('downed') and why['downed'] > 0)
+			str += COLOUR_YELLOW_BLINK + "downed" + COLOUR_RESET
+			print str
+			p str
+			return
+		end
+
+		if (why.has_key?('stunned') and why['stunned'] > 0)
+			str += COLOUR_YELLOW + "stunned" + COLOUR_RESET
+			print str
+			p str
+			return
+		end
+	end
 end
 
 def combatants_to_s (combatants)
@@ -777,10 +818,10 @@ def sock_puts(sock, *vargs)
 		sock.puts(vargs)
 	rescue Exception => e
 
-		print 'Exception:' + e.to_s
+		server_print 'Exception:' + e.to_s
 
-		puts e.message  
-		puts e.backtrace.inspect
+		server_print e.message  
+		server_print e.backtrace.inspect
 		
 	end
 end
@@ -1279,7 +1320,7 @@ def fight_all_rounds(monitor, pcs,npcs,combatants)
 		end
 
 		print name_header
-		print name_divider
+		print name_divider + '  ' + '---/---'
 
 		combatants.each { | xpc |
 
@@ -1306,20 +1347,39 @@ def fight_all_rounds(monitor, pcs,npcs,combatants)
 			print wide_name
 
 			set_pos_y = "\033[1A"
-			set_pos_x = "\033[" + (names_width+1).to_s + 'C'
+			set_pos_x = "\033[" + (names_width+2).to_s + 'C'
 			
 			str += set_pos_y + set_pos_x
-			str += xpc.current_hp.to_s
-			str += '/' + xpc.hp.to_s
+
+			curr_hp = xpc.current_hp.to_s
+			while(curr_hp.length<3)
+				curr_hp = ' ' + curr_hp
+			end
+
+			str += curr_hp.to_s
+			str += '/'
+
+			hp = xpc.hp.to_s
+			while(hp.length<3)
+				hp += ' '
+			end
+
+			str += hp.to_s
+
+			#set_pos_x = "\033[" + (10).to_s + 'C'
+			#str += set_pos_x
+
 			str += ' u' if (xpc.unconscious)
 			str += ' D' if (xpc.dead)
-			str += ' s' + xpc.stun.to_s    if (xpc.stun>0)
-			str += ' d' + xpc.downed.to_s  if (xpc.downed>0)
-			str += ' d' + xpc.prone.to_s   if (xpc.prone>0)
+			str += ' s' + xpc.stun.to_s       if (xpc.stun>0)
+			str += ' d' + xpc.downed.to_s  	  if (xpc.downed>0)
+			str += ' p' + xpc.prone.to_s      if (xpc.prone>0)
+			str += ' b' + xpc.bleeding.to_s   if (xpc.bleeding>0)
 
 			print str
 		}
 
+		print "\n"
 
 	end
 

@@ -8,6 +8,8 @@ evils attack dead people
 
 smart attack dead people
 
+fumble on fumble could be upwards open-ended
+
 --
 
 \n => \n\r - asia, jollain voi olla billy
