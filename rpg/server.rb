@@ -402,7 +402,7 @@ end
 			colour = COLOUR_RED	
 		end
 		
- 		print defender.name + " has " + colour + defender.current_hp.to_s() + COLOUR_RESET + " hit points left\n"
+ 		#print defender.name + " has " + colour + defender.current_hp.to_s() + COLOUR_RESET + " hit points left\n"
 
 		if(defender.current_hp<0 and defender.dead == false)
 			defender.unconscious = true
@@ -428,9 +428,9 @@ class Character
 	attr_accessor :stun, :bleeding, :uparry, :downed, :prone, :blind
 	attr_accessor :unconscious, :dead
 	attr_accessor :current_db, :active_weapon, :current_hp
-	attr_accessor :wounds
 	attr_accessor :personality
-	attr_accessor :cant_attack_reason
+	attr_accessor :can_attack, :cant_attack_reason
+	attr_accessor :wounds
 
 	def get_personality
 		personality = rand(3)
@@ -455,7 +455,10 @@ class Character
 		
 		@current_hp    = @hp
 		@active_weapon = Weapon.new("sword")
-		@current_db     = @db # at this point
+		@current_db    = @db # at this point
+
+		@can_attack = true
+		@cant_attack_reason = 'no reason'
 
 		@wounds = []
 	end
@@ -468,8 +471,6 @@ class Character
 		@hp	= count("hp")
 
 		@personality = get_personality
-		@cant_attack_reason = 'no reason'
-
 		heal
 	end
 
@@ -492,11 +493,22 @@ class Character
 		@wounds.push(wound)
 	end
 
-	def apply_wounds_effects_round_start
+	def recover_from_wounds
 
 		if(@bleeding > 0)
-			cprint COLOUR_RED + COLOUR_REVERSE + @name + ' loses ' + @bleeding.to_s() + ' hits due to bleeding!' + "\n\n" ### FIXME
 			@current_hp -= @bleeding
+		end
+
+		@stun   -= 1 if(@stun>0)
+		@downed -= 1 if(@downed>0)
+		@prone  -= 1 if(@prone>0)
+		@uparry -= 1 if(@uparry > 0)
+
+	end
+
+	def show_wound_effects
+		if(@bleeding > 0)
+			print "\n" + COLOUR_RED + COLOUR_REVERSE + @name + ' loses ' + @bleeding.to_s() + ' hits due to bleeding!' + "\n\n" + COLOUR_RESET
 		end
 	end
 
@@ -508,22 +520,14 @@ class Character
 	# FIXME: can char be downed and prone?
 	# FIXME: if char suffers one prone and one downed, should they take a total of 1 or 2 rounds to recover from?
 		if(@stun>0)
-
-			@stun -= 1
 			@current_db -= 20
-			
-			if(@uparry > 0)
-				@uparry -= 1
-			end
 		end
 
 		if(@downed>0)
-			@downed -= 1
 			@current_db -= 30
 		end
 
 		if(@prone>0)
-			@prone -= 1
 			@current_db -= 50
 		end
 
@@ -542,10 +546,7 @@ class Character
 	end
 
 
-	def can_attack() # i.e. can this character attack now
-
-		can_attack = true
-		@cant_attack_reason = ''
+	def can_attack_now() # i.e. can this character attack now
 
 		def _add_reason(reason)
 
@@ -555,8 +556,11 @@ class Character
 				@cant_attack_reason = reason
 			end
 		
-			can_attack = false
+			@can_attack = false
 		end
+
+		@can_attack = true
+		@cant_attack_reason = ''
 
 		if(@stun > 0)
 			_add_reason("stunned")
@@ -580,7 +584,9 @@ class Character
 			end
 		end
 
-		return can_attack, @cant_attack_reason
+		#print 'MUST NOT ATTACK ' + @can_attack.to_s + ' ' + @cant_attack_reason
+
+		return @can_attack, @cant_attack_reason
 
 	end
 
@@ -650,7 +656,7 @@ def attack(attacker, opponent, manner)
 		return
 	end
 
-	print attacker.name + " ATTACKS " + opponent.name + " with " + attacker.active_weapon.name + " in a " + manner + " manner..\n"
+	print COLOUR_GREEN + COLOUR_REVERSE + attacker.name + COLOUR_RESET + " ATTACKS " + COLOUR_RED + COLOUR_REVERSE + opponent.name + COLOUR_RESET +  " with " + attacker.active_weapon.name + " in a " + manner + " manner..\n"
 
 	__roll  = roll(attacker.active_weapon, attacker)
 	_roll   = __roll[0]
@@ -732,12 +738,14 @@ end
 
 def actions(character, opponents)
 
-	if(character.can_attack())
+	can_attack, why = character.can_attack_now()
+
+	if(can_attack)
 		opponent, manner = choose_opponent(character, opponents)
 		attack(character, opponent, manner)
 		opponent.apply_wound_effects_after_attack
 	else
-		print COLOUR_BLUE + character.name + " cannot attack, reason: " + character.cant_attack_reason + "\n" + COLOUR_RESET
+		print COLOUR_BLUE + character.name + " cannot attack, reason: " + why + "\n" + COLOUR_RESET
 	end
 
 	print "\n"
@@ -832,7 +840,7 @@ class Clients
 			clients.each{ | thread_id, socket | sockets.push(socket) }
 
 			loop {
-				results = select ( sockets )
+				results = select ( sockets ) # FIXME, can except?
 				
 				for sock in results[0]
 					if results[0].include? sock
@@ -1213,21 +1221,84 @@ end
 
 def fight_all_rounds(pcs,npcs,combatants)
 
+	def _draw_subround(active_xpc, rnd, combatants, sub_round)
+
+		print SCREEN_CLEAR + CURSOR_UP
+		print "========================= Round: #" + rnd.to_s + " (" + sub_round.to_s + "/" + combatants.length.to_s + ") ==============================\n\n"
+
+		idx_longest_name = combatants.each_with_index.inject(0) { | max_i, (combatant, idx) | combatant.name.length > combatants[max_i].name.length ? idx : max_i }
+
+		names_width = combatants[idx_longest_name].name.length
+
+		name_header  = 'Name:'
+		name_divider = ''
+
+		while(name_header.length<names_width)
+			name_header  += ' '
+		end
+
+		while(name_divider.length<names_width)
+			name_divider += '-'
+		end
+
+		print name_header
+		print name_divider
+
+		combatants.each { | xpc |
+
+			if(xpc.name == active_xpc.name)
+				if(xpc.can_attack_now[0])
+					wide_name = COLOUR_GREEN_BLINK + xpc.name
+				else
+					wide_name = COLOUR_RED_BLINK + xpc.name
+				end
+			else
+				wide_name = xpc.name
+			end
+
+			while(wide_name.length<names_width)
+				wide_name += ' '
+			end
+
+			if(xpc.name == active_xpc.name)
+				wide_name += COLOUR_RESET
+			end
+
+			str = ''
+
+			print wide_name
+
+			set_pos_y = "\033[1A"
+			set_pos_x = "\033[" + (names_width+1).to_s + 'C'
+			
+			str += set_pos_y + set_pos_x
+			str += xpc.current_hp.to_s
+			str += '/' + xpc.hp.to_s
+			str += ' u' if (xpc.unconscious)
+			str += ' D' if (xpc.dead)
+			str += ' s' + xpc.stun.to_s    if (xpc.stun>0)
+			str += ' d' + xpc.downed.to_s  if (xpc.downed>0)
+			str += ' d' + xpc.prone.to_s   if (xpc.prone>0)
+
+			print str
+		}
+
+		print "----------------------------------------------------------------------------\n\n"
+
+	end
+
 	i=0
 	while true
 		i=i+1
-		print "========================= Round: #" + i.to_s() + " ==============================\n\n"
 
 		players_left = false
 		enemies_left = false
 
-		combatants.each { |character|
-			character.apply_wounds_effects_round_start
-		}
-
-		print "\n----------------------------------------------------------------\n\n"
+		sub_round=1
 
 		pcs.each  { | character | 
+
+			_draw_subround(character, i, combatants, sub_round)
 
 			if(npcs_left(npcs))
 				actions(character, npcs)
@@ -1235,15 +1306,22 @@ def fight_all_rounds(pcs,npcs,combatants)
 
 			$clients.gets_any
 
+			sub_round += 1
 		}
 
-		npcs.each { | character | 
+		npcs.each { | character |
+
+			character.recover_from_wounds
+
+			_draw_subround(character, i, combatants, sub_round)
 
 			if(pcs_left(pcs))
 				actions(character, pcs)
 			end
 
 			$clients.gets_any
+
+			sub_round += 1
 		}
 
 		#print "enemies left:" + enemies_left.to_s() + ", players left: " + players_left.to_s() + "\n"
