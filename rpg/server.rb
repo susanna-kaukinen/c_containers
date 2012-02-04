@@ -1366,7 +1366,7 @@ end
 $forced_start_fight = false
 $clients            = Clients.new
 
-def main(server)
+def server_loop(server)
 
 	players     = Array.new
 	pcs         = Array.new
@@ -1449,53 +1449,59 @@ def main(server)
 
 end
 
-def shutdown(server, cause)
-	print 'Server exiting, cause = ' + cause.to_s 
-	server = nil
-	exit
-end
 
-def main_wrapper(server)
+def main
 
-	loop {
-		begin
-			main(server)
+	def _shutdown(server, cause)
+		print 'Server exiting, cause = ' + cause.to_s 
+		server = nil
+		exit
+	end
 
-		rescue IOError => e
+	def _exception_handler(server)
 
-			print 'IOError:' + e.to_s
+		loop {
+			begin
+				server_loop(server)
 
-			puts e.message  
-			puts e.backtrace.inspect
+			rescue IOError => e
 
-		rescue Exception => e  
-	
-			print 'Exception:' + e.to_s
+				print 'IOError:' + e.to_s
 
-			puts e.message  
-			puts e.backtrace.inspect
+				puts e.message  
+				puts e.backtrace.inspect
 
-			if(e.to_s == 'exit') 
-				print '<<<exit>>>'
-				exit
+			rescue Exception => e  
+		
+				print 'Exception:' + e.to_s
+
+				puts e.message  
+				puts e.backtrace.inspect
+
+				if(e.to_s == 'exit') 
+					print '<<<exit>>>'
+					exit
+				end
+
+			rescue
+				print 'catch all rescue'	
+
 			end
 
-		rescue
-			print 'catch all rescue'	
+		}
 
-		end
+	end
 
-	}
+	server      = TCPServer.open(20025)
 
+	Signal.trap("INT") do
+		_shutdown(server, "manual shutdown")
+	end
+
+	_exception_handler(server)
 end
 
-server      = TCPServer.open(20025)
-
-Signal.trap("INT") do
-	shutdown(server, "manual shutdown")
-end
-
-main_wrapper(server)
+main
 
 
 
