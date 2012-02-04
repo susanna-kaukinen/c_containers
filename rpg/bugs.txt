@@ -1,4 +1,23 @@
 
+server> #<TCPSocket:0x8d837b0>
+./server.rb:814:in `write': Broken pipe (Errno::EPIPE)
+        from ./server.rb:814:in `puts'
+        from ./server.rb:814:in `block (2 levels) in print_all'
+        from ./server.rb:812:in `each'
+        from ./server.rb:812:in `block in print_all'
+        from /home/susanna/.rvm/rubies/ruby-1.9.3-p0/lib/ruby/1.9.1/monitor.rb:211:in `mon_synchronize'
+        from ./server.rb:811:in `print_all'
+        from ./server.rb:894:in `print'
+        from ./server.rb:1229:in `init_round'
+        from ./server.rb:1394:in `block (3 levels) in main'
+        from /home/susanna/.rvm/rubies/ruby-1.9.3-p0/lib/ruby/1.9.1/monitor.rb:211:in `mon_synchronize'
+        from ./server.rb:1389:in `block (2 levels) in main'
+        from ./server.rb:1385:in `loop'
+        from ./server.rb:1385:in `block in main'
+
+<= breikkaa telnetti ja ota uus
+
+----------
 
 crit roll open ended yields 2nd roll
 

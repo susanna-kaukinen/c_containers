@@ -811,7 +811,7 @@ class Clients
 		synchronize {
 			clients.each{ | thread_id, socket | 
 				if(thread_id.alive?)
-					socket.puts(vargs) 
+					socket.puts(vargs)  # FIXME, can lead to broken pipe if client has aborted her client/telnet
 				end
 			}
 
@@ -1237,7 +1237,8 @@ def fight_all_rounds(pcs,npcs,combatants)
 	def _draw_subround(active_xpc, rnd, combatants, sub_round)
 
 		print SCREEN_CLEAR + CURSOR_UP
-		print "========================= Round: #" + rnd.to_s + " (" + sub_round.to_s + "/" + combatants.length.to_s + ") ==============================\n\n"
+		top_bar = "========================= Round: #" + rnd.to_s + " (" + sub_round.to_s + "/" + combatants.length.to_s + ") ==============================\n\n"
+		print top_bar
 
 		idx_longest_name = combatants.each_with_index.inject(0) { | max_i, (combatant, idx) | combatant.name.length > combatants[max_i].name.length ? idx : max_i }
 
@@ -1296,7 +1297,6 @@ def fight_all_rounds(pcs,npcs,combatants)
 			print str
 		}
 
-		print "----------------------------------------------------------------------------\n\n"
 
 	end
 
@@ -1350,7 +1350,7 @@ def fight_all_rounds(pcs,npcs,combatants)
 		end
 
 		#$clients.gets_all
-		sleep(0.5)
+		#sleep(0.5)
 
 		print SCREEN_CLEAR + CURSOR_UP
 		
@@ -1366,10 +1366,8 @@ end
 $forced_start_fight = false
 $clients            = Clients.new
 
-def main()
+def main(server)
 
-
-	server      = TCPServer.open(20015)
 	players     = Array.new
 	pcs         = Array.new
 	npcs        = Array.new
@@ -1451,4 +1449,53 @@ def main()
 
 end
 
-main
+def shutdown(server, cause)
+	print 'Server exiting, cause = ' + cause.to_s 
+	server = nil
+	exit
+end
+
+def main_wrapper(server)
+
+	loop {
+		begin
+			main(server)
+
+		rescue IOError => e
+
+			print 'IOError:' + e.to_s
+
+			puts e.message  
+			puts e.backtrace.inspect
+
+		rescue Exception => e  
+	
+			print 'Exception:' + e.to_s
+
+			puts e.message  
+			puts e.backtrace.inspect
+
+			if(e.to_s == 'exit') 
+				print '<<<exit>>>'
+				exit
+			end
+
+		rescue
+			print 'catch all rescue'	
+
+		end
+
+	}
+
+end
+
+server      = TCPServer.open(20025)
+
+Signal.trap("INT") do
+	shutdown(server, "manual shutdown")
+end
+
+main_wrapper(server)
+
+
+
