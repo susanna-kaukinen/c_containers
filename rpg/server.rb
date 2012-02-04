@@ -1,6 +1,7 @@
 #!/home/susanna/.rvm/rubies/ruby-1.9.3-p0/bin/ruby
 
-require 'socket'                # Get sockets from stdlib
+#require 'io'
+require 'socket'
 require 'monitor'
 require 'rubygems'
 require 'json'
@@ -824,6 +825,26 @@ class Clients
 		}
 	end
 
+	def gets_any
+
+		synchronize {
+			sockets = Array.new
+			clients.each{ | thread_id, socket | sockets.push(socket) }
+
+			loop {
+				results = select ( sockets )
+				
+				for sock in results[0]
+					if results[0].include? sock
+						sock.gets
+						return
+					end
+				end
+			}
+		}
+	end
+
+
 	def length
 		len=0
 		synchronize {
@@ -1204,13 +1225,16 @@ def fight_all_rounds(pcs,npcs,combatants)
 			character.apply_wounds_effects_round_start
 		}
 
+		print "\n----------------------------------------------------------------\n\n"
+
 		pcs.each  { | character | 
 
 			if(npcs_left(npcs))
 				actions(character, npcs)
 			end
 
-			print "\n----------------------------------------------------------------\n\n"
+			$clients.gets_any
+
 		}
 
 		npcs.each { | character | 
@@ -1219,7 +1243,7 @@ def fight_all_rounds(pcs,npcs,combatants)
 				actions(character, pcs)
 			end
 
-			print "\n----------------------------------------------------------------\n\n"
+			$clients.gets_any
 		}
 
 		#print "enemies left:" + enemies_left.to_s() + ", players left: " + players_left.to_s() + "\n"
