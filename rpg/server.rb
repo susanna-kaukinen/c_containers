@@ -780,9 +780,15 @@ class Clients
 		@clients = Hash.new
 	end
 
-	def addClient(player)
+	def add_client(player)
 		self.synchronize do
 			clients[player.thread_id] = player.socket
+		end
+	end
+
+	def del_client(player)
+		self.synchronize do
+			clients.delete(player.thread_id)
 		end
 	end
 
@@ -840,13 +846,19 @@ class Clients
 			clients.each{ | thread_id, socket | sockets.push(socket) }
 
 			loop {
-				results = select ( sockets ) # FIXME, can except?
-				
-				for sock in results[0]
-					if results[0].include? sock
-						sock.gets
-						return
+				begin
+					results = select ( sockets ) # FIXME, can except?
+
+					for sock in results[0]
+						if results[0].include? sock
+							sock.gets
+							return
+						end
 					end
+	
+				rescue IOError => err
+					p err
+					server_print err
 				end
 			}
 		}
@@ -922,11 +934,16 @@ class Player
 	
 	def remove()
 
+		self.socket.puts 'bye'
+		self.socket.close
+
 		players.each_with_index { |player,i|
 			if(player.thread_id = @thread_id)
 				players.delete_at(i)
 			end
 		}
+
+		$clients.del_client(self)
 
 		return self
 
@@ -973,11 +990,7 @@ end
 def menu(monitor, player, ask_play_again)
 
 	def _exit(player)
-		begin
-			player.socket.puts 'bye'
-			player.socket.close
-		rescue
-		end
+
 
 		_player = player.remove
 		_player = nil
@@ -1409,7 +1422,7 @@ def main()
 
 				player = Player.new(players, Thread.current, sock)
 
-				$clients.addClient(player)
+				$clients.add_client(player)
 
 				server_print $clients.getSocket(player.thread_id)
 
