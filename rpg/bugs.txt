@@ -1,7 +1,16 @@
 
 ---
 
-There are some glitches in multiplayer, but I just saw a 4 vs 4 fight go down all right
+
+Q from admin console doesn't take instant effect when in a fight
+
+cannot see bleeding at all
+
+stuns, prones, etc don't decrement on fight screen
+
+evils attack dead people
+
+smart attack dead people
 
 
 --

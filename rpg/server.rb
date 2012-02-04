@@ -768,6 +768,20 @@ def combatants_to_s (combatants)
 
 end
 
+def sock_puts(sock, *vargs)
+
+	begin
+		sock.puts(vargs)
+	rescue Exception => e
+
+		print 'Exception:' + e.to_s
+
+		puts e.message  
+		puts e.backtrace.inspect
+		
+	end
+end
+
 class Clients
 
 	include MonitorMixin
@@ -803,7 +817,7 @@ class Clients
 	def print(key, vargs)
 		synchronize {
 			sock = getSocket(key)
-			sock.puts(vargs)
+			sock_puts(sock, vargs)
 		}
 	end
 
@@ -811,10 +825,10 @@ class Clients
 		synchronize {
 			clients.each{ | thread_id, socket | 
 				if(thread_id.alive?)
-					socket.puts(vargs)  # FIXME, can lead to broken pipe if client has aborted her client/telnet
+					sock_puts(socket,vargs)
+
 				end
 			}
-
 		}
 	end
 
@@ -874,6 +888,17 @@ class Clients
 	end
 end
 
+
+def server_cmd (*vargs)
+
+	putc 'c'
+	putc 'm'
+	putc 'd'
+	putc ':'
+	putc ' '
+
+	puts(vargs)
+end
 
 def server_print(*vargs)
 
@@ -990,7 +1015,6 @@ end
 def menu(monitor, player, ask_play_again)
 
 	def _exit(player)
-
 
 		_player = player.remove
 		_player = nil
@@ -1199,13 +1223,13 @@ def npcs_left(npcs)
 	res = false
 
 	npcs.each { |npc|
-		#print print npc.name + ' ' + npc.current_hp.to_s + ' ' + npc.dead.to_s + ' ' + npc.unconscious.to_s + ' '
+		#p npc.name + ' ' + npc.current_hp.to_s + ' ' + npc.dead.to_s + ' ' + npc.unconscious.to_s + ' '
 		if(npc.current_hp>0 and npc.dead==false and npc.unconscious==false)
 			res = true
 		end
 	}
 
-	#print res.to_s
+	#p res.to_s
 	
 	return res
 
@@ -1232,7 +1256,7 @@ def init_round(pcs, npcs, combatants)
 	print(SCREEN_CLEAR + CURSOR_UP)
 end
 
-def fight_all_rounds(pcs,npcs,combatants)
+def fight_all_rounds(monitor, pcs,npcs,combatants)
 
 	def _draw_subround(active_xpc, rnd, combatants, sub_round)
 
@@ -1301,65 +1325,70 @@ def fight_all_rounds(pcs,npcs,combatants)
 	end
 
 	i=0
-	while true
-		i=i+1
+	catch (:done) do
+		while true
+			monitor.synchronize {
+				i=i+1
 
-		players_left = false
-		enemies_left = false
+				players_left = false
+				enemies_left = false
 
-		sub_round=1
+				sub_round=1
 
-		pcs.each  { | character | 
+				pcs.each  { | character | 
 
-			_draw_subround(character, i, combatants, sub_round)
+					_draw_subround(character, i, combatants, sub_round)
 
-			if(npcs_left(npcs))
-				actions(character, npcs)
-			end
+					if(npcs_left(npcs))
+						actions(character, npcs)
+					end
 
-			$clients.gets_any
+					$clients.gets_any
 
-			sub_round += 1
-		}
+					sub_round += 1
+				}
 
-		npcs.each { | character |
+				npcs.each { | character |
 
-			character.recover_from_wounds
+					character.recover_from_wounds
 
-			_draw_subround(character, i, combatants, sub_round)
+					_draw_subround(character, i, combatants, sub_round)
 
-			if(pcs_left(pcs))
-				actions(character, pcs)
-			end
+					if(pcs_left(pcs))
+						actions(character, pcs)
+					end
 
-			$clients.gets_any
+					$clients.gets_any
 
-			sub_round += 1
-		}
+					sub_round += 1
+				}
 
-		#print "enemies left:" + enemies_left.to_s() + ", players left: " + players_left.to_s() + "\n"
+				#print "enemies left:" + enemies_left.to_s() + ", players left: " + players_left.to_s() + "\n"
 
-		if(not pcs_left(pcs))
-			print "NPCs won!\n"
-			break
+				if(not pcs_left(pcs))
+					print "NPCs won!\n"
+					throw :done
+				end
+
+				if(not npcs_left(npcs))
+					print "PCs won!\n"
+					throw :done
+				end
+
+				#$clients.gets_all
+				#sleep(0.5)
+
+				print SCREEN_CLEAR + CURSOR_UP
+			}
 		end
-
-		if(not npcs_left(npcs))
-			print "PCs won!\n"
-			break
-		end
-
-		#$clients.gets_all
-		#sleep(0.5)
-
-		print SCREEN_CLEAR + CURSOR_UP
-		
 	end
 
-	$clients.gets_all
-	print SCREEN_CLEAR + CURSOR_UP
-	print(combatants_to_s(combatants))
-	$clients.gets_all
+	monitor.synchronize {
+		$clients.gets_all
+		print SCREEN_CLEAR + CURSOR_UP
+		print(combatants_to_s(combatants))
+		$clients.gets_all
+	}
 
 end
 
@@ -1368,15 +1397,63 @@ $clients            = Clients.new
 
 def server_loop(server)
 
+	def _handle_server_commands(players, pcs, npcs, combatants, monitor, server)
+
+		def _cmd_threads
+			p Thread.list
+		end
+	
+		def _cmd_sockets(players)
+			for player in players
+				p player.socket
+			end
+		end
+
+		cmd = "\n"
+		while cmd == "\n"
+			cmd = gets
+		end
+	
+		server_cmd cmd
+
+			case cmd[0]
+				when 'P'
+					p players
+				when 'p'
+					for pc  in pcs  do p pc  end
+				when 'n'
+					for npc in npcs do p npc end
+				when 'l'
+					server_print \
+						"\n\tplayers="    + "#{players.length}"    + 
+						"\n\tpcs="        + "#{pcs.length}"        +
+						"\n\tnpcs="       + "#{npcs.length}"       +
+						"\n\tcombatants=" + "#{combatants.length}"
+				when 't'
+					_cmd_threads
+				when 's'
+					_cmd_sockets(players)
+				when 'Q'
+					shutdown(server, 'operator manual shutdown from server console')
+			end
+	end
+
 	players     = Array.new
 	pcs         = Array.new
 	npcs        = Array.new
 	combatants  = Array.new
 	monitor     = Monitor.new
 
+
 	fight_thread = ''
 
-	Thread.start() do 
+	Thread.start() do
+		loop {
+			_handle_server_commands(players, pcs, npcs, combatants, monitor, server)
+		}
+	end
+
+	Thread.start() do
 
 		fight_thread = Thread.current
 
@@ -1384,24 +1461,32 @@ def server_loop(server)
 
 			Thread.stop
 
-			monitor.synchronize {
+			if($forced_start_fight and players.length>0)
 
-				if($forced_start_fight and players.length>0)
+				monitor.synchronize {
 					$forced_start_fight = false
-
 					init_round(pcs, npcs, combatants)
+				}
 
-					fight_all_rounds(pcs,npcs,combatants)
+				fight_all_rounds(monitor, pcs,npcs,combatants)
 
-					# <cleanup>
+				monitor.synchronize { # cleanup
 					pcs        = Array.new
 					npcs       = Array.new
 					combatants = Array.new
+				}
+			end
 
-					# </cleanup>
-				end
-
-				players.each { |p| p.thread_id.run }
+			monitor.synchronize {
+				players.each { |p| 
+					if(p.thread_id.alive?)
+						p.thread_id.run
+					else
+						server_warn 'Emergency cleaunp, thread was dead - removed player'
+						p.remove
+						p = nil
+					end
+				}
 			}
 
 		}
@@ -1449,14 +1534,14 @@ def server_loop(server)
 
 end
 
+def shutdown(server, cause)
+	print 'Server exiting, cause = ' + cause.to_s 
+	server = nil
+	exit
+end
+
 
 def main
-
-	def _shutdown(server, cause)
-		print 'Server exiting, cause = ' + cause.to_s 
-		server = nil
-		exit
-	end
 
 	def _exception_handler(server)
 
@@ -1495,7 +1580,7 @@ def main
 	server      = TCPServer.open(20025)
 
 	Signal.trap("INT") do
-		_shutdown(server, "manual shutdown")
+		shutdown(server, "manual shutdown")
 	end
 
 	_exception_handler(server)
