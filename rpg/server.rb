@@ -614,17 +614,26 @@ class Character
 	end
 
 	def save
-		data = YAML::dump(self)
-		File.open('character_' + @name + '.yaml', 'w+') {|f| f.write(data) }
+		begin
+			data = YAML::dump(self)
+			File.open('character_' + @name + '.yaml', 'w+') {|f| f.write(data) }
+			return true
+		rescue
+			return false
+		end
 	end
 
 	def Character.load(name)
 
 		char_as_yaml = ''
 
-		File.open('character_' + name + '.yaml').each_line { |line_in_file|
-			char_as_yaml += line_in_file
-		}
+		begin
+			File.open('character_' + name + '.yaml').each_line { |line_in_file|
+				char_as_yaml += line_in_file
+			}
+		rescue
+			return nil
+		end
 
 		p char_as_yaml
 
@@ -1202,6 +1211,12 @@ def menu(monitor, player, ask_play_again)
 				when 'l'
 					name = prompt(sock, 'name')
 					player.character = Character::load(name)
+					if(player.character == nil)
+						sock_puts sock, '?load error'
+					else
+						sock_puts sock, 'loaded.'
+					end
+					sleep(1)
 					return false, false
 				when 't'
 					if(_screen(nil) == 'large')
@@ -1212,7 +1227,12 @@ def menu(monitor, player, ask_play_again)
 					
 					return false, false
 				when 's'
-					player.character.save
+					if(player.character and player.character.save)
+						sock_puts sock, 'saved.'
+					else
+						sock_puts sock, '?save error'
+					end
+					sleep(1)
 					return false, false
 				when 'p'
 					return true, false
@@ -1700,7 +1720,7 @@ def main
 
 	end
 
-	server      = TCPServer.open(20015)
+	server      = TCPServer.open(20025)
 
 	Signal.trap("INT") do
 		shutdown(server, "manual shutdown")
