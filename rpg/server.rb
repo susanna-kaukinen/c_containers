@@ -70,9 +70,9 @@ end
 $tight=true # h=13, w=72 screen
 
 if($tight)
-	MOTD='motd_tight.txt'
+	$motd='motd_tight.txt'
 else
-	MOTD='motd.txt'
+	$motd='motd.txt'
 end
 
 
@@ -1092,7 +1092,7 @@ def menu(monitor, player, ask_play_again)
 		sock.puts(SCREEN_CLEAR + CURSOR_UP)
 	
 		i=0	
-		File.open(MOTD).each_line{ |line_in_file|
+		File.open($motd).each_line{ |line_in_file|
 
 			strMONSTER = COLOUR_RED_BLINK + 'MONSTER' + COLOUR_RESET
 
@@ -1106,6 +1106,7 @@ def menu(monitor, player, ask_play_again)
 		sock.puts COLOUR_YELLOW_BLINK + ' N' + COLOUR_RESET + ' = New character'
 		sock.puts COLOUR_BLUE_BLINK   + ' L' + COLOUR_RESET + ' = Load character'
 		sock.puts COLOUR_WHITE_BLINK  + ' S' + COLOUR_RESET + ' = Save character'
+		sock.puts COLOUR_CYAN_BLINK   + ' G' + COLOUR_RESET + ' = larGe screen'
 		sock.puts COLOUR_RED_BLINK    + " Q" + COLOUR_RESET + ' = Quit'
 
 		if(ask_play_again)
@@ -1121,7 +1122,7 @@ def menu(monitor, player, ask_play_again)
 
 		sock.puts(SCREEN_CLEAR + CURSOR_UP)
 	
-		File.open(MOTD).each_line{ |line_in_file|
+		File.open($motd).each_line{ |line_in_file|
 
 			strMONSTER = COLOUR_RED_BLINK + 'MONSTER' + COLOUR_RESET
 
@@ -1152,6 +1153,8 @@ def menu(monitor, player, ask_play_again)
 				when 'l'
 					name = prompt(sock, 'name')
 					player.character = Character::load(name)
+				when 'g'
+					$motd='motd.txt'
 				when 's'
 					player.character.save
 				when 'p'
@@ -1651,7 +1654,7 @@ def main
 
 	end
 
-	server      = TCPServer.open(20025)
+	server      = TCPServer.open(20015)
 
 	Signal.trap("INT") do
 		shutdown(server, "manual shutdown")

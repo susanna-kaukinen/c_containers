@@ -1,4 +1,6 @@
 
+
+git commit -a -m "chars can be loaded and saved, but 2nd menu should not auto-follow load or save so you can view and heal the char before you start, or you can create a new one. Also creating new chars and viewing them should be supported so you can fiddle at creating a good char"
 ---
 
 
