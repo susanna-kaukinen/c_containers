@@ -5,10 +5,15 @@ require 'socket'
 require 'monitor'
 require 'rubygems'
 require 'json'
+require 'yaml'
 #
 # TODO: severed, crushed, bruised, miinukset: e.g. char at -10%, blind toteuttamatta (-100)
 #
 
+
+# HTC Desire Z AndroMud screen props: height: 13 lines, width: 72
+# 1234567890123456789012345678901234567890123456789012345678901234567890
+# ========================= Round: #2 (1/4) ============================
 
 # ==<COLOURS>===
 
@@ -62,7 +67,14 @@ end
 # ==</COLOURS>===
 
 
-	
+$tight=true # h=13, w=72 screen
+
+if($tight)
+	MOTD='motd_tight.txt'
+else
+	MOTD='motd.txt'
+end
+
 
 def count(what)
 	case
@@ -78,7 +90,7 @@ class Critical
 end
 
 class Wound
-	attr_accessor :damage, :stun, :bleeding, :uparry, :downed, :prone, :unconscious, :dead	
+	attr_accessor :damage, :bleeding, :stun, :uparry, :downed, :prone, :unconscious, :dead	
 	attr_accessor :target
 	attr_accessor :text
 
@@ -598,6 +610,24 @@ class Character
 
 	end
 
+	def save
+		data = YAML::dump(self)
+		File.open('character_' + @name + '.yaml', 'w+') {|f| f.write(data) }
+	end
+
+	def Character.load(name)
+
+		char_as_yaml = ''
+
+		File.open('character_' + name + '.yaml').each_line { |line_in_file|
+			char_as_yaml += line_in_file
+		}
+
+		p char_as_yaml
+
+		return YAML::load(char_as_yaml)
+	end
+
 
 end
 
@@ -1045,17 +1075,6 @@ def prompt(sock, str)
 	return response.strip!
 end
 
-def pre_menu(sock)
-
-	i=0
-	File.open('motd.txt').each_line{ |line_in_file|
-
-		if(i>=15)
-			sock.puts line_in_file 
-		end
-	}
-end
-
 def menu(monitor, player, ask_play_again)
 
 	def _exit(player)
@@ -1073,7 +1092,7 @@ def menu(monitor, player, ask_play_again)
 		sock.puts(SCREEN_CLEAR + CURSOR_UP)
 	
 		i=0	
-		File.open('motd.txt').each_line{ |line_in_file|
+		File.open(MOTD).each_line{ |line_in_file|
 
 			strMONSTER = COLOUR_RED_BLINK + 'MONSTER' + COLOUR_RESET
 
@@ -1085,12 +1104,14 @@ def menu(monitor, player, ask_play_again)
 		}
 
 		sock.puts COLOUR_YELLOW_BLINK + ' N' + COLOUR_RESET + ' = New character'
-		sock.puts COLOUR_RED_BLINK + " Q" + COLOUR_RESET + ' = Quit'
+		sock.puts COLOUR_BLUE_BLINK   + ' L' + COLOUR_RESET + ' = Load character'
+		sock.puts COLOUR_WHITE_BLINK  + ' S' + COLOUR_RESET + ' = Save character'
+		sock.puts COLOUR_RED_BLINK    + " Q" + COLOUR_RESET + ' = Quit'
 
 		if(ask_play_again)
-			sock.puts COLOUR_YELLOW_BLINK + ' S' + COLOUR_RESET + ' = Show character'
-			sock.puts COLOUR_GREEN_BLINK + ' H' + COLOUR_RESET + ' = Heal character'
-			sock.puts "\n " + COLOUR_GREEN_BLINK + 'P' + COLOUR_RESET + 'lay again? (same character)'
+			sock.puts COLOUR_YELLOW_BLINK + ' V' + COLOUR_RESET + ' = View character'
+			sock.puts COLOUR_GREEN_BLINK  + ' H' + COLOUR_RESET + ' = Heal character'
+			sock.puts COLOUR_GREEN_BLINK   + 'P' + COLOUR_RESET + 'lay again? (same character)'
 		end
 	end
 
@@ -1100,7 +1121,7 @@ def menu(monitor, player, ask_play_again)
 
 		sock.puts(SCREEN_CLEAR + CURSOR_UP)
 	
-		File.open('motd.txt').each_line{ |line_in_file|
+		File.open(MOTD).each_line{ |line_in_file|
 
 			strMONSTER = COLOUR_RED_BLINK + 'MONSTER' + COLOUR_RESET
 
@@ -1128,11 +1149,14 @@ def menu(monitor, player, ask_play_again)
 									
 				when 'q'
 					_exit(player)
-				when 'n'
-					_exit(player)
+				when 'l'
+					name = prompt(sock, 'name')
+					player.character = Character::load(name)
+				when 's'
+					player.character.save
 				when 'p'
 					return true, false if ask_play_again
-				when 's'
+				when 'v'
 					return false, true
 				when ''
 					return false, false
@@ -1301,7 +1325,7 @@ def fight_all_rounds(monitor, pcs,npcs,combatants)
 	def _draw_subround(active_xpc, rnd, combatants, sub_round)
 
 		print SCREEN_CLEAR + CURSOR_UP
-		top_bar = "========================= Round: #" + rnd.to_s + " (" + sub_round.to_s + "/" + combatants.length.to_s + ") ==============================\n\n"
+		top_bar = "========================= Round: #" + rnd.to_s + " (" + sub_round.to_s + "/" + combatants.length.to_s + ") ============================\n\n"
 		print top_bar
 
 		idx_longest_name = combatants.each_with_index.inject(0) { | max_i, (combatant, idx) | combatant.name.length > combatants[max_i].name.length ? idx : max_i }
@@ -1550,8 +1574,6 @@ def server_loop(server)
 
 			player = ''
 			ask_play_again = false
-
-			pre_menu(sock)
 
 			monitor.synchronize {
 
