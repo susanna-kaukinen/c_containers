@@ -1,4 +1,63 @@
 
+fumble -> fumble ?
+
+--
+
+
+<> se oli dead jo
+<susanna> :-(
+<> se oli se jolla oli positiiviset hitit, mutta dead
+<susanna> kato perkele!
+<susanna> good catch!
+<> sitä ny paukutettu muutamat kerrat sen jälkeen
+
+--
+
+server> Exception:"\xF6" from ASCII-8BIT to UTF-8
+"\xF6" from ASCII-8BIT to UTF-8
+["./server.rb:139:in `encode'", "./server.rb:139:in `to_json'", "./server.rb:139:in `to_json'", "./server.rb:511:in `to_json'", "./server.rb:511:in `to_s'", "./server.rb:836:in `block in combatants_to_s'", "./server.rb:835:in `each'", "./server.rb:835:in `each_with_index'", "./server.rb:835:in `combatants_to_s'", "./server.rb:1514:in `block in fight_all_rounds'", "/home/susanna/.rvm/rubies/ruby-1.9.3-p0/lib/ruby/1.9.1/monitor.rb:211:in `mon_synchronize'", "./server.rb:1511:in `fight_all_rounds'", "./server.rb:1596:in `block (2 levels) in server_loop'", "./server.rb:1585:in `loop'", "./server.rb:1585:in `block in server_loop'"]
+
+---
+
+
+<> pitäs selectaa target paremmin
+<> ottaa toi toinen down eka
+<susanna> jep
+
+---
+
+initiativet puuttuu
+
+---
+
+run until damage
+
+--
+
+näytä lopuks vaan omat woundit
+
+--
+
+entteriä runsaasti =>
+<susanna> bugaa menuun välillä?
+<susanna> näitkö?
+
+---
+
+
+Visnasch the Orc ATTACKS Kyyst� with sword in a evil manner..
+Roll:12
+ => result:-58
+Kyyst� blocks the attack
+Kyyst� falls unconscious.
+
+
+---
+
+eli, jos vaikka ensin
+	menu -> g -> f -> exception -> break telnet -> reconnect telnet -> n -> f -> fight goes through instanly, now enter pressing needed. figure it out.
+
+---
 
 git commit -a -m "chars can be loaded and saved, but 2nd menu should not auto-follow load or save so you can view and heal the char before you start, or you can create a new one. Also creating new chars and viewing them should be supported so you can fiddle at creating a good char"
 ---

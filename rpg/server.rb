@@ -58,6 +58,8 @@ COLOUR_RESET      = "\033[0m"
 
 SCREEN_CLEAR      = "\033[2J";
 CURSOR_UP         = "\033[0;0H";
+CURSOR_BACK       = "\033[1D";
+CURSOR_NEXT_LINE  = "\033[1E";
 
 def cprint(*vargs)
 	vargs.each { |param| print param }
@@ -433,7 +435,7 @@ end
 class Character
 
 	# base, or so
-	attr_accessor :name, :party, :brains
+	attr_accessor :full_name, :name, :party, :brains
 	attr_accessor :ob, :db, :ac, :hp
 
 	# current/active
@@ -481,7 +483,8 @@ class Character
 	end
 
 	def initialize(name, party, brains)
-		@name	= name
+		@full_name = name
+		@name	= name[0..17] # andromud screen
 		@party  = party
 		@brains = brains
 		@ob	= count("ob")
@@ -842,10 +845,37 @@ def combatants_to_s (combatants)
 
 end
 
-def sock_puts(sock, *vargs)
-
+def sock_io(sock, op, *vargs, iter)
 	begin
-		sock.puts(vargs)
+		if(op=='str')
+
+			if(iter=='1st')
+				sock.putc("\r")
+			end
+
+			vargs.each { |param|
+
+				if(param.is_a? Array)
+					for item in param
+						return sock_io(sock, op, item, 'recurse')
+					end
+				end
+	
+				if(param.is_a? String)
+					sock.puts(param)
+				else
+					p param
+					sock.puts(param.to_s)
+				end
+			}
+		elsif(op=='c')
+			sock.putc(vargs[0]) 
+		elsif(op=='gets')
+			data = sock.gets
+			return data.strip!
+		else
+			throw :no_op
+		end
 	rescue Exception => e
 
 		server_print 'Exception:' + e.to_s
@@ -854,6 +884,18 @@ def sock_puts(sock, *vargs)
 		server_print e.backtrace.inspect
 		
 	end
+end
+
+def sock_putc(sock, c)
+	sock_io(sock, 'c', c, '1st')
+end
+
+def sock_puts(sock, *vargs)
+	sock_io(sock, 'str', vargs, '1st')
+end
+
+def sock_gets(sock)
+	return sock_io(sock, 'gets', nil, '1st')
 end
 
 class Clients
@@ -1062,17 +1104,19 @@ end
 	
 def prompt(sock, str)
 
+	sock_putc(sock, "\r")
+
 	str.each_byte do |c|
-		sock.putc c
+		sock_putc(sock,c)
 	end
 
-	sock.putc ' '
-	sock.putc '>'
-	sock.putc ' '
+	sock_putc(sock, ' ')
+	sock_putc(sock, '>')
+	sock_putc(sock, ' ')
 
-	response = sock.gets
+	response = sock_gets(sock)
 
-	return response.strip!
+	return response
 end
 
 def menu(monitor, player, ask_play_again)
@@ -1089,7 +1133,7 @@ def menu(monitor, player, ask_play_again)
 
 		sock      = player.socket
 
-		sock.puts(SCREEN_CLEAR + CURSOR_UP)
+		sock_puts sock,(SCREEN_CLEAR + CURSOR_UP)
 	
 		i=0	
 		File.open($motd).each_line{ |line_in_file|
@@ -1098,40 +1142,45 @@ def menu(monitor, player, ask_play_again)
 
 			line_in_file = line_in_file.gsub('MONSTER', strMONSTER)
 
-			sock.puts line_in_file 
+			sock_puts sock, line_in_file 
 
 			i+=1
 		}
 
-		sock.puts COLOUR_YELLOW_BLINK + ' N' + COLOUR_RESET + ' = New character'
-		sock.puts COLOUR_BLUE_BLINK   + ' L' + COLOUR_RESET + ' = Load character'
-		sock.puts COLOUR_WHITE_BLINK  + ' S' + COLOUR_RESET + ' = Save character'
-		sock.puts COLOUR_CYAN_BLINK   + ' G' + COLOUR_RESET + ' = larGe screen'
-		sock.puts COLOUR_RED_BLINK    + " Q" + COLOUR_RESET + ' = Quit'
-
-		if(ask_play_again)
-			sock.puts COLOUR_YELLOW_BLINK + ' V' + COLOUR_RESET + ' = View character'
-			sock.puts COLOUR_GREEN_BLINK  + ' H' + COLOUR_RESET + ' = Heal character'
-			sock.puts COLOUR_GREEN_BLINK   + 'P' + COLOUR_RESET + 'lay again? (same character)'
-		end
+		sock_puts sock, COLOUR_YELLOW_BLINK + ' N' + COLOUR_RESET + ' = New character ' + COLOUR_BLUE_BLINK   + ' L' + COLOUR_RESET + ' = Load character'
+		sock_puts sock, COLOUR_WHITE_BLINK  + ' S' + COLOUR_RESET + ' = Save character' + COLOUR_CYAN_BLINK   + ' T' + COLOUR_RESET + ' = Toggle screen'
+		sock_puts sock, COLOUR_YELLOW_BLINK + ' V' + COLOUR_RESET + ' = View character' + COLOUR_GREEN_BLINK  + ' H' + COLOUR_RESET + ' = Heal character'
+		sock_puts sock, COLOUR_RED_BLINK    + " Q" + COLOUR_RESET + ' = Quit          ' + COLOUR_GREEN_BLINK  + ' P' + COLOUR_RESET + ' = Play (start)'
+		sock_puts sock, ' '
 	end
 
 	def _print_motd_2(player)
 
 		sock      = player.socket
 
-		sock.puts(SCREEN_CLEAR + CURSOR_UP)
+		sock_puts sock,(SCREEN_CLEAR + CURSOR_UP)
 	
 		File.open($motd).each_line{ |line_in_file|
 
 			strMONSTER = COLOUR_RED_BLINK + 'MONSTER' + COLOUR_RESET
 
-			sock.puts line_in_file 
+			sock_puts sock, line_in_file 
 		}
 
-		sock.puts COLOUR_YELLOW_BLINK + ' W' + COLOUR_RESET + ' = Wait for other players'
-		sock.puts COLOUR_RED_BLINK + " F" + COLOUR_RESET + ' = Force start'
+		sock_puts sock, COLOUR_YELLOW_BLINK + ' W' + COLOUR_RESET + ' = Wait for other players'
+		sock_puts sock, COLOUR_RED_BLINK + " F" + COLOUR_RESET + ' = Force start'
 
+	end
+
+	def _screen(size) # set(size), get(nil)
+		if(size == nil)
+			return 'large' if ($motd == 'motd.txt')
+			return '72x13'
+	 	elsif (size == 'large')
+			$motd='motd.txt' 
+		else
+			$motd='motd_tight.txt'
+		end
 	end
 
 	def _handle_cmd(monitor, player, ask_play_again)	
@@ -1146,19 +1195,27 @@ def menu(monitor, player, ask_play_again)
 				when 'n'
 					name = prompt(sock, 'name')
 					player.character= Character.new(name, 'pc', 'biological')
-					return true, false
+					return false, false
 									
 				when 'q'
 					_exit(player)
 				when 'l'
 					name = prompt(sock, 'name')
 					player.character = Character::load(name)
-				when 'g'
-					$motd='motd.txt'
+					return false, false
+				when 't'
+					if(_screen(nil) == 'large')
+						_screen('72x13')
+					else
+						_screen('large')
+					end
+					
+					return false, false
 				when 's'
 					player.character.save
+					return false, false
 				when 'p'
-					return true, false if ask_play_again
+					return true, false
 				when 'v'
 					return false, true
 				when ''
@@ -1167,7 +1224,7 @@ def menu(monitor, player, ask_play_again)
 					player.character.heal
 					return false, false
 				else
-					sock.puts 'Not implemented'
+					sock_puts sock, 'Not implemented'
 					sleep(1)
 					return false, false
 			end
@@ -1189,7 +1246,7 @@ def menu(monitor, player, ask_play_again)
 					$forced_start_fight = true
 					return true
 				else
-					sock.puts 'Not implemented'
+					sock_puts sock, 'Not implemented'
 					sleep(1)
 					return false, false
 			end
@@ -1328,55 +1385,43 @@ def fight_all_rounds(monitor, pcs,npcs,combatants)
 	def _draw_subround(active_xpc, rnd, combatants, sub_round)
 
 		print SCREEN_CLEAR + CURSOR_UP
-		top_bar = "========================= Round: #" + rnd.to_s + " (" + sub_round.to_s + "/" + combatants.length.to_s + ") ============================\n\n"
+		top_bar = "==================---/--- Round: #" + rnd.to_s + " (" + sub_round.to_s + "/" + combatants.length.to_s + ") ===========================\n"
+		#top_bar = "123456789_123456789_123456789_123456789_123456789_123456789_123456789_\n"
 		print top_bar
 
 		idx_longest_name = combatants.each_with_index.inject(0) { | max_i, (combatant, idx) | combatant.name.length > combatants[max_i].name.length ? idx : max_i }
 
 		names_width = combatants[idx_longest_name].name.length
 
-		name_header  = 'Name:'
-		name_divider = ''
-
-		while(name_header.length<names_width)
-			name_header  += ' '
-		end
-
-		while(name_divider.length<names_width)
-			name_divider += '-'
-		end
-
-		print name_header
-		print name_divider + '  ' + '---/---'
-
-		combatants.each { | xpc |
-
-			if(xpc.name == active_xpc.name)
-				if(xpc.can_attack_now[0])
-					wide_name = COLOUR_GREEN_BLINK + xpc.name
-				else
-					wide_name = COLOUR_RED_BLINK + xpc.name
-				end
-			else
-				wide_name = xpc.name
-			end
-
-			while(wide_name.length<names_width)
-				wide_name += ' '
-			end
-
-			if(xpc.name == active_xpc.name)
-				wide_name += COLOUR_RESET
-			end
+		combatants.each_with_index { | xpc,i |
 
 			str = ''
 
-			print wide_name
+			if(i >= (combatants.length/2)) # print npc:s in 2nd column
+				set_pos_x_y = "\033[" + (3+i-(combatants.length/2)).to_s + ';' + '36' + 'H'
+				str += set_pos_x_y
+			end
 
-			set_pos_y = "\033[1A"
-			set_pos_x = "\033[" + (names_width+2).to_s + 'C'
-			
-			str += set_pos_y + set_pos_x
+
+			name = xpc.name
+
+			if(name == active_xpc.name)
+				if(xpc.can_attack_now[0])
+					name = COLOUR_GREEN_BLINK + name + COLOUR_RESET
+				else
+					name = COLOUR_RED_BLINK   + name + COLOUR_RESET
+				end
+			end
+
+			str += name
+
+			if(i < (combatants.length/2))
+				set_pos_y = "\033[" + '20' + 'G'
+				str += set_pos_y
+			else
+				set_pos_y = "\033[" + (36+20).to_s + 'G'
+				str += set_pos_y
+			end
 
 			curr_hp = xpc.current_hp.to_s
 			while(curr_hp.length<3)
@@ -1396,17 +1441,18 @@ def fight_all_rounds(monitor, pcs,npcs,combatants)
 			#set_pos_x = "\033[" + (10).to_s + 'C'
 			#str += set_pos_x
 
-			str += ' u' if (xpc.unconscious)
-			str += ' D' if (xpc.dead)
-			str += ' s' + xpc.stun.to_s       if (xpc.stun>0)
-			str += ' d' + xpc.downed.to_s  	  if (xpc.downed>0)
-			str += ' p' + xpc.prone.to_s      if (xpc.prone>0)
-			str += ' b' + xpc.bleeding.to_s   if (xpc.bleeding>0)
+			str += ' '
+			str += 'u' if (xpc.unconscious)
+			str += 'D' if (xpc.dead)
+			str += 's' + xpc.stun.to_s       if (xpc.stun>0)
+			str += 'd' + xpc.downed.to_s  	  if (xpc.downed>0)
+			str += 'p' + xpc.prone.to_s      if (xpc.prone>0)
+			str += 'b' + xpc.bleeding.to_s   if (xpc.bleeding>0)
 
 			print str
 		}
 
-		print "\n"
+		print "\n\n"
 
 	end
 
