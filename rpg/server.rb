@@ -15,7 +15,7 @@ require 'yaml'
 # 1234567890123456789012345678901234567890123456789012345678901234567890
 # ========================= Round: #2 (1/4) ============================
 
-# ==<COLOURS>===
+# ==<ANSI>===
 
 =begin
 https://en.wikipedia.org/wiki/ANSI_escape_code
@@ -60,13 +60,32 @@ SCREEN_CLEAR      = "\033[2J";
 CURSOR_UP         = "\033[0;0H";
 CURSOR_BACK       = "\033[1D";
 CURSOR_NEXT_LINE  = "\033[1E";
+CURSOR_SAVE       = "\033[s";
+CURSOR_RESTORE    = "\033[u";
 
-def cprint(*vargs)
-	vargs.each { |param| print param }
- 	print COLOUR_RESET
+def cursor_clear_rows(amt)
+
+	str=''
+
+	i=0
+	loop {
+		for j in 0..69
+			str += ' '
+		end	
+
+		str += "\n\r"
+		
+		i+=1
+
+		break if (i>=amt)
+	}
+
+
+	return str
+
 end
 
-# ==</COLOURS>===
+# ==</ANSI>===
 
 
 $tight=true # h=13, w=72 screen
@@ -259,7 +278,7 @@ class Weapon
 		#print '*** CRITICAL *** ' + "\n"
 
 	
-		_roll = roll(nil, nil)[1] 
+		_roll = roll(nil, nil, nil)[1] 
 
 
 		crit_bonus = 0
@@ -390,7 +409,7 @@ end
 		wound.apply(defender, wound.target)
 	end
 
-	def deal_damage(result, defender)
+	def deal_damage(attacker, defender, result)
 		hp_damage, critical = damage_table(result)
 
 		defender.current_hp -= hp_damage
@@ -398,12 +417,16 @@ end
 		if(hp_damage>0)
 			print "\t" + name + " deals " + COLOUR_RED + hp_damage.to_s() + COLOUR_RESET + " hit points of damage.\n"
 		else
-			if(rand(2)==1)
-				evade = "dodges"
+			if(defender.dead || defender.unconscious)
+				print attacker.name + "misses"
 			else
-				evade = "blocks"
+				if(rand(2)==1)
+					evade = "dodges"
+				else
+					evade = "blocks"
+				end
+				print defender.name + " " + evade + " the attack\n"
 			end
-			print defender.name + " " + evade + " the attack\n"
 		end
 
 		if(critical)
@@ -419,13 +442,17 @@ end
  		#print defender.name + " has " + colour + defender.current_hp.to_s() + COLOUR_RESET + " hit points left\n"
 
 		if(defender.current_hp<0 and defender.dead == false)
+			if(defender.unconscious==false)
+				print COLOUR_YELLOW_BLINK + defender.name + " falls unconscious.\n" + COLOUR_RESET
+			else
+				print COLOUR_YELLOW_BLINK + defender.name + " is unconscious.\n" + COLOUR_RESET
+			end
 			defender.unconscious = true
-			cprint COLOUR_YELLOW_BLINK + defender.name + " falls unconscious.\n"
 		end
 
 		if(defender.current_hp < -defender.hp or defender.dead == true)
 			defender.dead = true
-			cprint COLOUR_RED_BLINK + defender.name + " is DEAD!\n"
+			print COLOUR_RED_BLINK + defender.name + " is DEAD!\n" + COLOUR_RESET
 		end
 
 	end
@@ -435,19 +462,38 @@ end
 class Character
 
 	# base, or so
-	attr_accessor :full_name, :name, :party, :brains
+	attr_accessor :full_name, :name, :party, :brains, :player
 	attr_accessor :ob, :db, :ac, :hp
+	attr_accessor :personality
 
 	# current/active
+
 	attr_accessor :stun, :bleeding, :uparry, :downed, :prone, :blind
 	attr_accessor :unconscious, :unconscious_why
 	attr_accessor :dead, :dead_why
-	attr_accessor :current_db, :active_weapon, :current_hp
-	attr_accessor :personality
-	attr_accessor :can_attack, :cant_attack_text, :cant_attack_reasons
+
+	attr_accessor :current_db, :active_weapon, :current_hp, :current_ob
+
+	attr_accessor :can_attack
+	attr_accessor :current_blocks
+
 	attr_accessor :wounds
 
+	def strength
+		strength = @current_ob + @current_db + @current_hp + @ac
+		return strength
+	end
+
+	def human
+		return true if(brains=='biological') 
+		return false
+	end
+
 	def get_personality
+
+		print 'HACK'
+		return 'evil'
+
 		personality = rand(3)
 
 		case personality
@@ -457,7 +503,11 @@ class Character
 		end
 	end
 
-	def heal
+	def do_clear_blocks
+		@current_blocks = Hash.new
+	end
+
+	def heal(clear_blocks)
 		@stun = 0
 		@bleeding = 0
 		@uparry = 0
@@ -474,26 +524,38 @@ class Character
 		@current_hp    = @hp
 		@active_weapon = Weapon.new("sword")
 		@current_db    = @db # at this point
+		@current_ob    = @ob
 
 		@can_attack = true
 		@cant_attack_text    = 'no reason'
-		@cant_attack_reasons = Hash.new
 
 		@wounds = []
+
+		if(clear_blocks)
+			do_clear_blocks
+		end
 	end
 
-	def initialize(name, party, brains)
+	def initialize(name, party, brains, player)
 		@full_name = name
 		@name	= name[0..17] # andromud screen
 		@party  = party
 		@brains = brains
+
 		@ob	= count("ob")
+	print 'HACK'
+		if(brains == 'artificial')
+			@ob += 100
+		end
 		@db	= count("db")
 		@ac	= count("ac")
 		@hp	= count("hp")
 
+		@player = player
+
 		@personality = get_personality
-		heal
+		
+		heal(true)
 	end
 
 	def to_s
@@ -573,44 +635,72 @@ class Character
 
 	def can_attack_now() # i.e. can this character attack now
 
-		def _add_reason (value, text)
-
-			if(text.length>0)
-				@cant_attack_text += " and " + text
-			else
-				@cant_attack_text = text
-			end
-
-			p text + value.to_s
-
-			@cant_attack_reasons[text] = value
-
-			p @cant_attack_reasons
-		
-			@can_attack = false
-		end
-
 		@can_attack = true
-		@cant_attack_text = ''
-
-		if(@stun > 0)
-			_add_reason @stun, "stunned"
-			
-			if(@uparry > 0)
-				 _add_reason @uparry, "unable to parry"
-			end
-		end
-
-  		_add_reason @downed, "downed" if @downed>0
-		_add_reason @prone,  "prone"  if @prone>0
 
 		check_hitpoints
 
-		_add_reason @unconscious ,"unconscious"  if (@unconscious == true)
-		_add_reason @dead        ,"dead"         if (@dead        == true)
+		if(@dead)        then return false, "dead"        end
+		if(@unconscious) then return false, "unconscious" end
+		if(@prone>0)     then return false, "prone"       end
+  		if(@downed>0)    then return false, "downed"      end
 
-		return @can_attack, @cant_attack_reasons, @cant_attack_text
+		if(@stun>0)
+			str = 'stunned'
+			
+			if(@uparry > 0)
+				 str += " and unable to parry"
+			end
 
+			return false, str
+		end
+
+		return @can_attack, 'no reason'
+
+	end
+
+	#
+	# downed characters may parry, they are just on their knees
+	# prone may not, they are face down in the dirt
+	#
+	def can_block_now()
+
+		check_hitpoints
+
+		if(@dead)
+			return false, 'dead'
+		end
+
+		if(@unconscious)
+			return false, 'unconscious'
+		end
+		
+		if(@prone>0)       
+			return false, 'prone'
+		end
+		
+		if(@uparry>0)    
+			return false, 'unable to parry'
+		end
+
+		return true, 'no reason'
+	end
+
+	def block(against, block_amount)
+	
+		@current_blocks[against] = block_amount
+	
+		@current_ob -= block_amount
+
+		return
+	end
+
+	def blocks?(against)
+		block_amt = @current_blocks[against]
+		if(block_amt==nil)
+			return 0
+		end
+
+		return block_amt
 	end
 
 	def save
@@ -643,7 +733,7 @@ class Character
 
 end
 
-def roll(weapon, attacker)
+def roll(weapon, attacker, __do_attack)
 
 	critical_roll = false
 	if(weapon==nil and attacker==nil)
@@ -655,11 +745,11 @@ def roll(weapon, attacker)
 	while true
 		first_roll = roll = 1 + rand(100)
 
-		if(weapon and result==0 and roll<weapon.fumble) then
+		if(not critical_roll and weapon and result==0 and roll<weapon.fumble) then
 			print result.to_s() + " => FUMBLE\n"
 			if(attacker != nil) then
 				print attacker.name + " deals himself a blow:\n"
-				attack(attacker, attacker, 'fumblingly')
+				__do_attack.call(attacker, attacker, 'fumblingly')
 			end
 			fumble=true
 		end
@@ -699,143 +789,340 @@ def roll(weapon, attacker)
 	end
 end
 
-def attack(attacker, opponent, manner)
+def sub_round(character, opponents)
 
-	if(opponent==nil)
-		print "No-one to attack!"
-		return
+	def _attack(character, opponents)
+
+		def __choose_opponent(attacker, opponents)
+
+			def ___prune_non_targets(personality, opponents)
+
+				choice=''
+		
+				opps = Array.new
+
+				if(personality == 'evil')
+
+					choice = 'weakest'
+
+					opponents.each { |opp|
+
+						opp.check_hitpoints
+
+						if (not opp.dead)
+							print COLOUR_GREEN + "#{opp.name} not dead, good target" + COLOUR_RESET
+							opps.push(opp)
+						else
+							print COLOUR_RED + "#{opp.name} is dead, not a target" + COLOUR_RESET
+						end
+					}
+				else
+					opponents.each { |opp|
+
+						opp.check_hitpoints
+
+						if (opp.current_hp>0 and not opp.dead and not opp.unconscious)
+							print COLOUR_GREEN + "#{opp.name} good target" + COLOUR_RESET
+							opps.push(opp)
+						else
+							print COLOUR_RED + "#{opp.name} not hp>0+not dead+not unco, not a target" + COLOUR_RESET
+						end
+					}
+
+					if(personality == 'smart')
+						choice = 'weakest'
+					else
+						choice = 'strongest'
+					end
+
+				end
+
+				return opps, choice
+			end
+
+			def ___choose_from_remaining(opps, choice)
+
+				def ____stronger(opp1, opp2)
+		
+					if(opp1.strength > opp2.strength)
+						return true
+					end
+		
+					return false
+				end
+
+				def ____weaker(opp1, opp2)
+
+					if(opp1.strength < opp2.strength)
+						return true
+					end
+		
+					return false
+
+				end
+
+				case choice
+					when 'weakest'
+						idx = opps.each_with_index.inject(0) { | min_i, (opp, i) |
+							if (____weaker(opp, opps[min_i]))
+								i
+							else
+								min_i
+							end
+						}
+						return opps[idx]
+
+					when 'strongest'
+
+						idx = opps.each_with_index.inject(0) { | max_i, (opp, i) |
+							if (____stronger(opp, opps[max_i]))
+								i
+							else
+								max_i
+							end
+							
+						}
+						return opps[idx]
+				end
+			end
+
+			# __choose_opponent
+	
+			print opponents.length
+			opps, choice = ___prune_non_targets(attacker.personality, opponents)
+			print opps.length
+			chosen_opponent = ___choose_from_remaining(opps, choice)
+
+			opponents.each { |o| p "#{o.name}=#{o.strength.to_s}," }
+
+			return chosen_opponent, attacker.personality
+
+		end
+
+		def __do_attack(attacker, opponent, manner)
+
+			if(opponent==nil)
+				print "No-one to attack!"
+				return
+			end
+
+			print COLOUR_GREEN + COLOUR_REVERSE + attacker.name + COLOUR_RESET + " ATTACKS " + COLOUR_RED + COLOUR_REVERSE + opponent.name + COLOUR_RESET +  " with " + attacker.active_weapon.name + " in a " + manner + " manner..\n"
+
+			__roll  = roll(attacker.active_weapon, attacker, method(:__do_attack))
+			_roll   = __roll[0]
+			fumble  = __roll[2]
+
+			if(fumble==true)
+				return
+			end 
+
+			block = opponent.blocks?(attacker.name)
+
+			if(block>0)
+				print opponent.name + ' blocks against ' + attacker.name + " w/#{block}"
+			end
+
+			result = attacker.current_ob - opponent.current_db - block + _roll
+
+			#print  " => result:" + result.to_s() + "\n"
+			print "ob-db-block+roll=result <=> #{attacker.current_ob}-#{opponent.current_db}-#{block}+#{_roll}=#{result}"
+
+			attacker.active_weapon.deal_damage(attacker, opponent, result)
+		end
+
+		# _attack
+
+		can_attack, why_cant = character.can_attack_now()
+
+		if(can_attack)
+			opponent, manner = __choose_opponent(character, opponents)
+			__do_attack(character, opponent, manner)
+			opponent.apply_wound_effects_after_attack
+			return true
+		end
+
+		_explain_why_not(character, 'attack', why_cant)
+		return false
 	end
 
-	print COLOUR_GREEN + COLOUR_REVERSE + attacker.name + COLOUR_RESET + " ATTACKS " + COLOUR_RED + COLOUR_REVERSE + opponent.name + COLOUR_RESET +  " with " + attacker.active_weapon.name + " in a " + manner + " manner..\n"
 
-	__roll  = roll(attacker.active_weapon, attacker)
-	_roll   = __roll[0]
-	fumble  = __roll[2]
+	def _explain_why_not(character, what, why_cant)
 
-	if(fumble==true)
-		return
-	end 
-
-	result = attacker.ob - opponent.current_db + _roll
-
-	print  " => result:" + result.to_s() + "\n"
-
-	attacker.active_weapon.deal_damage(result, opponent)
-end
-
-def choose_opponent(att, opponents)
-
-	opps = opponents.clone
-	choice=''
-
-	if(att.personality == 'evil')
-
-		choice = 'weakest'
-
-		opps.each_with_index { |opp,i|
-			if (opp.dead)
-				#p opps[i]
-				opps.delete_at(i)
+		def __puts(player, what, *vargs)
+			if(what=='attack')
+				print vargs
+			elsif(what=='block')
+				player.puts_me vargs
 			end
-		}
-	else
-		opps.each_with_index { |opp,i|
-			if (opp.current_hp<=0 or opp.dead or opp.unconscious)
-				#p opps[i]
-				opps.delete_at(i)
-			end
-		}
+		end
 
-		if(att.personality == 'smart')
-			choice = 'weakest'
+		player = character.player
+
+		str = COLOUR_WHITE + COLOUR_REVERSE + character.name + COLOUR_RESET + " cannot " + what + ", reason: "
+
+		if (why_cant == 'dead')
+			str += COLOUR_RED + COLOUR_REVERSE
+		elsif (why_cant == 'unconscious')
+			str += COLOUR_RED
+		elsif (why_cant == 'prone')
+			str += COLOUR_YELLOW + COLOUR_REVERSE
+		elsif (why_cant == 'downed')
+			str += COLOUR_YELLOW_BLINK
 		else
-			choice = 'strongest'
+			str += COLOUR_YELLOW
 		end
+
+		str += " " + why_cant + COLOUR_RESET
+
+		__puts(player, what, str)
 
 	end
 
-	case choice
-		when 'weakest'
-			idx_weakest_opp = opps.each_with_index.inject(0) { |min_i, (opp, idx) |
-				if (opp.current_hp < opps[min_i].current_hp)
-					idx
-				else
-					min_i
+	def _block(character, opponents)
+	
+		player = character.player
+
+		can_block, why_cant = character.can_block_now()
+
+		if(can_block==false)
+			_explain_why_not(character, 'block', why_cant)
+			return false
+		end
+
+		loop {
+			player.puts_me('Choose action:')
+
+			prompt = ' (e)=all Equally' + "\n "
+
+			opponents.each_with_index { |opponent,i|
+				prompt += "(#{i})" + opponent.name + " "
+				if(i%2==1)
+					prompt += "\r\n "
 				end
 			}
-			opp = opps[idx_weakest_opp]
+			#prompt += '( )=specify... '
+			
+			player.puts_me(prompt)
 
-		when 'strongest'
-			idx_weakest_opp = opps.each_with_index.inject(0) { |max_i, (opp, idx) |
-				if (opp.current_hp > opps[max_i].current_hp)
-					idx
-				else
-					max_i
-				end
+			cmd = player.gets
+
+			if(cmd == 'e')
+		
+				how_much = character.current_ob / opponents.length
 				
-			}
-			opp = opps[idx_weakest_opp]
+				opponents.each_with_index { |opponent,i|
+					character.block(opponent.name, how_much)
+				}
 
+				player.puts_me("Blocking w/#{how_much} against all opponents.")
+
+				return true
+			else
+				how_much = character.current_ob / 2
+
+				opponents.each_with_index { |opponent,i|
+					if(cmd == i.to_s)
+						character.block(opponent.name, how_much)
+						player.puts_me("Blocking w/#{how_much} against " + opponent.name)
+					end
+				}
+
+				return true
+			end
+		
+
+		}
+	end
+
+	def _prompt_pc_actions(character, opponents)
+
+
+		def _cls(player)
+			player.puts_me(CURSOR_RESTORE)
+			player.puts_me(cursor_clear_rows(10))
+			player.puts_me(CURSOR_RESTORE)
+		end
+
+		player = character.player
+
+		player.puts_others(character.name + ' ponders action, please wait...')
+
+		can_attack, why_cant_attack = character.can_attack_now()
+		can_block,  why_cant_block  = character.can_block_now()
+
+		
+		player.puts_me(CURSOR_SAVE)
+		loop {
+
+			if(can_attack == false and can_block == false)
+				_explain_why_not(character, 'do anything', 'is incapacitated')
+				player.gets
+				break
+			end
+
+			if(character.current_ob<10)
+				player.puts_me(character, 'take more actions', 'all ob used up!')
+				player.gets
+				break
+			end	
+
+			player.puts_me('Choose action:')
+
+			prompt = ' '
+			prompt += "(a)=attack (#{character.current_ob}) " if(can_attack)
+			prompt += '(b)=block  ' if(can_block)
+			prompt += '( )=Auto   '
+			prompt += '( )=run till damage'
+			
+			player.puts_me(prompt)
+
+			cmd = player.gets
+
+			case cmd
+				when 'a'
+					_cls(player)
+					if(_attack(character, opponents))
+						break
+					else
+						sleep(1)
+					end
+				when 'b'
+					_cls(player)
+					_block(character, opponents)
+				else
+					player.puts_me 'Not implemented'	
+			end
+
+			_cls(player)
+		}
+	end
+
+
+	def _npc_actions(character, opponents)
+
+		_attack(character, opponents)
 
 	end
 
-	return opp, att.personality
+	def _sub_round_init(character)
+		character.do_bleed
+		character.recover_from_wounds
+		character.current_ob = character.ob
+		character.current_blocks = Hash.new
+	end
 
-end
+	# sub_round
 
+	_sub_round_init(character)
 
-
-
-def actions(character, opponents)
-
-	character.do_bleed
-	character.recover_from_wounds
-
-	can_attack, why, text = character.can_attack_now()
-
-	if(can_attack)
-		opponent, manner = choose_opponent(character, opponents)
-		attack(character, opponent, manner)
-		opponent.apply_wound_effects_after_attack
+	if(character.human)
+		_prompt_pc_actions(character, opponents)
 	else
-		str = COLOUR_WHITE + COLOUR_REVERSE + character.name + COLOUR_RESET + " cannot attack, reason: "
-
-		if (why.has_key?('dead') and why['dead'])
-			str += COLOUR_RED + COLOUR_REVERSE + "DEAD" + COLOUR_RESET
-			print str
-			p str
-			return
-		end
-
-		if (why.has_key?('unconscious') and why['unconscious']) 
-			str += COLOUR_RED + "unconscious" + COLOUR_RESET
-			print str
-			p str
-			return
-		end
-
-		if (why.has_key?('prone') and why['prone'] > 0) 
-			str += COLOUR_YELLOW + COLOUR_REVERSE + "prone" + COLOUR_RESET
-			print str
-			p str
-			return
-		end
-
-		if (why.has_key?('downed') and why['downed'] > 0)
-			str += COLOUR_YELLOW_BLINK + "downed" + COLOUR_RESET
-			print str
-			p str
-			return
-		end
-
-		if (why.has_key?('stunned') and why['stunned'] > 0)
-			str += COLOUR_YELLOW + "stunned" + COLOUR_RESET
-			print str
-			p str
-			return
-		end
+		_npc_actions(character, opponents)
 	end
+
 end
+
 
 def combatants_to_s (combatants)
 	
@@ -931,7 +1218,7 @@ class Clients
 		end
 	end
 
-	def getSocket(key)
+	def get_socket(key)
 		sock = ''
 		synchronize {
 			sock = clients[key]
@@ -941,17 +1228,29 @@ class Clients
 
 	def print(key, vargs)
 		synchronize {
-			sock = getSocket(key)
+			sock = get_socket(key)
 			sock_puts(sock, vargs)
 		}
 	end
 
 	def print_all(vargs)
-		synchronize {
-			clients.each{ | thread_id, socket | 
-				if(thread_id.alive?)
-					sock_puts(socket,vargs)
+		print_all_but(nil, vargs)
+	end
 
+	def print_all_but(player, vargs)
+
+		exclude_socket = nil
+		if(player and player.socket)
+			exclude_socket = player.socket
+		end
+
+		synchronize {
+			clients.each { | thread_id, socket | 
+
+				if(socket != exclude_socket)
+					if(thread_id.alive?)
+						sock_puts(socket,vargs)
+					end
 				end
 			}
 		}
@@ -972,7 +1271,7 @@ class Clients
 
 	def gets(key)
 		synchronize {
-			sock = getSocket(key)
+			sock = get_socket(key)
 			str = sock.gets
 			return str
 		}
@@ -1099,14 +1398,16 @@ class Player
 
 	end	
 
-	def write(*vargs)
-		vargs.each { |param|
-			if(vargs.is_a? String)
-				socket.puts(param)
-			else
-				socket.puts(param.to_s)
-			end
-		}
+	def gets()
+		return sock_gets(socket)
+	end
+
+	def puts_me(*vargs)
+		sock_puts(socket, vargs)
+	end
+
+	def puts_others(*vargs)
+		$clients.print_all_but(self, vargs)
 	end
 
 end
@@ -1177,7 +1478,8 @@ def menu(monitor, player, ask_play_again)
 		}
 
 		sock_puts sock, COLOUR_YELLOW_BLINK + ' W' + COLOUR_RESET + ' = Wait for other players'
-		sock_puts sock, COLOUR_RED_BLINK + " F" + COLOUR_RESET + ' = Force start'
+		sock_puts sock, COLOUR_RED_BLINK    + " F" + COLOUR_RESET + ' = Force start'
+		sock_puts sock, COLOUR_BLUE_BLINK   + ' M' + COLOUR_RESET + ' = back to main Menu'
 
 	end
 
@@ -1203,7 +1505,7 @@ def menu(monitor, player, ask_play_again)
 			case cmd[0]
 				when 'n'
 					name = prompt(sock, 'name')
-					player.character= Character.new(name, 'pc', 'biological')
+					player.character= Character.new(name, 'pc', 'biological', player)
 					return false, false
 									
 				when 'q'
@@ -1235,13 +1537,19 @@ def menu(monitor, player, ask_play_again)
 					sleep(1)
 					return false, false
 				when 'p'
-					return true, false
+					if(player.character == nil)
+						sock_puts sock, '?no character'
+						sleep(1)
+						return false, false
+					else
+						return true, false
+					end
 				when 'v'
 					return false, true
 				when ''
 					return false, false
 				when 'h'
-					player.character.heal
+					player.character.heal(true)
 					return false, false
 				else
 					sock_puts sock, 'Not implemented'
@@ -1261,14 +1569,16 @@ def menu(monitor, player, ask_play_again)
 
 			case cmd[0]
 				when 'w'
-					return true
+					return true, true
 				when 'f'
 					$forced_start_fight = true
-					return true
+					return true, true
+				when 'm'
+					return false, false				
 				else
 					sock_puts sock, 'Not implemented'
 					sleep(1)
-					return false, false
+					return false
 			end
 		}
 	end
@@ -1297,7 +1607,11 @@ def menu(monitor, player, ask_play_again)
 
 		if(ready)
 			monitor.synchronize { _print_motd_2(player) }
-			bool = _handle_2nd_cmd(monitor, player)
+			bool, back_to_menu = _handle_2nd_cmd(monitor, player)
+			
+			if(back_to_menu)
+				ready = false
+			end
 		end
 
 		if(_ready_to_break(monitor, bool))
@@ -1323,7 +1637,7 @@ def rename_pcs(pcs)
 				when 3
 					pc.name = 'Bereth the Strong'
 				else
-					pc.name = 'Unknown'  + i.to_s + surname
+					pc.name = "Beanel the #{i}th"
 			end
 		end
 	}	
@@ -1352,42 +1666,16 @@ def rename_npcs(npcs)
 	}	
 end
 
-def pcs_left(pcs)
-
-	pcs.each { |pc|
-		if(pc.current_hp>0 and pc.dead==false and pc.unconscious==false)
-			return true
-		end
-	}
-	return false
-end
-
-def npcs_left(npcs)
-
-	res = false
-
-	npcs.each { |npc|
-		#p npc.name + ' ' + npc.current_hp.to_s + ' ' + npc.dead.to_s + ' ' + npc.unconscious.to_s + ' '
-		if(npc.current_hp>0 and npc.dead==false and npc.unconscious==false)
-			res = true
-		end
-	}
-
-	#p res.to_s
-	
-	return res
-
-end
 
 def init_round(pcs, npcs, combatants)
 
-	while (pcs.length<2) 
-		pcs.push(Character.new('dummy', 'pc', 'artificial'))
+	while (pcs.length<5) 
+		pcs.push(Character.new('dummy', 'pc', 'artificial', nil))
 	end
 
 	rename_pcs(pcs)
 
-	pcs.each { |pc| npcs.push(Character.new('dummy', 'npc', 'artificial')) }
+	pcs.each { |pc| npcs.push(Character.new('dummy', 'npc', 'artificial', nil)) }
 	
 	rename_npcs(npcs)
 
@@ -1402,10 +1690,10 @@ end
 
 def fight_all_rounds(monitor, pcs,npcs,combatants)
 
-	def _draw_subround(active_xpc, rnd, combatants, sub_round)
+	def _draw_subround(active_xpc, rnd, combatants, sub_round_number)
 
 		print SCREEN_CLEAR + CURSOR_UP
-		top_bar = "==================---/--- Round: #" + rnd.to_s + " (" + sub_round.to_s + "/" + combatants.length.to_s + ") ===========================\n"
+		top_bar = "==================---/--- Round: #" + rnd.to_s + " (" + sub_round_number.to_s + "/" + combatants.length.to_s + ") ===========================\n"
 		#top_bar = "123456789_123456789_123456789_123456789_123456789_123456789_123456789_\n"
 		print top_bar
 
@@ -1476,11 +1764,49 @@ def fight_all_rounds(monitor, pcs,npcs,combatants)
 
 	end
 
-	def _act(actor, round, combatants, opponents, sub_round)
-		_draw_subround(actor, round, combatants, sub_round)
 
-		if(npcs_left(opponents))
-			actions(actor, opponents)
+	def _pcs_left(pcs)
+
+		pcs.each { |pc|
+			if(pc.current_hp>0 and pc.dead==false and pc.unconscious==false)
+				return true
+			end
+		}
+		return false
+	end
+
+	def _npcs_left(npcs)
+
+		res = false
+
+		npcs.each { |npc|
+			#p npc.name + ' ' + npc.current_hp.to_s + ' ' + npc.dead.to_s + ' ' + npc.unconscious.to_s + ' '
+			if(npc.current_hp>0 and npc.dead==false and npc.unconscious==false)
+				res = true
+			end
+		}
+
+		#p res.to_s
+		
+		return res
+
+	end
+
+	def _opponents_left(xpc, opponents)
+		if(xpc.human)
+			return _npcs_left(opponents)
+		else
+			return _pcs_left(opponents)
+		end
+
+	end
+
+	def _sub_round(actor, round, combatants, opponents, sub_round_number)
+
+		_draw_subround(actor, round, combatants, sub_round_number)
+
+		if(_opponents_left(actor, opponents))
+			sub_round(actor, opponents)
 		end
 
 		$clients.gets_any
@@ -1496,26 +1822,26 @@ def fight_all_rounds(monitor, pcs,npcs,combatants)
 				players_left = false
 				enemies_left = false
 
-				sub_round=1
+				sub_round_number=1
 
 				pcs.each  { | actor | 
-					_act(actor, i, combatants, npcs, sub_round)
-					sub_round += 1
+					_sub_round(actor, i, combatants, npcs, sub_round_number)
+					sub_round_number += 1
 				}
 
 				npcs.each { | actor |
-					_act(actor, i, combatants, pcs, sub_round)
-					sub_round += 1
+					_sub_round(actor, i, combatants, pcs, sub_round_number)
+					sub_round_number += 1
 				}
 
 				#print "enemies left:" + enemies_left.to_s() + ", players left: " + players_left.to_s() + "\n"
 
-				if(not pcs_left(pcs))
+				if(not _pcs_left(pcs))
 					print "NPCs won!\n"
 					throw :done
 				end
 
-				if(not npcs_left(npcs))
+				if(not _npcs_left(npcs))
 					print "PCs won!\n"
 					throw :done
 				end
@@ -1650,7 +1976,7 @@ def server_loop(server)
 
 				$clients.add_client(player)
 
-				server_print $clients.getSocket(player.thread_id)
+				server_print $clients.get_socket(player.thread_id)
 
 
 			}
@@ -1662,7 +1988,7 @@ def server_loop(server)
 				monitor.synchronize {
 					pcs.push(player.character)
 
-					player.write('Waiting for fight to start..')
+					player.puts_me('Waiting for fight to start..')
 	
 					ask_play_again = true
 				}

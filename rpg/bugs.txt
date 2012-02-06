@@ -11,22 +11,58 @@ fumble -> fumble ?
 <susanna> good catch!
 <> sitä ny paukutettu muutamat kerrat sen jälkeen
 
+smart and evil attack dead <== does this happen unless last round any more? yes
+
+--
+
+takes two enters for human player to proceed if unco <- maybe a feature?
+
+--
+
+
+character.player broke save/load
+
+--
+
+no explanation text for unco human player
+
 --
 
 server> Exception:"\xF6" from ASCII-8BIT to UTF-8
 "\xF6" from ASCII-8BIT to UTF-8
 ["./server.rb:139:in `encode'", "./server.rb:139:in `to_json'", "./server.rb:139:in `to_json'", "./server.rb:511:in `to_json'", "./server.rb:511:in `to_s'", "./server.rb:836:in `block in combatants_to_s'", "./server.rb:835:in `each'", "./server.rb:835:in `each_with_index'", "./server.rb:835:in `combatants_to_s'", "./server.rb:1514:in `block in fight_all_rounds'", "/home/susanna/.rvm/rubies/ruby-1.9.3-p0/lib/ruby/1.9.1/monitor.rb:211:in `mon_synchronize'", "./server.rb:1511:in `fight_all_rounds'", "./server.rb:1596:in `block (2 levels) in server_loop'", "./server.rb:1585:in `loop'", "./server.rb:1585:in `block in server_loop'"]
 
+--
+
+human can choose to block npc that cannot attack
+
 ---
 
-
-<> pitäs selectaa target paremmin
-<> ottaa toi toinen down eka
-<susanna> jep
+equally blocking causes rubish on screen
 
 ---
 
 initiativet puuttuu
+
+---
+
+arch:
+	players vs clients
+		player
+
+		<= a bit of a mess right now, could be like...
+
+	clients
+		client
+			- thread
+			- socket
+
+	players
+		player
+
+
+	... I dunno :-) Point being that now there are some methods that are basically dulpicated in player/s and client/s
+
 
 ---
 
@@ -41,16 +77,6 @@ näytä lopuks vaan omat woundit
 entteriä runsaasti =>
 <susanna> bugaa menuun välillä?
 <susanna> näitkö?
-
----
-
-
-Visnasch the Orc ATTACKS Kyyst� with sword in a evil manner..
-Roll:12
- => result:-58
-Kyyst� blocks the attack
-Kyyst� falls unconscious.
-
 
 ---
 
@@ -71,9 +97,4 @@ smart attack dead people
 
 fumble on fumble could be upwards open-ended
 
---
 
-\n => \n\r - asia, jollain voi olla billy
-
-
---
