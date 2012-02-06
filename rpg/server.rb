@@ -462,7 +462,7 @@ end
 class Character
 
 	# base, or so
-	attr_accessor :full_name, :name, :party, :brains, :player
+	attr_accessor :full_name, :name, :party, :brains
 	attr_accessor :ob, :db, :ac, :hp
 	attr_accessor :personality
 
@@ -490,10 +490,6 @@ class Character
 	end
 
 	def get_personality
-
-		print 'HACK'
-		return 'evil'
-
 		personality = rand(3)
 
 		case personality
@@ -536,22 +532,15 @@ class Character
 		end
 	end
 
-	def initialize(name, party, brains, player)
+	def initialize(name, party, brains)
 		@full_name = name
 		@name	= name[0..17] # andromud screen
 		@party  = party
 		@brains = brains
-
 		@ob	= count("ob")
-	print 'HACK'
-		if(brains == 'artificial')
-			@ob += 100
-		end
 		@db	= count("db")
 		@ac	= count("ac")
 		@hp	= count("hp")
-
-		@player = player
 
 		@personality = get_personality
 		
@@ -810,10 +799,10 @@ def sub_round(character, opponents)
 						opp.check_hitpoints
 
 						if (not opp.dead)
-							print COLOUR_GREEN + "#{opp.name} not dead, good target" + COLOUR_RESET
+							target_print COLOUR_GREEN + "#{opp.name} not dead, good target" + COLOUR_RESET
 							opps.push(opp)
 						else
-							print COLOUR_RED + "#{opp.name} is dead, not a target" + COLOUR_RESET
+							target_print COLOUR_RED + "#{opp.name} is dead, not a target" + COLOUR_RESET
 						end
 					}
 				else
@@ -822,10 +811,10 @@ def sub_round(character, opponents)
 						opp.check_hitpoints
 
 						if (opp.current_hp>0 and not opp.dead and not opp.unconscious)
-							print COLOUR_GREEN + "#{opp.name} good target" + COLOUR_RESET
+							target_print COLOUR_GREEN + "#{opp.name} good target" + COLOUR_RESET
 							opps.push(opp)
 						else
-							print COLOUR_RED + "#{opp.name} not hp>0+not dead+not unco, not a target" + COLOUR_RESET
+							target_print COLOUR_RED + "#{opp.name} not hp>0+not dead+not unco, not a target" + COLOUR_RESET
 						end
 					}
 
@@ -888,9 +877,9 @@ def sub_round(character, opponents)
 
 			# __choose_opponent
 	
-			print opponents.length
+			target_print "total targets: #{opponents.length}"
 			opps, choice = ___prune_non_targets(attacker.personality, opponents)
-			print opps.length
+			target_print "pruned targets: #{opps.length}"
 			chosen_opponent = ___choose_from_remaining(opps, choice)
 
 			opponents.each { |o| p "#{o.name}=#{o.strength.to_s}," }
@@ -919,7 +908,7 @@ def sub_round(character, opponents)
 			block = opponent.blocks?(attacker.name)
 
 			if(block>0)
-				print opponent.name + ' blocks against ' + attacker.name + " w/#{block}"
+				print opponent.name + COLOUR_CYAN + ' blocks' + COLOUR_RESET + ' against ' + attacker.name + " w/#{block}"
 			end
 
 			result = attacker.current_ob - opponent.current_db - block + _roll
@@ -951,12 +940,12 @@ def sub_round(character, opponents)
 		def __puts(player, what, *vargs)
 			if(what=='attack')
 				print vargs
-			elsif(what=='block')
+			else #if(what=='block')
 				player.puts_me vargs
 			end
 		end
 
-		player = character.player
+		player = $clients.get_player(character)
 
 		str = COLOUR_WHITE + COLOUR_REVERSE + character.name + COLOUR_RESET + " cannot " + what + ", reason: "
 
@@ -980,7 +969,7 @@ def sub_round(character, opponents)
 
 	def _block(character, opponents)
 	
-		player = character.player
+		player = $clients.get_player(character)
 
 		can_block, why_cant = character.can_block_now()
 
@@ -1000,7 +989,6 @@ def sub_round(character, opponents)
 					prompt += "\r\n "
 				end
 			}
-			#prompt += '( )=specify... '
 			
 			player.puts_me(prompt)
 
@@ -1043,7 +1031,7 @@ def sub_round(character, opponents)
 			player.puts_me(CURSOR_RESTORE)
 		end
 
-		player = character.player
+		player = $clients.get_player(character)
 
 		player.puts_others(character.name + ' ponders action, please wait...')
 
@@ -1057,13 +1045,13 @@ def sub_round(character, opponents)
 			if(can_attack == false and can_block == false)
 				_explain_why_not(character, 'do anything', 'is incapacitated')
 				player.gets
-				break
+				return
 			end
 
 			if(character.current_ob<10)
-				player.puts_me(character, 'take more actions', 'all ob used up!')
+				_explain_why_not(character, 'take more actions', 'all ob used up!')
 				player.gets
-				break
+				return
 			end	
 
 			player.puts_me('Choose action:')
@@ -1082,9 +1070,7 @@ def sub_round(character, opponents)
 				when 'a'
 					_cls(player)
 					if(_attack(character, opponents))
-						break
-					else
-						sleep(1)
+						return
 					end
 				when 'b'
 					_cls(player)
@@ -1092,6 +1078,8 @@ def sub_round(character, opponents)
 				else
 					player.puts_me 'Not implemented'	
 			end
+		
+			sleep(1)
 
 			_cls(player)
 		}
@@ -1198,32 +1186,44 @@ class Clients
 
 	include MonitorMixin
 
-	attr_accessor :clients
+	attr_accessor :sockets, :players
 
 	def initialize(*args)
 		super(*args)
 
-		@clients = Hash.new
+		@sockets = Hash.new
+		@players = Hash.new
 	end
 
 	def add_client(player)
 		self.synchronize do
-			clients[player.thread_id] = player.socket
+			@sockets[player.thread_id] = player.socket
+			@players[player.thread_id] = player
 		end
 	end
 
 	def del_client(player)
 		self.synchronize do
-			clients.delete(player.thread_id)
+			@sockets.delete(player.thread_id)
+			@players.delete(player.thread_id)
+			server_print "Client #{player.thread_id} left, still have #{@sockets.length} sockets."
 		end
 	end
 
-	def get_socket(key)
+	def get_socket(key) # key is thread_id
 		sock = ''
 		synchronize {
-			sock = clients[key]
+			sock = @sockets[key]
 		}
 		return sock
+	end
+
+	def get_player(character)
+		players.each_value { |player| 
+			if(player.character == character)
+				return player;
+			end
+		}
 	end
 
 	def print(key, vargs)
@@ -1245,7 +1245,7 @@ class Clients
 		end
 
 		synchronize {
-			clients.each { | thread_id, socket | 
+			@sockets.each { | thread_id, socket | 
 
 				if(socket != exclude_socket)
 					if(thread_id.alive?)
@@ -1258,7 +1258,7 @@ class Clients
 
 	def gets_all()
 		synchronize {
-			clients.each{ | thread_id, socket | 
+			sockets.each{ | thread_id, socket | 
 
 				msg = ''
 
@@ -1280,12 +1280,12 @@ class Clients
 	def gets_any
 
 		synchronize {
-			sockets = Array.new
-			clients.each{ | thread_id, socket | sockets.push(socket) }
+			socks = Array.new
+			@sockets.each{ | thread_id, socket | socks.push(socket) }
 
 			loop {
 				begin
-					results = select ( sockets ) # FIXME, can except?
+					results = select ( socks ) # FIXME, can except?
 
 					for sock in results[0]
 						if results[0].include? sock
@@ -1306,7 +1306,7 @@ class Clients
 	def length
 		len=0
 		synchronize {
-			len = clients.length	
+			len = sockets.length	
 		}
 		return len
 	end
@@ -1336,8 +1336,12 @@ def server_print(*vargs)
 	putc ' '
 
 	puts(vargs)
-	
 end
+
+def target_print(*vargs)
+	#print(vargs)
+end
+
 
 def print(*vargs)
 	$clients.print_all(vargs)
@@ -1367,30 +1371,27 @@ Thread.abort_on_exception = true
 
 
 class Player
-	attr_accessor :character
 	attr_accessor :thread_id, :socket
 	attr_accessor :character
-	attr_accessor :players
 
-	def initialize(players, thread_id, socket)
+	def initialize(thread_id, socket)
 		@thread_id   = thread_id
 		@socket      = socket
 		@character   = nil
-
-		players.push(self)
-		@players = players
 	end
 	
 	def remove()
 
-		self.socket.puts 'bye'
-		self.socket.close
+		sock_puts @socket, "bye"
 
-		players.each_with_index { |player,i|
-			if(player.thread_id = @thread_id)
-				players.delete_at(i)
-			end
-		}
+		begin
+			self.socket.close
+		rescue Exception => e
+			server_print 'Exception:' + e.to_s
+
+			server_print e.message  
+			server_print e.backtrace.inspect
+		end
 
 		$clients.del_client(self)
 
@@ -1505,7 +1506,7 @@ def menu(monitor, player, ask_play_again)
 			case cmd[0]
 				when 'n'
 					name = prompt(sock, 'name')
-					player.character= Character.new(name, 'pc', 'biological', player)
+					player.character= Character.new(name, 'pc', 'biological')
 					return false, false
 									
 				when 'q'
@@ -1670,12 +1671,12 @@ end
 def init_round(pcs, npcs, combatants)
 
 	while (pcs.length<5) 
-		pcs.push(Character.new('dummy', 'pc', 'artificial', nil))
+		pcs.push(Character.new('dummy', 'pc', 'artificial'))
 	end
 
 	rename_pcs(pcs)
 
-	pcs.each { |pc| npcs.push(Character.new('dummy', 'npc', 'artificial', nil)) }
+	pcs.each { |pc| npcs.push(Character.new('dummy', 'npc', 'artificial')) }
 	
 	rename_npcs(npcs)
 
@@ -1813,6 +1814,8 @@ def fight_all_rounds(monitor, pcs,npcs,combatants)
 
 	end
 
+	# fight_all_rounds
+
 	i=0
 	catch (:done) do
 		while true
@@ -1868,16 +1871,16 @@ $clients            = Clients.new
 
 def server_loop(server)
 
-	def _handle_server_commands(players, pcs, npcs, combatants, monitor, server)
+	def _handle_server_commands(clients, pcs, npcs, combatants, monitor, server)
 
 		def _cmd_threads
 			p Thread.list
 		end
 	
-		def _cmd_sockets(players)
-			for player in players
-				p player.socket
-			end
+		def _cmd_sockets(clients)
+			clients.sockets.each_key { |thread_id|
+				p clients.get_socket(thread_id)
+			}
 		end
 
 		cmd = "\n"
@@ -1889,27 +1892,26 @@ def server_loop(server)
 
 			case cmd[0]
 				when 'P'
-					p players
+					p $clients
 				when 'p'
 					for pc  in pcs  do p pc  end
 				when 'n'
 					for npc in npcs do p npc end
 				when 'l'
 					server_print \
-						"\n\tplayers="    + "#{players.length}"    + 
+						"\n\tclients="    + "#{clients.length}"    + 
 						"\n\tpcs="        + "#{pcs.length}"        +
 						"\n\tnpcs="       + "#{npcs.length}"       +
 						"\n\tcombatants=" + "#{combatants.length}"
 				when 't'
 					_cmd_threads
 				when 's'
-					_cmd_sockets(players)
+					_cmd_sockets(clients)
 				when 'Q'
 					shutdown(server, 'operator manual shutdown from server console')
 			end
 	end
 
-	players     = Array.new
 	pcs         = Array.new
 	npcs        = Array.new
 	combatants  = Array.new
@@ -1920,7 +1922,7 @@ def server_loop(server)
 
 	Thread.start() do
 		loop {
-			_handle_server_commands(players, pcs, npcs, combatants, monitor, server)
+			_handle_server_commands($clients, pcs, npcs, combatants, monitor, server)
 		}
 	end
 
@@ -1932,14 +1934,14 @@ def server_loop(server)
 
 			Thread.stop
 
-			if($forced_start_fight and players.length>0)
+			if($forced_start_fight and $clients.length>0)
 
 				monitor.synchronize {
 					$forced_start_fight = false
 					init_round(pcs, npcs, combatants)
 				}
 
-				fight_all_rounds(monitor, pcs,npcs,combatants)
+				fight_all_rounds(monitor, pcs ,npcs, combatants)
 
 				monitor.synchronize { # cleanup
 					pcs        = Array.new
@@ -1949,13 +1951,11 @@ def server_loop(server)
 			end
 
 			monitor.synchronize {
-				players.each { |p| 
-					if(p.thread_id.alive?)
-						p.thread_id.run
+				$clients.sockets.each_key { |thread_id| 
+					if(thread_id.alive?)
+						thread_id.run
 					else
-						server_warn 'Emergency cleaunp, thread was dead - removed player'
-						p.remove
-						p = nil
+						server_print 'Thread was dead - removed player'
 					end
 				}
 			}
@@ -1972,12 +1972,11 @@ def server_loop(server)
 
 			monitor.synchronize {
 
-				player = Player.new(players, Thread.current, sock)
+ 				player = Player.new(Thread.current, sock)
 
 				$clients.add_client(player)
 
-				server_print $clients.get_socket(player.thread_id)
-
+				server_print $clients.get_socket(Thread.current)
 
 			}
 
