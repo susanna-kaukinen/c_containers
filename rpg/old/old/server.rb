@@ -6,6 +6,7 @@ require 'monitor'
 require 'rubygems'
 require 'json'
 require 'yaml'
+require 'securerandom'
 #
 # TODO: severed, crushed, bruised, miinukset: e.g. char at -10%, blind toteuttamatta (-100)
 #
@@ -75,7 +76,7 @@ def cursor_clear_rows(amt)
 		end	
 
 		str += "\n\r"
-
+		
 		i+=1
 
 		break if (i>=amt)
@@ -174,7 +175,7 @@ class Wound
 
 		if(@damage)
 			character.current_hp -= @damage
-
+	
 			@text += " and was dealt " + @damage.to_s() + " extra damage"
 		end
 
@@ -187,7 +188,7 @@ class Wound
 			character.bleeding += @bleeding
 			@text += " and is bleeding " + @bleeding.to_s() + " hits worth each round"
 		end
-
+		
 		if(@uparry > 0)
 			character.uparry += @uparry
 			@text += " and is unable to parry for " + @uparry.to_s() + " rounds"
@@ -214,9 +215,9 @@ class Wound
 		end
 
 		character.add_wound(self)
-
+		
 		#p self
-
+		
 		print COLOUR_CYAN + "\t===> " + @text + "\n" + COLOUR_RESET
 
 	end
@@ -279,7 +280,7 @@ class Weapon
 		#print '*** CRITICAL *** ' + "\n"
 		#print '*** CRITICAL *** ' + "\n"
 
-
+	
 		_roll = roll(nil, nil, nil)[1] 
 
 
@@ -294,7 +295,7 @@ class Weapon
 			when "E"
 				crit_bonus += 20
 		end
-
+	
 		result = _roll + crit_bonus
 
 		wound = Wound.new()
@@ -373,7 +374,7 @@ end
 
 			wound.uparry /= 2
 		end
-
+		
 
 		target_result = 1 + rand(100) + target_bonus
 		case target_result
@@ -440,7 +441,7 @@ end
 		if(defender.current_hp <= 0) 
 			colour = COLOUR_RED	
 		end
-
+		
  		#print defender.name + " has " + colour + defender.current_hp.to_s() + COLOUR_RESET + " hit points left\n"
 
 		if(defender.current_hp<0 and defender.dead == false)
@@ -467,6 +468,7 @@ class Character
 	attr_accessor :full_name, :name, :party, :brains
 	attr_accessor :personality
 	attr_accessor :ob, :db, :ac, :hp
+	attr_accessor :id
 
 	# base stats
 	attr_accessor :quickness
@@ -489,7 +491,7 @@ class Character
 		return strength
 	end
 
-	def human
+	def human?
 		return true if(brains=='biological') 
 		return false
 	end
@@ -522,7 +524,7 @@ class Character
 
 		@dead	     = false
 		@dead_why    = ''
-
+		
 		@current_hp    = @hp
 		@active_weapon = Weapon.new("sword")
 		@current_db    = @db # at this point
@@ -539,6 +541,7 @@ class Character
 	end
 
 	def initialize(name, party, brains)
+		@id = SecureRandom.uuid
 		@full_name = name
 		@name	= name[0..17] # andromud screen
 		@party  = party
@@ -551,7 +554,7 @@ class Character
 		@quickness = generate("quickness")
 
 		@personality = get_personality
-
+		
 		heal(true)
 	end
 
@@ -649,7 +652,7 @@ class Character
 
 		if(@stun>0)
 			str = 'stunned'
-
+			
 			if(@uparry > 0)
 				 str += " and unable to parry"
 			end
@@ -676,11 +679,11 @@ class Character
 		if(@unconscious)
 			return false, 'unconscious'
 		end
-
+		
 		if(@prone>0)       
 			return false, 'prone'
 		end
-
+		
 		if(@uparry>0)    
 			return false, 'unable to parry'
 		end
@@ -689,9 +692,9 @@ class Character
 	end
 
 	def block(against, block_amount)
-
+	
 		@current_blocks[against] = block_amount
-
+	
 		@current_ob -= block_amount
 
 		return
@@ -801,7 +804,7 @@ def sub_round(character, opponents)
 			def ___prune_non_targets(personality, opponents)
 
 				choice=''
-
+		
 				opps = Array.new
 
 				if(personality == 'evil')
@@ -846,11 +849,11 @@ def sub_round(character, opponents)
 			def ___choose_from_remaining(opps, choice)
 
 				def ____stronger(opp1, opp2)
-
+		
 					if(opp1.strength > opp2.strength)
 						return true
 					end
-
+		
 					return false
 				end
 
@@ -859,7 +862,7 @@ def sub_round(character, opponents)
 					if(opp1.strength < opp2.strength)
 						return true
 					end
-
+		
 					return false
 
 				end
@@ -883,14 +886,14 @@ def sub_round(character, opponents)
 							else
 								max_i
 							end
-
+							
 						}
 						return opps[idx]
 				end
 			end
 
 			# __choose_opponent
-
+	
 			target_print "total targets: #{opponents.length}"
 			opps, choice = ___prune_non_targets(attacker.personality, opponents)
 			target_print "pruned targets: #{opps.length}"
@@ -982,7 +985,7 @@ def sub_round(character, opponents)
 	end
 
 	def _block(character, opponents)
-
+	
 		player = $clients.get_player(character)
 
 		can_block, why_cant = character.can_block_now()
@@ -1003,15 +1006,15 @@ def sub_round(character, opponents)
 					prompt += "\r\n "
 				end
 			}
-
+			
 			player.puts_me(prompt)
 
 			cmd = player.gets
 
 			if(cmd == 'e')
-
+		
 				how_much = character.current_ob / opponents.length
-
+				
 				opponents.each_with_index { |opponent,i|
 					character.block(opponent.name, how_much)
 				}
@@ -1031,7 +1034,7 @@ def sub_round(character, opponents)
 
 				return true
 			end
-
+		
 
 		}
 	end
@@ -1052,7 +1055,7 @@ def sub_round(character, opponents)
 		can_attack, why_cant_attack = character.can_attack_now()
 		can_block,  why_cant_block  = character.can_block_now()
 
-
+		
 		player.puts_me(CURSOR_SAVE)
 		loop {
 
@@ -1075,7 +1078,7 @@ def sub_round(character, opponents)
 			prompt += '(b)=block  ' if(can_block)
 			prompt += '( )=Auto   '
 			prompt += '( )=run till damage'
-
+			
 			player.puts_me(prompt)
 
 			cmd = player.gets
@@ -1092,8 +1095,8 @@ def sub_round(character, opponents)
 				else
 					player.puts_me 'Not implemented'	
 			end
-
-			sleep(1)
+		
+			#sleep(1)
 
 			_cls(player)
 		}
@@ -1117,7 +1120,7 @@ def sub_round(character, opponents)
 
 	_sub_round_init(character)
 
-	if(character.human)
+	if(character.human?)
 		_prompt_pc_actions(character, opponents)
 	else
 		_npc_actions(character, opponents)
@@ -1127,7 +1130,7 @@ end
 
 
 def combatants_to_s (combatants)
-
+	
 	str = ''
 
 	combatants.each_with_index  { | character, index |  
@@ -1145,92 +1148,44 @@ end
 
 def sock_io(sock, op, *vargs, iter)
 
-	Monitor.new.synchronize {
+	if(sock==nil || sock.closed?)
+		server_print 'dead socket, no more i/o'
+		return
+	end
 
-		sock_invalid = false
+	if(op=='str')
 
-		begin
-			if(op=='str')
-
-				if(iter=='1st')
-					sock.putc("\r")
-				end
-
-				vargs.each { |param|
-
-					if(param.is_a? Array)
-						for item in param
-							return sock_io(sock, op, item, 'recurse')
-						end
-					end
-
-					if(param.is_a? String)
-						sock.puts(param)
-					else
-						p param
-						sock.puts(param.to_s)
-					end
-				}
-			elsif(op=='c')
-				sock.putc(vargs[0]) 
-			elsif(op=='gets')
-				data = sock.gets
-				if(data != nil)
-					data = data.strip!
-					return data
-				end
-				return ''
-			else
-				throw :no_op
-			end
-
-		rescue Exception => e
-
-			server_print 'Exception:' + e.to_s
-
-			server_print e.message  
-			server_print e.backtrace.inspect
-
-			sock_invalid = true	
-
+		if(iter=='1st')
+			sock.putc("\r")
 		end
 
-		if(sock_invalid)
+		vargs.each { |param|
 
-			begin
-				sock.close
-				sock.shutdown(:WR)
-				sock = nil
-			rescue
-			end
-
-			is_player_thread = false
-			$clients.players.keys.each do |key|
-				if(key =~ /player.*/)
-					is_player_thread = true
+			if(param.is_a? Array)
+				for item in param
+					return sock_io(sock, op, item, 'recurse')
 				end
 			end
 
-			if(is_player_thread)
-				player = $clients.players[Thread.current]
-				_player = player.remove
-				_player = nil
-				Thread.current.exit
+			if(param.is_a? String)
+				sock.puts(param)
 			else
-				player, thread_id = $clients.get_player2(sock)
-
-				if(player!=nil)
-					_player = player.remove
-					_player = nil
-
-					if(thread_id != nil)		
-						Thread::kill(thread_id)
-					end
-				end
+				p param
+				sock.puts(param.to_s)
 			end
+		}
+	elsif(op=='c')
+		sock.putc(vargs[0]) 
+	elsif(op=='gets')
+		data = sock.gets
+		if(data != nil)
+			data = data.strip!
+			return data
 		end
-
-	}
+		return ''
+	else
+		throw :no_op
+	end
 
 end
 
@@ -1250,42 +1205,172 @@ class Clients
 
 	include MonitorMixin
 
-	attr_accessor :sockets, :players
-
 	def initialize(*args)
 		super(*args)
+ 
+		@pcs         = Array.new
+		@npcs        = Array.new
+		@combatants  = Array.new
+		$threads     = Hash.new
 
 		@sockets = Hash.new
 		@players = Hash.new
 	end
 
-	def add_client(player)
+	def in_game(game)
 		self.synchronize do
+			if(game)
+				p 'game set true'
+				@game = true
+			else
+				p 'game set false'
+				@game =false
+			end
+		end
+	end
+
+	def in_game?
+		self.synchronize do
+			p "game: #{@game}"
+			return @game
+		end
+	end
+	
+
+	def try_add_client(player)
+		self.synchronize do
+
+			if (@sockets.has_value? (player.socket))
+				server_print 'player registered already'
+				return
+			end
+
 			@sockets[player.thread_id] = player.socket
 			@players[player.thread_id] = player
 		end
 	end
 
+
+	def dump_sockets
+		self.synchronize do
+			@sockets.each_key { |thread_id|
+				p get_socket(thread_id)
+			}
+		end
+	end
+	def fight_cleanup
+		self.synchronize do
+			@pcs        = Array.new
+			@npcs       = Array.new
+			@combatants = Array.new
+		end
+	end
+
+	def kick_player_threads(what)
+
+		self.synchronize do
+
+			p "kicker, existing threads: #{Thread.list}"
+
+			if(what == 'all')
+
+				@sockets.each { |thr,soc|
+
+					if(thr.alive?)
+						p "kicking #{thr}"
+						thr.run
+					else
+						server_print 'Thread was dead - removed player' # or should? FIXME
+					end
+				}
+
+
+			elsif (what == 'broken')
+				
+
+				kick_list = Array.new
+				
+				@sockets.each { |thr,soc|
+				
+					begin
+						soc.puts(' ')
+					rescue
+						p "#{thr} on kick_list"
+						kick_list.push(thr)
+					end
+				}
+
+
+				p "threads w/broken sockets: #{kick_list}"
+
+				kick_list.each { |thread_id| 
+					if(thread_id.alive?)
+						thread_id.run
+					else
+						server_print 'Thread was dead - removed player' # or should? FIXME
+					end
+				}
+
+			else
+				throw ':bad params'
+			end
+
+		end
+	end
+
+
+	def get_pcs
+		self.synchronize do
+			return @pcs
+		end
+	end
+
+	def pcs_push(character)
+		self.synchronize do
+			@pcs.push(character)
+		end
+	end
+
+	def get_npcs
+		self.synchronize do
+			return @npcs
+		end	
+	end
+
+	def get_combatants
+		self.synchronize do
+			return @combatants
+		end
+	end
+
+	def get_players(thread_id)
+		self.synchronize do
+			return @players[thread_id]
+		end
+	end
+
 	def del_client(player)
 		self.synchronize do
+			p "del_client: sockets=#{@sockets.length}, players=#{@players.length}"
 			@sockets.delete(player.thread_id)
 			@players.delete(player.thread_id)
+			p "/del_client: sockets=#{@sockets.length}, players=#{@players.length}"
 			server_print "Client #{player.thread_id} left, still have #{@sockets.length} sockets."
 		end
 	end
 
 
 
-	def get_socket(key) # key is thread_id
+	def get_socket(thread)
 		sock = ''
 		synchronize {
-			sock = @sockets[key]
+			sock = @sockets[thread]
 		}
 		return sock
 	end
 
 	def get_player2(sock)
-
+		
 		synchronize {
 			thread = nil
 
@@ -1304,9 +1389,43 @@ class Clients
 		return nil, nil
 	end
 
+	def prune_gone_humans(combatants)
+		synchronize {
+		p "prune start: combatants=#{combatants.length}, sockets=#{@sockets.length}, players=#{@players.length}"
+
+			combatants.each_with_index { |comb, i|
+
+				catch (:exists) do
+					if(comb.human?)
+
+						@players.each { |thread,player|
+							if(player!=nil and player.character != nil and player.character.id == comb.id)
+								p "still have #{comb.name} #{comb.id}"
+								throw :exists
+							end
+						}
+
+						p "deleting #{comb.name} =?= #{combatants[i].name}"
+						combatants.delete_at(i)
+					end
+				end
+			}
+		p "/prune: combatants=#{combatants.length}, sockets=#{@sockets.length}, players=#{@players.length}"
+		}
+	end
+
+	def players_left?
+		self.synchronize do
+			if(@players.length ==0) 
+				return false
+			end
+			return true	
+		end
+	end
+
 	def get_player(character)
 		synchronize {
-			players.each_value { |player| 
+			@players.each_value { |player| 
 				if(player.character == character)
 					return player;
 				end
@@ -1345,14 +1464,50 @@ class Clients
 		}
 	end
 
-	def gets_all()
+	def mark_players(in_game)
 		synchronize {
-			sockets.each{ | thread_id, socket | 
+			@players.each_value { |player| player.in_game = in_game }
+		}
+	end
 
-				msg = ''
+	def player_in_game?(thread_id)
+	
+		synchronize {
+			if(thread_id==nil)
+				server_print "player_in_game?: no thread"
+				return false
+			end
 
-				if(thread_id.alive?)
-					msg = socket.gets
+			player=nil
+
+			@players.each { | _thread_id, _player |
+				if(thread_id==_thread_id)
+					player = _player
+				end
+			}
+
+			if(player==nil)
+				server_print "player_in_game?: no player for socket #{socket} with thread_id #{thread_id}"
+				return false
+			end
+
+			if(player.in_game)
+				server_print "player_in_game?: #{player} in game"
+				return true
+			end
+
+			server_print "player_in_game?: player for socket #{socket} with thread_id #{thread_id}"
+			server_print "player_in_game?: NOT #{player} in game"
+			return false
+		}
+	end
+
+	def gets_all_in_game()
+		synchronize {
+			@sockets.each{ | thread_id, socket | 
+
+				if(thread_id.alive? and player_in_game?(thread_id))
+					sock_gets(socket)
 				end
 			}
 		}
@@ -1366,23 +1521,36 @@ class Clients
 		}
 	end
 
-	def gets_any
+	def gets_any_in_game
 
 		synchronize {
 			socks = Array.new
-			@sockets.each{ | thread_id, socket | socks.push(socket) }
+
+			@sockets.each{ | thread_id, socket | 
+				if(player_in_game?(thread_id))
+					socks.push(socket) 
+				end
+			}
+
+			if(socks.length<=0)
+				server_print 'NO WRITERS'
+				return
+			else
+				server_print "WRITERS = #{socks.length}"
+			end
 
 			loop {
 				begin
+					server_print 'SELECT'
 					results = select ( socks ) # FIXME, can except?
 
 					for sock in results[0]
 						if results[0].include? sock
-							sock.gets
+							sock_gets sock
 							return
 						end
 					end
-
+	
 				rescue IOError => err
 					p err
 					server_print err
@@ -1395,9 +1563,8 @@ class Clients
 	def length
 		len=0
 		synchronize {
-			len = sockets.length	
+			return @sockets.length	
 		}
-		return len
 	end
 end
 
@@ -1432,6 +1599,18 @@ def target_print(*vargs)
 end
 
 
+def clear_screens (sock)
+
+	clear = SCREEN_CLEAR + CURSOR_UP_LEFT
+
+	if(sock==nil)
+		$clients.print_all(clear)
+	else
+		sock_puts(sock, clear) # FIXME, no synch
+	end
+
+end
+
 def print(*vargs)
 	$clients.print_all(vargs)
 	server_print(vargs) # server window
@@ -1462,13 +1641,14 @@ Thread.abort_on_exception = true
 class Player
 	attr_accessor :thread_id, :socket
 	attr_accessor :character
+	attr_accessor :in_game
 
 	def initialize(thread_id, socket)
 		@thread_id   = thread_id
 		@socket      = socket
 		@character   = nil
 	end
-
+	
 	def remove()
 
 		begin
@@ -1505,7 +1685,7 @@ class Player
 	end
 
 end
-
+	
 def prompt(sock, str)
 
 	sock_putc(sock, "\r")
@@ -1523,7 +1703,7 @@ def prompt(sock, str)
 	return response
 end
 
-def menu(monitor, player, ask_play_again)
+def menu(player, ask_play_again)
 
 	def _exit(player)
 
@@ -1537,8 +1717,8 @@ def menu(monitor, player, ask_play_again)
 
 		sock      = player.socket
 
-		sock_puts sock,(SCREEN_CLEAR + CURSOR_UP_LEFT)
-
+		clear_screens sock
+	
 		i=0	
 		File.open($motd).each_line{ |line_in_file|
 
@@ -1562,8 +1742,8 @@ def menu(monitor, player, ask_play_again)
 
 		sock      = player.socket
 
-		sock_puts sock,(SCREEN_CLEAR + CURSOR_UP_LEFT)
-
+		clear_screens (sock)
+	
 		File.open($motd).each_line{ |line_in_file|
 
 			strMONSTER = COLOUR_RED_BLINK + 'MONSTER' + COLOUR_RESET
@@ -1588,20 +1768,19 @@ def menu(monitor, player, ask_play_again)
 		end
 	end
 
-	def _handle_cmd(monitor, player, ask_play_again)	
+	def _handle_cmd(player, ask_play_again)	
 
 		sock = player.socket
 
 		cmd = prompt(sock, 'cmd')
 
-		monitor.synchronize {
 
 			case cmd[0]
 				when 'n'
 					name = prompt(sock, 'name')
 					player.character= Character.new(name, 'pc', 'biological')
 					return false, false
-
+									
 				when 'q'
 					_exit(player)
 				when 'l'
@@ -1620,7 +1799,7 @@ def menu(monitor, player, ask_play_again)
 					else
 						_screen('large')
 					end
-
+					
 					return false, false
 				when 's'
 					if(player.character and player.character.save)
@@ -1647,68 +1826,59 @@ def menu(monitor, player, ask_play_again)
 					return false, false
 				else
 					sock_puts sock, 'Not implemented'
-					sleep(1)
 					return false, false
 			end
-		}
 	end
 
-	def _handle_2nd_cmd(monitor, player)
+	def _handle_2nd_cmd(player)
 
 		sock = player.socket
 
 		cmd = prompt(sock, 'cmd')
 
-		monitor.synchronize {
-
-			case cmd[0]
-				when 'w'
-					return true, true
-				when 'f'
-					$forced_start_fight = true
-					return true, true
-				when 'm'
-					return false, false				
-				else
-					sock_puts sock, 'Not implemented'
-					sleep(1)
-					return false
-			end
-		}
+		case cmd[0]
+			when 'w'
+				return true, true
+			when 'f'
+				$forced_start_fight = true
+				return true, true
+			when 'm'
+				return false, false				
+			else
+				sock_puts sock, 'Not implemented'
+				sleep(1)
+				return false
+		end
 	end
 
-	def _ready_to_break(monitor, bool)
-		monitor.synchronize { 
+	def _ready_to_break(bool)
 			if(bool) 
 				return true
 			end 
-		}
 	end
 
 	show_player = false
 
 	while true
 
-		monitor.synchronize {
-			_print_motd_1(player, ask_play_again)
+		_print_motd_1(player, ask_play_again)
 
-			if(show_player)
-				player.socket.puts player.character.to_s
-			end
-		}
+		if(show_player)
+			player.socket.puts player.character.to_s
+		end
 
-		ready, show_player = _handle_cmd(monitor, player, ask_play_again)
+		ready, show_player = _handle_cmd(player, ask_play_again)
 
 		if(ready)
-			monitor.synchronize { _print_motd_2(player) }
-			bool, back_to_menu = _handle_2nd_cmd(monitor, player)
-
+			_print_motd_2(player)
+			bool, back_to_menu = _handle_2nd_cmd(player)
+			
 			if(back_to_menu)
 				ready = false
 			end
 		end
 
-		if(_ready_to_break(monitor, bool))
+		if(_ready_to_break(bool))
 			break
 		end
 	end
@@ -1721,7 +1891,7 @@ def rename_pcs(pcs)
 
 		if (pc.brains == 'artificial')
 			case i
-
+			
 				when 0
 					pc.name = 'Aramir the Invincible'
 				when 1
@@ -1745,7 +1915,7 @@ def rename_npcs(npcs)
 
 
 		case i
-
+		
 			when 0
 				npc.name = 'Gurlar'   + surname
 			when 1
@@ -1770,24 +1940,25 @@ def init_round(pcs, npcs, combatants)
 	rename_pcs(pcs)
 
 	pcs.each { |pc| npcs.push(Character.new('dummy', 'npc', 'artificial')) }
-
+	
 	rename_npcs(npcs)
 
 	pcs.each  { |pc|  combatants.push(pc)  }
 	npcs.each { |npc| combatants.push(npc) }
 
-	print(SCREEN_CLEAR + CURSOR_UP_LEFT + "NEW FIGHT!")
-	print(combatants_to_s(combatants) + "\nHIT ENTER TO BEGIN" )
-	$clients.gets_all
-	print(SCREEN_CLEAR + CURSOR_UP_LEFT)
+	clear_screens(nil)
+	print "NEW FIGHT!"
+	print "\nHIT ENTER TO BEGIN"
+	$clients.gets_all_in_game
+	clear_screens(nil)
 end
 
-def fight_all_rounds(monitor, pcs,npcs,combatants)
+def fight_all_rounds(pcs,npcs,combatants)
 
 
 	def _draw_subround(active_xpc, rnd, combatants, sub_round_number)
 
-		print SCREEN_CLEAR + CURSOR_UP_LEFT
+		clear_screens(nil)
 		top_bar = "==================---/--- Round: #" + rnd.to_s + " (" + sub_round_number.to_s + "/" + combatants.length.to_s + ") ===========================\n"
 		#top_bar = "123456789_123456789_123456789_123456789_123456789_123456789_123456789_\n"
 		print top_bar
@@ -1805,6 +1976,7 @@ def fight_all_rounds(monitor, pcs,npcs,combatants)
 		combatants.each_with_index { | xpc,i |
 
 			str = ''
+			server_str = ''
 
 			if(i >= (combatants.length/2)) # print npc:s in 2nd column
 				set_pos_x_y = "\033[" + (3+i-(combatants.length/2)).to_s + ';' + '36' + 'H'
@@ -1832,7 +2004,8 @@ def fight_all_rounds(monitor, pcs,npcs,combatants)
 				end
 			end
 
-			str += name
+			str        += name
+			server_str += name
 
 			if(i < (combatants.length/2))
 				set_pos_y = "\033[" + '20' + 'G'
@@ -1848,7 +2021,9 @@ def fight_all_rounds(monitor, pcs,npcs,combatants)
 			end
 
 			str += curr_hp.to_s
+			server_str += curr_hp.to_s
 			str += '/'
+			server_str += '/'
 
 			hp = xpc.hp.to_s
 			while(hp.length<3)
@@ -1856,6 +2031,7 @@ def fight_all_rounds(monitor, pcs,npcs,combatants)
 			end
 
 			str += hp.to_s
+			server_str += hp.to_s
 
 			#set_pos_x = "\033[" + (10).to_s + 'C'
 			#str += set_pos_x
@@ -1868,7 +2044,17 @@ def fight_all_rounds(monitor, pcs,npcs,combatants)
 			str += 'p' + xpc.prone.to_s      if (xpc.prone>0)
 			str += 'b' + xpc.bleeding.to_s   if (xpc.bleeding>0)
 
-			print str
+			server_str += ' '
+			server_str += 'u' if (xpc.unconscious)
+			server_str += 'D' if (xpc.dead)
+			server_str += 's' + xpc.stun.to_s       if (xpc.stun>0)
+			server_str += 'd' + xpc.downed.to_s  	  if (xpc.downed>0)
+			server_str += 'p' + xpc.prone.to_s      if (xpc.prone>0)
+			server_str += 'b' + xpc.bleeding.to_s   if (xpc.bleeding>0)
+
+			$clients.print_all str
+
+			server_print server_str
 		}
 
 		print "\n"
@@ -1897,13 +2083,13 @@ def fight_all_rounds(monitor, pcs,npcs,combatants)
 		}
 
 		#p res.to_s
-
+		
 		return res
 
 	end
 
 	def _opponents_left(xpc, opponents)
-		if(xpc.human)
+		if(xpc.human?)
 			return _npcs_left(opponents)
 		else
 			return _pcs_left(opponents)
@@ -1918,9 +2104,6 @@ def fight_all_rounds(monitor, pcs,npcs,combatants)
 		if(_opponents_left(actor, enemies))
 			sub_round(actor, enemies)
 		end
-
-		$clients.gets_any
-
 	end
 
 	# fight_all_rounds
@@ -1928,11 +2111,10 @@ def fight_all_rounds(monitor, pcs,npcs,combatants)
 	i=0
 	catch (:done) do
 		while true
-			monitor.synchronize {
+				server_print '<<<NEW ROUND>>>'
+				server_print '<<<NEW ROUND>>>'
+				server_print '<<<NEW ROUND>>>'
 				i=i+1
-
-				players_left = false
-				enemies_left = false
 
 				sub_round_number=1
 
@@ -1942,211 +2124,128 @@ def fight_all_rounds(monitor, pcs,npcs,combatants)
 					enemies = actor.party == 'pc' ? npcs : pcs
 					friends = actor.party == 'pc' ? pcs : npcs
 
-					if(actor.party=='pc' and actor.brains=='biological'  and $clients.get_player(actor) == nil)
+					begin
+						server_print '<<<NEW SUB ROUND>>>'
+						server_print '<<<NEW SUB ROUND>>>'
+						server_print '<<<NEW SUB ROUND>>>'
 
-						print "#{actor.name} has left the game..."
-
-						sleep(1)
-
-						combatants.each_with_index { |comb, i| 
-							if(comb.name == actor.name)
-								combatants.delete_at(i)
-							end
-						}
-
-						combatants_in_action_order.each_with_index { |comb, i| 
-							if(comb.name == actor.name)
-								combatants_in_action_order.delete_at(i)
-							end
-						}
-
-
-					else
 						_sub_round(actor, i, combatants, friends, enemies, sub_round_number)
+
+						$clients.gets_any_in_game
+
+						sub_round_number += 1
+
+						msg = ''
+
+						if(not $clients.players_left?)
+							msg = "All players have left the game!\n"
+						end
+
+						if(not _pcs_left(pcs))
+							msg = "NPCs won!\n"
+						end
+
+						if(not _npcs_left(npcs))
+							msg = "PCs won!\n"
+						end
+
+						if(msg.length>0)
+							clear_screens(nil)
+							print "GAME OVER: #{msg}"
+							sleep(2)
+							throw :done
+						end
+
+					rescue Exception => e
+			
+						server_print '<<<SUB ROUND ERR HANDLER>>>'
+						server_print '<<<SUB ROUND ERR HANDLER>>>'
+						server_print '<<<SUB ROUND ERR HANDLER>>>'
+						server_print "#{e}"
+						server_print e.message  
+						server_print e.backtrace.inspect
+
+						$clients.kick_player_threads('broken')
+						Thread.stop
+
+						$clients.prune_gone_humans(combatants)
+						$clients.prune_gone_humans(combatants_in_action_order)
 					end
 
-
-					sub_round_number += 1
 				}
-
-				if(not _pcs_left(pcs))
-					print "NPCs won!\n"
-					throw :done
-				end
-
-				if(not _npcs_left(npcs))
-					print "PCs won!\n"
-					throw :done
-				end
-
-				#$clients.gets_all
-				#sleep(0.5)
-
-				print SCREEN_CLEAR + CURSOR_UP_LEFT
-			}
 		end
 	end
 
-	monitor.synchronize {
-		$clients.gets_all
-		print SCREEN_CLEAR + CURSOR_UP_LEFT
-		print(combatants_to_s(combatants))
-		$clients.gets_all
-	}
 
 end
 
 $forced_start_fight = false
 $clients            = Clients.new
 
-def server_loop(server)
+def cmd_threads
+	p Thread.list
 
-	def _handle_server_commands(clients, pcs, npcs, combatants, monitor, server)
+	names = Array.new
+	ids   = Array.new
 
-		def _cmd_threads
-			p Thread.list
-
-			names = Array.new
-
-			Thread.list.each { |thread_id|
-				$threads.each { |name, _thread_id|
-					if(thread_id==_thread_id)
-						names.push(name)
-					end
-				}
-			}
-
-			p names	
-
-
-		end
-
-		def _cmd_sockets(clients)
-			clients.sockets.each_key { |thread_id|
-				p clients.get_socket(thread_id)
-			}
-		end
-
-		cmd = "\n"
-		while cmd == "\n"
-			cmd = gets
-		end
-
-		server_cmd cmd
-
-			case cmd[0]
-				when 'P'
-					p $clients
-				when 'p'
-					for pc  in pcs  do p pc  end
-				when 'n'
-					for npc in npcs do p npc end
-				when 'l'
-					server_print \
-						"\n\tclients="    + "#{clients.length}"    + 
-						"\n\tpcs="        + "#{pcs.length}"        +
-						"\n\tnpcs="       + "#{npcs.length}"       +
-						"\n\tcombatants=" + "#{combatants.length}"
-				when 't'
-					_cmd_threads
-				when 's'
-					_cmd_sockets(clients)
-				when 'Q'
-					shutdown(server, 'operator manual shutdown from server console')
+	Thread.list.each { |thread_id|
+		$threads.each { |name, _thread_id|
+			if(thread_id==_thread_id)
+				names.push(name)
+				ids.push(thread_id)
 			end
-	end
-
-	pcs         = Array.new
-	npcs        = Array.new
-	combatants  = Array.new
-	monitor     = Monitor.new
-	$threads     = Hash.new
-
-	Thread.start() do
-		$threads['server_cmd_thread'] = Thread.current
-		loop {
-			_handle_server_commands($clients, pcs, npcs, combatants, monitor, server)
 		}
-	end
-
-	Thread.start() do
-
-		$threads['fight_thread'] = Thread.current
-
-		loop { # one iteration is one fight
-
-			Thread.stop
-
-			if($forced_start_fight and $clients.length>0)
-
-				monitor.synchronize {
-					$forced_start_fight = false
-					init_round(pcs, npcs, combatants)
-				}
-
-				fight_all_rounds(monitor, pcs ,npcs, combatants)
-
-				monitor.synchronize { # cleanup
-					pcs        = Array.new
-					npcs       = Array.new
-					combatants = Array.new
-				}
-			end
-
-			monitor.synchronize {
-				$clients.sockets.each_key { |thread_id| 
-					if(thread_id.alive?)
-						thread_id.run
-					else
-						server_print 'Thread was dead - removed player' # or should? FIXME
-					end
-				}
-			}
-
-		}
-	end
-
-	ii=-1
-	loop { # accept new players                       
-
-		ii+=1
-		Thread.start(server.accept) do | sock |
-
-			$threads["player#{ii}"] = Thread.current
-			player = ''
-			ask_play_again = false
-
-			monitor.synchronize {
-
- 				player = Player.new(Thread.current, sock)
-
-				$clients.add_client(player)
-
-				server_print $clients.get_socket(Thread.current)
-
-			}
-
-			loop {
-
-				menu(monitor, player, ask_play_again)
-
-				monitor.synchronize {
-					pcs.push(player.character)
-
-					player.puts_me('Waiting for fight to start..')
-
-					ask_play_again = true
-				}
-				$threads['fight_thread'].run
-
-				Thread.stop
-			}
-
-		end
 	}
 
+	p names
+	p ids
 
 
+end
+
+def cmd_sockets
+	$clients.dump_sockets
+
+end
+
+def dump
+	cmd_threads
+	cmd_sockets
+	
+end
+def handle_server_commands(clients, pcs, npcs, combatants, server)
+
+
+	cmd = "\n"
+	while cmd == "\n"
+		cmd = gets
+	end
+
+	server_cmd cmd
+
+		case cmd[0]
+			when 'P'
+				p $clients
+			when 'p'
+				for pc  in pcs  do p pc  end
+			when 'n'
+				for npc in npcs do p npc end
+			when 'l'
+				server_print \
+					"\n\tclients="    + "#{clients.length}"    + 
+					"\n\tpcs="        + "#{pcs.length}"        +
+					"\n\tnpcs="       + "#{npcs.length}"       +
+					"\n\tcombatants=" + "#{combatants.length}"
+			when 't'
+				cmd_threads
+			when 's'
+				cmd_sockets
+			when 'Z'
+				dump
+
+			when 'Q'
+				shutdown(server, 'operator manual shutdown from server console')
+		end
 end
 
 def shutdown(server, cause)
@@ -2166,14 +2265,14 @@ def main
 
 			rescue IOError => e
 
-				print 'IOError:' + e.to_s
+				puts 'IOError:' + e.to_s
 
 				puts e.message  
 				puts e.backtrace.inspect
 
 			rescue Exception => e  
-
-				print 'Exception:' + e.to_s
+		
+				puts 'Exception:' + e.to_s
 
 				puts e.message  
 				puts e.backtrace.inspect
@@ -2201,5 +2300,160 @@ def main
 	_exception_handler(server)
 end
 
+
+def server_loop(server)
+
+
+	Thread.start() do
+		$threads['server_cmd_thread'] = Thread.current
+		loop {
+			handle_server_commands($clients, $clients.get_pcs, $clients.get_npcs, $clients.get_combatants, server)
+		}
+	end
+
+	def _fight_cleanup
+
+		server_print '_fight_cleanup !'
+
+		$clients.fight_cleanup
+
+		$clients.kick_player_threads('all')
+	end
+
+	Thread.start() do
+
+		$threads['fight_thread'] = Thread.current
+
+		loop { # one iteration is one fight
+
+			if($forced_start_fight and $clients.length>0)
+
+				$clients.in_game true
+
+				server_print "<<<FIGHT THREAD IN GAME >>>"
+				server_print "<<<FIGHT THREAD IN GAME >>>"
+				server_print "<<<FIGHT THREAD IN GAME >>>"
+
+				$forced_start_fight = false
+
+				begin
+					$clients.mark_players(true) # FIXME, mark players should be replaced by some register thing + it now register everyone, even those in lobby
+
+					init_round($clients.get_pcs, $clients.get_npcs, $clients.get_combatants)
+
+					fight_all_rounds($clients.get_pcs ,$clients.get_npcs, $clients.get_combatants)
+
+				rescue Exception => e
+						server_print "<<<FIGHT THREAD ERR HANDLER >>>\nException: #{e}\n"
+						server_print "<<<FIGHT THREAD ERR HANDLER >>>\nException: #{e}\n"
+						server_print "<<<FIGHT THREAD ERR HANDLER >>>\nException: #{e}\n"
+
+						server_print e.message  
+						server_print e.backtrace.inspect
+
+						$clients.kick_player_threads('broken') # FIXME might not work
+						Thread.stop
+				ensure
+					_fight_cleanup
+					$clients.mark_players(false)
+				end
+
+				server_print "<<<FIGHT THREAD GAME OVER >>>"
+				server_print "<<<FIGHT THREAD GAME OVER >>>"
+				server_print "<<<FIGHT THREAD GAME OVER >>>"
+
+				$clients.in_game false
+			end
+
+			Thread.stop
+			server_print(',')
+
+		}
+	end
+
+	ii=-1
+	player_lock = Monitor.new 
+	loop { # accept new players                       
+
+		ii+=1
+		Thread.start(server.accept, player_lock ) do | sock, player_lock |
+
+
+			begin
+
+
+				$threads["player#{ii}"] = Thread.current
+				player = ''
+				ask_play_again = false
+
+				player = Player.new(Thread.current, sock)
+
+				server_print "New connection: #{$clients.get_socket(Thread.current)}"
+
+				loop {
+					player.status('in lobby')
+					menu(player, ask_play_again)
+					
+					if($clients.in_game?)
+						sock_puts(sock, 'Game in progress...')
+						redo
+					end
+
+					$clients.try_add_client(player)
+
+					$clients.pcs_push(player.character)
+
+					player.puts_me('Waiting for fight to start..')
+					player.set_status 'waiting_for_game'
+		
+					ask_play_again = true
+
+					server_print "<<<PLAYER #{ii} THREAD STOP >>>"
+
+					$threads['fight_thread'].run
+
+					Thread.stop
+
+				}
+
+
+			rescue Exception => e
+
+					server_print "<<<PLAYER #{ii} THREAD ERR HANDLER >>>\nException: #{e}\n"
+					server_print "<<<PLAYER THREAD ERR HANDLER >>>\nException: #{e}\n"
+					server_print "<<<PLAYER THREAD ERR HANDLER >>>\nException: #{e}\n"
+
+					server_print e.message  
+					server_print e.backtrace.inspect
+
+					$clients.print_all_but(player, "#{player.character.name} bids you farewall...")
+
+					player = $clients.get_players(Thread.current)
+					if(player=!nil)
+						_player = player.remove
+						_player = nil
+					else
+						p 'player nil'
+					end
+
+					$threads['fight_thread'].run
+
+					server_print "<<<PLAYER #{ii} THREAD EXIT >>>"
+					server_print "<<<PLAYER THREAD EXIT >>>"
+					server_print "<<<PLAYER THREAD EXIT >>>"
+			end
+
+		end
+
+		server_print('.')
+
+	}
+
+	
+
+end
+
 main
+
+
 

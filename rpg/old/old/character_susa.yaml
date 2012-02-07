@@ -1,0 +1,35 @@
+--- &72580390 !ruby/object:Character
+full_name: susa
+name: susa
+party: pc
+brains: biological
+ob: 78
+db: 78
+ac: 77
+hp: 59
+player: &73328270 !ruby/object:Player
+  thread_id: !ruby/object:Thread {}
+  socket: !ruby/object:TCPSocket {}
+  character: *72580390
+  players:
+  - *73328270
+personality: smart
+stun: 0
+bleeding: 0
+uparry: 0
+downed: 0
+prone: 0
+blind: 0
+unconscious: false
+unconscious_why: ''
+dead: false
+dead_why: ''
+current_hp: 59
+active_weapon: !ruby/object:Weapon
+  name: sword
+  fumble: 8
+current_db: 78
+can_attack: true
+cant_attack_text: no reason
+wounds: []
+current_blocks: {}
