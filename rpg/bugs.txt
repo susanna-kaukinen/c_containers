@@ -105,3 +105,62 @@ undefined method `puts_others' for #<Hash:0x972fea8>
 
 
 	<= now lives nicely through one exitting player during game, at least in 5x5 and 2 humans, where 1 human exits while the other human ponders
+
+--- jos tekee toisin päin, niin tulee looping death:
+
+:in `block (2 levels) in server_loop'", "./server.rb:2076:in `loop'", "./server.rb:2076:in `block in server_loop'"]
+server> Exception:private method `putc' called for nil:NilClass
+server> private method `putc' called for nil:NilClass
+server> ["./server.rb:1156:in `block in sock_io'", "/home/susanna/.rvm/rubies/ruby-1.9.3-p0/lib/ruby/1.9.1/monitor.rb:211:in `mon_synchronize'", "./server.rb:1148:in `sock_io'", "./server.rb:1242:in `sock_puts'", "./server.rb:1500:in `puts_me'", "./server.rb:1093:in `block in _prompt_pc_actions'", "./server.rb:1057:in `loop'", "./server.rb:1057:in `_prompt_pc_actions'", "./server.rb:1121:in `sub_round'", "./server.rb:1919:in `_sub_round'", "./server.rb:1965:in `block (3 levels) in fight_all_rounds'", "./server.rb:1941:in `each'", "./server.rb:1941:in `block (2 levels) in fight_all_rounds'", "/home/susanna/.rvm/rubies/ruby-1.9.3-p0/lib/ruby/1.9.1/monitor.rb:211:in `mon_synchronize'", "./server.rb:1931:in `block in fight_all_rounds'", "./server.rb:1929:in `catch'", "./server.rb:1929:in `fight_all_rounds'", "./server.rb:2087:in `block (2 levels) in server_loop'", "./server.rb:2076:in `loop'", "./server.rb:2076:in `block in server_loop'"]
+^Cserver> Server exiting, cause = manual shutdown
+server> Exception:exit
+exit
+
+
+
+---
+
+Toi new character jostain syystä aina feilaa ekalla.
+---
+
+blokkaa valittu määrä vs all
+
+---
+
+Mä oon listalla ennen sua ja silti lyön jälkeen.
+ => only 3rd player gets to hit before 2nd, otherwise sort ok, only affects humans?
+
+--
+
+dead unc, skip action
+
+--
+
+no text when unco, last subrounds, but prompts for enter
+
+---
+
+ "waiting for others" e
+
+---
+
+name => id hash
+
+---
+
+eka attack syödään
+
+---
+
+highlightaa lyöntikohde
+
+---
+
+
+
+<> noiden RNG-nimien pitäs kyllä ehdottomasti hookkautua statseihin jotenkin
+<susanna> joo-o
+<> et tietäs vähän ketkä on kovempia jne.
+
+
+
