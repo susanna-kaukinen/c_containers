@@ -15,19 +15,6 @@ smart and evil attack dead <== does this happen unless last round any more? yes
 
 --
 
-takes two enters for human player to proceed if unco <- maybe a feature?
-
---
-
-
-character.player broke save/load
-
---
-
-no explanation text for unco human player
-
---
-
 server> Exception:"\xF6" from ASCII-8BIT to UTF-8
 "\xF6" from ASCII-8BIT to UTF-8
 ["./server.rb:139:in `encode'", "./server.rb:139:in `to_json'", "./server.rb:139:in `to_json'", "./server.rb:511:in `to_json'", "./server.rb:511:in `to_s'", "./server.rb:836:in `block in combatants_to_s'", "./server.rb:835:in `each'", "./server.rb:835:in `each_with_index'", "./server.rb:835:in `combatants_to_s'", "./server.rb:1514:in `block in fight_all_rounds'", "/home/susanna/.rvm/rubies/ruby-1.9.3-p0/lib/ruby/1.9.1/monitor.rb:211:in `mon_synchronize'", "./server.rb:1511:in `fight_all_rounds'", "./server.rb:1596:in `block (2 levels) in server_loop'", "./server.rb:1585:in `loop'", "./server.rb:1585:in `block in server_loop'"]
@@ -35,10 +22,6 @@ server> Exception:"\xF6" from ASCII-8BIT to UTF-8
 --
 
 human can choose to block npc that cannot attack
-
----
-
-equally blocking causes rubish on screen
 
 ---
 
@@ -98,3 +81,27 @@ smart attack dead people
 fumble on fumble could be upwards open-ended
 
 
+
+===
+
+
+server> ==================---/--- Round: #2 (1/10) ===========================
+server> 2          123/136 s1      Visnasch the Orc     65/65  
+server> Bereth the  80/80          Unknown4 the Orc     92/92  
+server> 1           21/77  s2      Gurlar the Orc       41/77  D
+server> Ezmu the Sm142/142         Bronthor the Orc    -51/51  u
+server> Beanel the  30/65  s1      Hugnarl the Orc      76/83  
+server> 
+server> Exception:undefined method `puts_others' for #<Hash:0x972fea8>
+undefined method `puts_others' for #<Hash:0x972fea8>
+["./server.rb:1050:in `_prompt_pc_actions'", "./server.rb:1121:in `sub_round'", "./server.rb:1914:in `_sub_round'", "./server.rb:1939:in `block (3 levels) in fight_all_rounds'", "./server.rb:1936:in `each'", "./server.rb:1936:in `block (2 levels) in fight_all_rounds'", "/home/susanna/.rvm/rubies/ruby-1.9.3-p0/lib/ruby/1.9.1/monitor.rb:211:in `mon_synchronize'", "./server.rb:1926:in `block in fight_all_rounds'", "./server.rb:1924:in `catch'", "./server.rb:1924:in `fight_all_rounds'", "./server.rb:2058:in `block (2 levels) in server_loop'", "./server.rb:2047:in `loop'", "./server.rb:2047:in `block in server_loop'"]
+
+
+<= crash w/2 players, one exited
+
+ - should still remove the on-screen player
+ - should not prompt for gone player to play
+ - last player exits => server blocks
+
+
+	<= now lives nicely through one exitting player during game, at least in 5x5 and 2 humans, where 1 human exits while the other human ponders
