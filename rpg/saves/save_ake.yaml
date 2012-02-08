@@ -1,0 +1,33 @@
+--- !ruby/object:Character
+id: 7c73f1cb-a96c-4467-8b72-c960f13c2d42
+full_name: ake
+name: ake
+party: pc
+brains: biological
+ob: 117
+db: 82
+ac: 69
+hp: 62
+quickness: 30
+personality: evil
+stun: 0
+bleeding: 0
+uparry: 0
+downed: 0
+prone: 0
+blind: 0
+penalties: 0
+unconscious: false
+unconscious_why: ''
+dead: false
+dead_why: ''
+current_hp: 62
+active_weapon: !ruby/object:Weapon
+  name: sword
+  fumble: 4
+current_db: 82
+current_ob: 117
+can_attack: true
+cant_attack_text: no reason
+wounds: []
+current_blocks: {}

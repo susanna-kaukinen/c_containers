@@ -1,0 +1,33 @@
+--- !ruby/object:Character
+id: eb0b42a2-4236-463b-8bcf-3acb817de641
+full_name: kalle2
+name: kalle2
+party: pc
+brains: biological
+ob: 62
+db: 5
+ac: 95
+hp: 142
+quickness: 40
+personality: evil
+stun: 0
+bleeding: 0
+uparry: 0
+downed: 0
+prone: 0
+blind: 0
+penalties: 0
+unconscious: false
+unconscious_why: ''
+dead: false
+dead_why: ''
+current_hp: 142
+active_weapon: !ruby/object:Weapon
+  name: sword
+  fumble: 7
+current_db: 5
+current_ob: 62
+can_attack: true
+cant_attack_text: no reason
+wounds: []
+current_blocks: {}

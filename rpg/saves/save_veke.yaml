@@ -1,0 +1,33 @@
+--- !ruby/object:Character
+id: 27e88b2a-0270-4a4f-8b67-128c2a746205
+full_name: veke
+name: veke
+party: pc
+brains: biological
+ob: 65
+db: 62
+ac: 92
+hp: 131
+quickness: 68
+personality: evil
+stun: 0
+bleeding: 0
+uparry: 0
+downed: 0
+prone: 0
+blind: 0
+penalties: 0
+unconscious: false
+unconscious_why: ''
+dead: false
+dead_why: ''
+current_hp: 131
+active_weapon: !ruby/object:Weapon
+  name: sword
+  fumble: 6
+current_db: 62
+current_ob: 65
+can_attack: true
+cant_attack_text: no reason
+wounds: []
+current_blocks: {}
