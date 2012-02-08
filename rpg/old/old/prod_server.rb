@@ -1096,8 +1096,6 @@ def sub_round(character, opponents)
 					player.puts_me 'Not implemented'	
 			end
 		
-			sleep(1)
-
 			_cls(player)
 		}
 	end
@@ -1248,7 +1246,7 @@ class Clients
 
 			if(what == 'all')
 
-				@sockets.keys { |thread_id| 
+				@sockets.each { |thread_id, soc| 
 
 					if(thread_id.alive?)
 						thread_id.run
@@ -1819,7 +1817,6 @@ def menu(player, ask_play_again)
 				return false, false				
 			else
 				sock_puts sock, 'Not implemented'
-				sleep(1)
 				return false
 		end
 	end
@@ -2102,6 +2099,26 @@ def fight_all_rounds(pcs,npcs,combatants)
 						server_print '<<<NEW SUB ROUND>>>'
 						server_print '<<<NEW SUB ROUND>>>'
 						_sub_round(actor, i, combatants, friends, enemies, sub_round_number)
+
+						$clients.gets_any_in_game
+
+						sub_round_number += 1
+
+						if(not $clients.players_left?)
+							print "All players have left the game!\n"
+							throw :done
+						end
+
+						if(not _pcs_left(pcs))
+							print "NPCs won!\n"
+							throw :done
+						end
+
+						if(not _npcs_left(npcs))
+							print "PCs won!\n"
+							throw :done
+						end
+
 					rescue Exception => e
 			
 						server_print '<<<SUB ROUND ERR HANDLER>>>'
@@ -2118,34 +2135,16 @@ def fight_all_rounds(pcs,npcs,combatants)
 						$clients.prune_gone_humans(combatants_in_action_order)
 					end
 
-					$clients.gets_any_in_game
 
-					sub_round_number += 1
-
-					if(not $clients.players_left?)
-						print "All players have left the game!\n"
-						throw :done
-					end
-
-					if(not _pcs_left(pcs))
-						print "NPCs won!\n"
-						throw :done
-					end
-
-					if(not _npcs_left(npcs))
-						print "PCs won!\n"
-						throw :done
-					end
 				}
 
 				clear_screens(nil)
 		end
 	end
 
-	$clients.gets_all_in_game
 	clear_screens(nil)
-	print(combatants_to_s(combatants))
-	$clients.gets_all_in_game
+	print "GAME OVER\n"
+	sleep(2)
 
 end
 
