@@ -1,4 +1,9 @@
 
+blocking all equally should only target against standing opponents
+also, choosing who to block is confusing
+
+---
+
 fumble -> fumble ?
 
 --
