@@ -6,21 +6,20 @@ class Player
 	attr_accessor :thread
 	attr_accessor :character
 
-	def initialize(name, socket)
+	def initialize(name, socket, games)
 
 		@monitor = Monitor.new
 
 		#@assertions = SynchronisedStack.new
-		#@questions  = SynchronisedStack.new
+		#@questions  = SynchronisedStack.new #FIXME
 		@assertions = Array.new
 		@questions  = Array.new
 
-		@name = name
-
+		@name   = name
 		@socket = socket
+		@games  = games
 
 		@character = nil
-
 	end
 
 	#<def_run>
@@ -107,7 +106,21 @@ class Player
 
 				elsif ( msg == 'choose_game' )
 
-					choose_game(self)
+					choose_game(@games, self)
+
+				elsif ( msg == 'go_lobby')
+
+					write 'TODO'
+
+				elsif ( msg[0] == 'play_game')
+
+					game = msg[1]
+					game.enter(self)
+	
+				elsif ( msg[0] == 'waiting_room' )
+
+					game = msg[1]
+					waiting_room(game, self)
 
 				else
 					print "UNKNOWN MESSAGE: #{msg}\n" 

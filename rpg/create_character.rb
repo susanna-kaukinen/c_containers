@@ -13,7 +13,7 @@ def create_character(player)
 
 		clear_screen (write)
 
-		write "#{COLOUR_RED}Rule Monster#{COLOUR_RESET} v2.0, early beta.          It\'s still 1984.\n\n"
+		write "#{COLOUR_RED}Rule Monster#{COLOUR_RESET} v2.0, early beta.              It\'s still 1984.\n\n"
 	end
 
 	def write_bottom_text(write, *vargs)
@@ -28,7 +28,7 @@ def create_character(player)
 
 		write cursor_to(11,1)
 
-		vargs[0] = "\t" + vargs[0]
+		vargs[0] = "\t\t\t" + vargs[0]
 
 		write vargs
 
@@ -43,10 +43,18 @@ def create_character(player)
 
 		_print_header(write)
 
-		write COLOUR_YELLOW_BLINK + ' N' + COLOUR_RESET + ' = New character ' + COLOUR_BLUE_BLINK   + ' L' + COLOUR_RESET + ' = Load character'
-		write COLOUR_WHITE_BLINK  + ' S' + COLOUR_RESET + ' = Save character' + COLOUR_CYAN_BLINK   + ' T' + COLOUR_RESET + ' = Toggle screen'
-		write COLOUR_YELLOW_BLINK + ' V' + COLOUR_RESET + ' = View character' + COLOUR_GREEN_BLINK  + ' H' + COLOUR_RESET + ' = Heal character'
-		write COLOUR_RED_BLINK    + " Q" + COLOUR_RESET + ' = Quit          ' + COLOUR_GREEN_BLINK  + ' P' + COLOUR_RESET + ' = Play (start)'
+		write COLOUR_YELLOW_BLINK    + ' N' + COLOUR_RESET + ' = New character  '   +
+			COLOUR_BLUE_BLINK    + ' L' + COLOUR_RESET + ' = Load character '   +
+			COLOUR_GREEN_BLINK   + ' H' + COLOUR_RESET + ' = Heal character '
+
+		write COLOUR_WHITE_BLINK     + ' S' + COLOUR_RESET + ' = Save character '   +
+			COLOUR_CYAN_BLINK    + ' T' + COLOUR_RESET + ' = Toggle screen  '   +
+			COLOUR_YELLOW_BLINK  + ' V' + COLOUR_RESET + ' = View character '
+
+		write COLOUR_RED_BLINK       + " Q" + COLOUR_RESET + ' = Quit           '   + 
+			COLOUR_GREEN_BLINK   + ' P' + COLOUR_RESET + ' = Play (start)   '   +
+			COLOUR_MAGENTA_BLINK + ' X' + COLOUR_RESET + ' = view eXperience'
+		
 
 		if(bottom_text!=nil)
 			# nop			
@@ -108,7 +116,14 @@ def create_character(player)
 					else
 						bottom_text = no_character_txt('!!!')
 					end
-				
+				when 'x'
+					clear_screen(player.method(:write))
+					if(player.character)
+						player.write player.character.xp_s
+						player.read
+					else
+						bottom_text = no_character_txt('!!!')
+					end
 				when 'h'
 					if(player.character)
 						player.character.heal(true)

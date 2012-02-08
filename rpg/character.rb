@@ -20,6 +20,15 @@ class Character
 	# base stats
 	attr_accessor :quickness
 
+	#experience
+	attr_accessor :kills
+	attr_accessor :damage_inflicted
+	attr_accessor :wounds_inflicted
+
+	attr_accessor :deaths # if own team loses and unco, that should count
+	attr_accessor :damage_sustained
+	attr_accessor :wounds_sustained
+
 	# current/active
 
 	attr_accessor :stun, :bleeding, :uparry, :downed, :prone, :blind, :penalties
@@ -123,6 +132,19 @@ class Character
 		"\n\t bl:" + @blind.to_s()+
 		"\n\t wo:" + @wounds.to_json()
 	end
+
+	def xp_s
+		COLOUR_RED +
+		"kills: #{@kills}" +
+		"\ndamage inflicted: #{@damage_inflicted}"  +
+		"\nwounds inflicted: #{@wounds_inflicted}"  +
+		COLOUR_GREEN +
+		"\ndeaths: #{@deaths}" +
+		"\n@damage sustained: #{@damage_sustained}" +
+		"\n@wounds sustained: #{@wounds_sustained}" +
+		COLOUR_RESET
+	end
+
 
 	def add_wound(wound)
 		@wounds.push(wound)
