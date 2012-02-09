@@ -1,4 +1,56 @@
+
 def choose_game(games, player)
+
+	def _choose_game(games, player)
+		clear_screen(player.method(:write))
+
+		games.get_all.each_with_index { |game,i|
+			player.write "#{i+1}) #{game.name}"
+		}
+		
+		game_idx = player.read
+		game_idx = game_idx.to_i
+
+		if(game_idx>0 && game_idx<=games.length)
+
+			chosen_game = games.get_all[game_idx-1]
+
+			if(chosen_game.is_a? Game)
+				return chosen_game
+			end
+		else
+			bottom_text = "Bad game index: #{game_idx}"
+			return nil
+		end
+	end
+				
+	def _choose_sides(game, player)		
+		clear_screen(player.method(:write))
+
+		sides = game.get_sides
+
+		sides.each_with_index { |side,i|
+			player.write "#{i+1}) #{side}"
+		}
+		
+		side = player.read
+		side = side.to_i
+
+		if(side>0 && side<=sides.length)
+
+			chosen_side = game.get_sides[side-1]
+
+			if(chosen_side.is_a? String)
+
+				player.character.current_side = side
+
+				return
+			end
+		else
+			bottom_text = "Bad game index: #{side}"
+			return nil
+		end
+	end
 
 
 	def _handle_game_screen_cmd(games, player)
@@ -9,33 +61,17 @@ def choose_game(games, player)
 
 		case cmd[0]
 			when 'm'
-				player.tell('create_character')
+				send_msg(player, 'create_character')
 				throw :done
 			when 'n'
-				clear_screen(player.method(:write))
+				chosen_game = _choose_game(games, player)
 
-				games.get_all.each_with_index { |game,i|
-					player.write "#{i+1}) #{game.name}"
-				}
-				
-				game_idx = player.read
-				game_idx = game_idx.to_i
-
-				if(game_idx>0 && game_idx<=games.length)
-
-					chosen_game = games.get_all[game_idx-1]
-
-					if(chosen_game.is_a? Game)
-						game = Array.new
-						game.push('play_game')
-						game.push(chosen_game)
-						player.tell(game)
-						throw :done
-					end
-				else
-					bottom_text = "Bad index: #{game_idx}"
+				if(chosen_game != nil)
+					_choose_sides(chosen_game, player)
+					send_msg(player, 'join_game', chosen_game)
+					throw :done
 				end
-				
+
 		end
 
 		return 'game', bottom_text

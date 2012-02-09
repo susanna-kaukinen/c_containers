@@ -1,9 +1,21 @@
 
-def generate(what)
+def generate(*vargs)
 
-	case what
+	case vargs[0]
 		when "hp", "ob"
 			return 1+50+rand(100)
+		when "mana"
+			case @profession
+				when 'fighter'
+					return 0
+				when 'warrior monk'
+					return rand(2)+1
+				when 'healer'
+					return 3
+				else
+					throw :unknown_profession
+			end
+		
 	else
 		return 1+rand(100)
 	end
@@ -31,6 +43,8 @@ class Character
 
 	# current/active
 
+	attr_accessor :current_player_id
+
 	attr_accessor :stun, :bleeding, :uparry, :downed, :prone, :blind, :penalties
 	attr_accessor :unconscious, :unconscious_why
 	attr_accessor :dead, :dead_why
@@ -41,6 +55,7 @@ class Character
 	attr_accessor :current_blocks
 
 	attr_accessor :wounds
+	attr_accessor :current_side
 
 	def strength
 		strength = @current_ob + @current_db + @current_hp + @ac + @quickness - @penalties
@@ -59,6 +74,17 @@ class Character
 			when 0 ; return 'smart'
 			when 1 ; return 'evil'
 			when 2 ; return 'stupid'
+			# vengeful could always hit back who hit them
+		end
+	end
+
+	def get_profession
+		profession = rand(3)
+
+		case profession
+			when 0 ; return 'fighter'
+			when 1 ; return 'warrior monk'
+			when 2 ; return 'healer'
 		end
 	end
 
@@ -66,7 +92,7 @@ class Character
 		@current_blocks = Hash.new
 	end
 
-	def heal(clear_blocks)
+	def heal_self_fully(clear_blocks)
 		@stun = 0
 		@bleeding = 0
 		@uparry = 0
@@ -85,6 +111,7 @@ class Character
 		@active_weapon = Weapon.new("sword")
 		@current_db    = @db # at this point
 		@current_ob    = @ob
+		@current_mana  = @mana
 
 		@can_attack = true
 		@cant_attack_text    = 'no reason'
@@ -94,7 +121,84 @@ class Character
 		if(clear_blocks)
 			do_clear_blocks
 		end
+
+		@current_side = nil
+
 	end
+
+	def can_heal?
+		@current_mana>0 ? true : false
+	end
+
+	def _heal(healee, power_modifier)
+
+		def _do_heal(healee, power)
+
+			result = roll('heal')[0]
+
+			if(healee.dead)
+				result = power - 50 + result
+				if(result>100)
+					healee.dead        = false
+					healee.unconscious = false
+				end
+			elsif(healee.unconscious)
+				result = power - 25 + result
+				if(result>100)
+					healee.unconscious = false
+				end
+			elsif(healee.prone>0 or healee.downed>0 or healee.stunned>0 or healee.uparry>0)
+				result = power - 12 + result
+
+				healee.prone    -= 1 if(healee.prone>0)
+				healee.downed   -= 1 if(healee.downed>0)
+				healee.stun     -= 1 if(healee.stun>0)
+				healee.uparry   -= 1 if(healee.uparry>0)
+				healee.bleeding -= 1 if(healee.bleeding>0)
+			end
+
+			healee.current_hp += ((power + result) / 2.5).to_i
+			if(healee.current_hp > healee.hp)
+				healee.current_hp = healee.hp
+			end
+
+		end
+
+		if(@profession == 'figher')
+			throw :fighters_cant_heal
+		elsif(@profession == 'warrior monk')
+			_do_heal(healee, 50+power_modifier)
+		elsif(@profession == 'healer')
+			_do_heal(healee, 100+power_modifier)
+		else
+			throw :unknown_profession
+		end
+
+	end
+
+	def heal(healees)
+
+		p healees
+
+		if(not can_heal?)
+			throw :no_mana
+		end
+
+		if(healees.is_a? Character) # heal one char vs all
+			power_modifier = 0  # no penalty for healing one char
+			_heal(healees, power_modifier)
+		else
+			power_modifier = (healees.length*20)
+			power_modifier *= -1
+
+			healees.each { |healee|
+				_heal(healee, power_modifier)
+			}
+		end
+
+		@current_mana -= 1
+	end
+	
 
 	def initialize(name, party, brains)
 		@id = SecureRandom.uuid
@@ -107,19 +211,35 @@ class Character
 		@ac	= generate("ac")
 		@hp	= generate("hp")
 
-		@quickness = generate("quickness")
+		@quickness   = generate("quickness")
 
-		@personality = get_personality
+		if(brains == 'artificial')
+			@personality = get_personality
+			@profession  = get_profession
+		else
+			@personality = get_personality # later, let choose alignment
+			@profession  = get_profession
+		end
+
+		@mana = generate('mana')
+
+		@current_player_id = nil
 		
-		heal(true)
+		heal_self_fully(true)
+	end
+
+	def roll_initiative
+		@initiative_roll_this_round = roll('initiative')[0]
 	end
 
 	def initiative
-		return @quickness - @penalties
+		return @quickness - @penalties + @initiative_roll_this_round
 	end
 
 	def to_s
 		"name:" + @name + 
+		"\n\t br: #{@brains}" +
+		"\n\t cl:" + @profession.to_s() +
 		"\n\t ob:" + @ob.to_s()+ 
 		"\n\t db:" + @db.to_s() + " current_db: " + @current_db.to_s() + 
 		"\n\t ac:" + @ac.to_s()+ 
@@ -130,7 +250,7 @@ class Character
 		"\n\t dw:" + @downed.to_s()+ 
 		"\n\t pr:" + @prone.to_s()+ 
 		"\n\t bl:" + @blind.to_s()+
-		"\n\t wo:" + @wounds.to_json()
+		"\n\t wo:" + @wounds.length().to_s
 	end
 
 	def xp_s
@@ -165,7 +285,7 @@ class Character
 			@current_hp -= @bleeding
 			CURSOR_PREV_LINE
 			CURSOR_PREV_LINE
-			print COLOUR_RED + COLOUR_REVERSE + @name + ' loses ' + @bleeding.to_s() + ' hits due to bleeding!' + COLOUR_RESET
+			return COLOUR_RED + COLOUR_REVERSE + @name + ' loses ' + @bleeding.to_s() + ' hits due to bleeding!' + COLOUR_RESET
 		end
 	end
 

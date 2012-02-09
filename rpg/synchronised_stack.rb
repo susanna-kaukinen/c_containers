@@ -8,8 +8,9 @@ class SynchronisedStack < Array
 		super(*args)
 	end
 
-	alias :old_pop :pop
-	alias :old_push :push
+	alias :old_pop    :pop
+	alias :old_push   :push
+	alias :old_length :length
 
 	def pop()
 		self.synchronize do
@@ -20,6 +21,12 @@ class SynchronisedStack < Array
 	def push(item)
 		self.synchronize do
 			self.old_push(item)
+		end
+	end
+
+	def length()
+		self.synchronize do
+			self.old_length		
 		end
 	end
 

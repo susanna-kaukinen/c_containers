@@ -1,4 +1,9 @@
 
+
+class Critical
+	attr_accessor :type, :level
+end
+
 class Weapon
 	attr_accessor :name, :fumble, :criticalType1, :criticalType2, :deal_damage
 
@@ -56,7 +61,7 @@ class Weapon
 		#print '*** CRITICAL *** ' + "\n"
 
 	
-		_roll = roll(nil, nil, nil)[1] 
+		_roll = roll('critical')[1]
 
 
 		crit_bonus = 0
@@ -111,7 +116,7 @@ end
 =end		
 		case result
 			when 0 ... 10
-				print 'Zip!' + "\n"
+				return -1, 'Zip!'
 			when 10 ... 20
 				wound.damage = 1 + rand(10)	
 			when 20 ... 40
@@ -184,32 +189,38 @@ end
 
 		end
 
-		wound.apply(defender, wound.target)
+		text = wound.apply(defender, wound.target)
+
+		return _roll, text
 	end
 
 	def deal_damage(attacker, defender, result)
+
+		text=''
+
 		hp_damage, critical = damage_table(result)
 
 		defender.current_hp -= hp_damage
 
 		if(hp_damage>0)
-			print "\t" + name + " deals " + COLOUR_RED + hp_damage.to_s() + COLOUR_RESET + " hit points of damage.\n"
+			"\t" + name + " deals " + COLOUR_RED + hp_damage.to_s() + COLOUR_RESET + " hit points of damage.\n"
 		else
 			if(defender.dead || defender.unconscious)
-				print attacker.name + "misses"
+				text += attacker.name + "misses"
 			else
 				if(rand(2)==1)
 					evade = "dodges"
 				else
 					evade = "blocks"
 				end
-				print defender.name + " " + evade + " the attack\n"
+				text += defender.name + " " + evade + " the attack\n"
 			end
 		end
 
+		critical_roll = nil
 		if(critical)
-			print COLOUR_WHITE_BLINK + "\nCritical: " + critical.level + ' ' + critical.type + "es\n" + COLOUR_RESET
-			resolve_critical(critical, defender)
+			text += COLOUR_WHITE_BLINK + "\nCritical: " + critical.level + ' ' + critical.type + "es\n" + COLOUR_RESET
+			text += resolve_critical(critical, defender)[1] # roll in [0], text in [1]
 		end
 
 		colour = COLOUR_GREEN
@@ -221,17 +232,19 @@ end
 
 		if(defender.current_hp<0 and defender.dead == false)
 			if(defender.unconscious==false)
-				print COLOUR_YELLOW_BLINK + defender.name + " falls unconscious.\n" + COLOUR_RESET
+				text += COLOUR_YELLOW_BLINK + defender.name + " falls unconscious.\n" + COLOUR_RESET
 			else
-				print COLOUR_YELLOW_BLINK + defender.name + " is unconscious.\n" + COLOUR_RESET
+				text += COLOUR_YELLOW_BLINK + defender.name + " is unconscious.\n" + COLOUR_RESET
 			end
 			defender.unconscious = true
 		end
 
 		if(defender.current_hp < -defender.hp or defender.dead == true)
 			defender.dead = true
-			print COLOUR_RED_BLINK + defender.name + " is DEAD!\n" + COLOUR_RESET
+			text += COLOUR_RED_BLINK + defender.name + " is DEAD!\n" + COLOUR_RESET
 		end
+
+		return text
 
 	end
 

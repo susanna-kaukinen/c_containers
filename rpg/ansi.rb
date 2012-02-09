@@ -48,3 +48,24 @@ def cursor_to(x,y)
 	return "\033[#{x};#{y}H"
 end
 
+def cursor_clear_rows(amt)
+
+	str=''
+
+	i=0
+	loop {
+		for j in 0..69
+			str += ' '
+		end	
+
+		str += "\n\r"
+		
+		i+=1
+
+		break if (i>=amt)
+	}
+
+
+	return str
+
+end

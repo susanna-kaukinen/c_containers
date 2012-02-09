@@ -77,11 +77,12 @@ def create_character(player)
 			case cmd[0]
 				when 'n'
 					name = player.prompt('name')
-					player.character= Character.new(name, 'pc', 'biological')
+					player.character = Character.new(name, 'pc', 'biological')
+					player.character.current_player_id = player.id
 					bottom_text = "#{player.character.name}!"
 									
 				when 'q'
-					player.ask('exit', nil)
+					send_question(player, nil, 'exit')
 					throw (:done)
 				when 'l'
 					name = player.prompt('name')
@@ -105,7 +106,7 @@ def create_character(player)
 					if(player.character == nil)
 						bottom_text = '?no character'
 					else
-						player.tell('choose_game')
+						send_msg(player, 'choose_game')
 						throw(:done)
 					end
 				when 'v'
@@ -126,7 +127,7 @@ def create_character(player)
 					end
 				when 'h'
 					if(player.character)
-						player.character.heal(true)
+						player.character.heal_self_fully(true)
 						bottom_text = "#{player.character.name} healed."
 					end
 			end
