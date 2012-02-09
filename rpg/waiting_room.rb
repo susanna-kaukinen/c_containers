@@ -47,7 +47,7 @@ def waiting_room(game, player)
 
 		case cmd[0]
 			when 'f'
-				send_msg(player, 'play_game', game)
+				game.invite_all
 				throw(:done)
 			when 'g'
 				game.leave(player)

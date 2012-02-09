@@ -147,7 +147,7 @@ class Character
 				if(result>100)
 					healee.unconscious = false
 				end
-			elsif(healee.prone>0 or healee.downed>0 or healee.stunned>0 or healee.uparry>0)
+			elsif(healee.prone>0 or healee.downed>0 or healee.stun>0 or healee.uparry>0)
 				result = power - 12 + result
 
 				healee.prone    -= 1 if(healee.prone>0)

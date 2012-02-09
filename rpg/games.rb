@@ -188,6 +188,12 @@ class Game
 		@players.all
 	end
 
+	def invite_all # FIXME
+		players.each { |player|
+			send_msg(player, 'play_game', self)
+		}
+	end
+
 	def enter(player)
 
 		mem_dump
@@ -564,6 +570,8 @@ class Orcs < Game
 				return false
 			end
 
+			text='' #TODO
+
 			loop {
 				draw_active_player(character, 'Choose action:')
 
@@ -586,7 +594,7 @@ class Orcs < Game
 
 					draw_active_player(character, "Healing all friends.")
 
-					return true
+					return true, text
 				else
 					friends.each_with_index { |healee,i|
 						if(cmd == i.to_s)
@@ -595,7 +603,7 @@ class Orcs < Game
 						end
 					}
 
-					return true
+					return true, text
 				end
 			
 
@@ -702,16 +710,18 @@ class Orcs < Game
 				case cmd
 					when 'a'
 						_cls(character)
-						if(_attack(character, opponents)) #let char choose target
-							return
+						did_attack, text = _attack(character, opponents) #let char choose target
+						if(did_attack)
+							return text
 						end
 					when 'b'
 						_cls(character)
 						_block(character, opponents)
 					when 'h'
 						_cls(character)
-						if(_heal(character, friends))
-							return
+						did_heal, text = _heal(character, friends)
+						if(did_heal)
+							return text
 						end
 				end
 			
@@ -740,57 +750,35 @@ class Orcs < Game
 
 		if(actor.human?) 
 			draw_subround(round, sub_round_number, actor, opponent)
-			_prompt_actor_actions(actor, enemies, friends) # in the future the npc:s could use this interface as well
+			text = _prompt_actor_actions(actor, enemies, friends) # in the future the npc:s could use this interface as well
+
 		else
 			did_attack, text, opponent = _attack(actor, enemies)
 			if(did_attack == false) then opponent=nil end
 			draw_subround(round, sub_round_number, actor, opponent)
+		end
+
+		if(text)
+			text = row_proper + text
 			draw_all(text)
 		end
 	end
 	#/play_sub_round
 
+	# normal proper row, for attack etc. text
+	def row_proper()
+
+		h = (@side1.length > @side2.length) ? @side1.length : @side2.length
+		
+		row = "\033[" + (3+h).to_s + ';H'
+	end
+
 	def draw_subround(rnd, sub_round_number, active_xpc, opponent)
 
-		combatants = Array.new # just for drawing
-
-		@side1.each { |char| combatants.push(char) }
-		@side2.each { |char| combatants.push(char) }
-
-=begin
-		combatants.sort! do |a,b|
-			 result = b.party      <=> a.party
-			 result = a.initiative <=> b.initiative if result == 0 
-			 result
-		end
-=end
-
-		#send_all('clear_screen')
-		top_bar = "==================---/--- Round: #" + rnd.to_s + " (" + sub_round_number.to_s + "/" + combatants.length.to_s + ") ===========================\n"
+		def _colour_names(xpc, active_xpc, opponent)
 		
-		str = SCREEN_CLEAR + CURSOR_UP_LEFT
-		str += top_bar
-		
-		print top_bar
-
-		idx_longest_name = combatants.each_with_index.inject(0) { | max_i, (combatant, idx) | combatant.name.length > combatants[max_i].name.length ? idx : max_i }
-
-		names_width = combatants[idx_longest_name].name.length
-
-		combatants.each_with_index { | xpc,i |
-
-			server_str = ''
-
-			if(i >= (combatants.length/2)) # print npc:s in 2nd column
-				row_col = "\033[" + (2+i-(combatants.length/2)).to_s + ';' + '36' + 'H'
-				str += row_col
-			else
-				row_col = "\033[" + (2+i).to_s + ';' + '0' + 'H'
-				str += row_col
-			end
-
 			name = xpc.name
-
+	
 			if(name == active_xpc.name)
 				if(xpc.can_attack_now[0])
 					name = COLOUR_GREEN + COLOUR_REVERSE + name + COLOUR_RESET
@@ -811,16 +799,13 @@ class Orcs < Game
 				end
 			end
 
-			str        += name
-			server_str += name
+			return name
+		end
 
-			if(i < (combatants.length/2))
-				set_pos_y = "\033[" + '20' + 'G'
-				str += set_pos_y
-			else
-				set_pos_y = "\033[" + (36+20).to_s + 'G'
-				str += set_pos_y
-			end
+
+		def _hp_and_wounds_to_s(xpc)
+
+			str = ''
 
 			curr_hp = xpc.current_hp.to_s
 			while(curr_hp.length<3)
@@ -828,9 +813,7 @@ class Orcs < Game
 			end
 
 			str += curr_hp.to_s
-			server_str += curr_hp.to_s
 			str += '/'
-			server_str += '/'
 
 			hp = xpc.hp.to_s
 			while(hp.length<3)
@@ -838,31 +821,56 @@ class Orcs < Game
 			end
 
 			str += hp.to_s
-			server_str += hp.to_s
-
-			#set_pos_x = "\033[" + (10).to_s + 'C'
-			#str += set_pos_x
 
 			str += ' '
 			str += 'u' if (xpc.unconscious)
 			str += 'D' if (xpc.dead)
 			str += 's' + xpc.stun.to_s       if (xpc.stun>0)
-			str += 'd' + xpc.downed.to_s  	  if (xpc.downed>0)
+			str += 'd' + xpc.downed.to_s  	 if (xpc.downed>0)
 			str += 'p' + xpc.prone.to_s      if (xpc.prone>0)
 			str += 'b' + xpc.bleeding.to_s   if (xpc.bleeding>0)
 
-			server_str += ' '
-			server_str += 'u' if (xpc.unconscious)
-			server_str += 'D' if (xpc.dead)
-			server_str += 's' + xpc.stun.to_s       if (xpc.stun>0)
-			server_str += 'd' + xpc.downed.to_s  	if (xpc.downed>0)
-			server_str += 'p' + xpc.prone.to_s      if (xpc.prone>0)
-			server_str += 'b' + xpc.bleeding.to_s   if (xpc.bleeding>0)
+			return str
 
-			draw_all(str)
+		end
 
-			#p server_str
+		top_bar = "==================---/--- Round: #" + rnd.to_s + " (" + sub_round_number.to_s + "/" + @combatants.length.to_s + ") ===========================\n"
+		
+		str = SCREEN_CLEAR + CURSOR_UP_LEFT
+		str += top_bar
+		
+		print top_bar
+
+		idx_longest_name = @combatants.each_with_index.inject(0) { | max_i, (combatant, idx) | combatant.name.length > @combatants[max_i].name.length ? idx : max_i }
+
+		names_width = @combatants[idx_longest_name].name.length
+
+		@side1.each_with_index { | xpc,i |
+			row_col = "\033[" + (2+i).to_s + ';' + '0' + 'H'
+			str += row_col
+
+			str += _colour_names(xpc, active_xpc, opponent)
+
+			set_pos_y = "\033[" + '20' + 'G'
+			str += set_pos_y
+
+			str += _hp_and_wounds_to_s(xpc)
 		}
+
+		@side2.each_with_index { | xpc,i |
+
+			row_col = "\033[" + (2+i).to_s + ';' + '36' + 'H'
+			str += row_col
+
+			str += _colour_names(xpc, active_xpc, opponent)
+			
+			set_pos_y = "\033[" + (36+20).to_s + 'G'
+			str += set_pos_y
+
+			str += _hp_and_wounds_to_s(xpc)
+		}
+
+		draw_all(str)
 
 		draw_all(EOL)
 
@@ -1032,13 +1040,13 @@ class Trolls < Orcs
 
 		rename_humans(@side1)
 
-		char = Troll.new('Gargath the Troll', 'pc', 'artificial')
-		char = Troll.new('Bargunth the Troll', 'pc', 'artificial')
-		char.current_side = 2
-		@side2.push(char)
-		
-		@side1.each  { |p| @combatants.push(p) }
-		@side2.each  { |p| @combatants.push(p) }
+		@side2.push(Troll.new('Gargath the Troll', 'pc', 'artificial'))
+		@side2.push(Troll.new('Bargunth the Troll', 'pc', 'artificial'))
+	
+		@side2.each  { |xpc| xpc.current_side = 2 }
+
+		@side1.each  { |xpc| @combatants.push(xpc) }
+		@side2.each  { |xpc| @combatants.push(xpc) }
 
 	end
 end
