@@ -1020,6 +1020,12 @@ class Trolls < Orcs
 		@sides.push('trolls')
 	end
 
+	def restructor
+		@games.del_game(@instance_id)
+		game = Trolls.new(@games)
+		@games.add_games(game)
+	end
+
 	def init_fight
 
 		@players.all.each { |player|
