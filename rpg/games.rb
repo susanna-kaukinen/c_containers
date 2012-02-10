@@ -366,7 +366,7 @@ class Orcs < Game
 
 	def play_sub_round(round, sub_round_number, combatants, friends, enemies, actor )
 
-		def _attack(character, opponents)
+		def _attack(character, opponents, override_opponent, opponent)
 
 			def __choose_opponent(attacker, opponents)
 
@@ -526,8 +526,12 @@ class Orcs < Game
 
 			can_attack, why_cant = character.can_attack_now()
 
+
 			if(can_attack)
-				opponent, manner = __choose_opponent(character, opponents)
+				manner = character.personality
+				if(not override_opponent)
+					opponent, manner = __choose_opponent(character, opponents)
+				end
 				text = __do_attack(character, opponent, manner)
 				opponent.apply_wound_effects_after_attack
 				return true, text, opponent
@@ -589,13 +593,16 @@ class Orcs < Game
 				cmd = ask_active_player(character, 'heal_action')
 
 				if(cmd == 'e')
-			
+					_cls(character)
+
 					character.heal(friends)
 
 					draw_active_player(character, "Healing all friends.")
 
 					return true, text
 				else
+					_cls(character)
+
 					friends.each_with_index { |healee,i|
 						if(cmd == i.to_s)
 							character.heal(healee)
@@ -606,6 +613,7 @@ class Orcs < Game
 					return true, text
 				end
 			
+				_cls(character)
 
 			}
 
@@ -668,6 +676,48 @@ class Orcs < Game
 
 		def _prompt_actor_actions(character, opponents, friends)
 
+			def _player_choose_opponent(character, opponents)
+
+				text='' #TODO
+
+				loop {
+					draw_active_player(character, 'Choose opponent:')
+
+					prompt = ' (a)=Auto target' + "\n "
+
+					opponents.each_with_index { |opponent,i|
+						prompt += "(#{i})" + opponent.name + " "
+						if(i%2==1)
+							prompt += EOL
+						end
+					}
+					
+					draw_active_player(character, prompt)
+
+					cmd = ask_active_player(character, 'attack_option')
+
+					if(cmd == 'a')
+						_cls(character)
+						return false, text
+					else
+						_cls(character)
+
+						chosen_opponent = nil
+
+						opponents.each_with_index { |opponent,i|
+							if(cmd == i.to_s)
+								chosen_opponent = opponent
+								break
+							end
+						}
+
+						return true, text, chosen_opponent
+					end
+				
+					_cls(character)
+
+				}
+			end
 
 			def _cls(character)
 				draw_active_player(character, CURSOR_RESTORE)
@@ -710,7 +760,8 @@ class Orcs < Game
 				case cmd
 					when 'a'
 						_cls(character)
-						did_attack, text = _attack(character, opponents) #let char choose target
+						player_chosen, _, opponent = _player_choose_opponent(character, opponents)
+						did_attack, text = _attack(character, opponents, player_chosen, opponent)
 						if(did_attack)
 							return text
 						end
@@ -753,7 +804,7 @@ class Orcs < Game
 			text = _prompt_actor_actions(actor, enemies, friends) # in the future the npc:s could use this interface as well
 
 		else
-			did_attack, text, opponent = _attack(actor, enemies)
+			did_attack, text, opponent = _attack(actor, enemies, false, nil)
 			if(did_attack == false) then opponent=nil end
 			draw_subround(round, sub_round_number, actor, opponent)
 		end

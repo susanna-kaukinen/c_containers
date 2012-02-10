@@ -58,6 +58,10 @@ class Weapon
 
 		_roll = roll('critical')[1]
 
+		mega_bonus = 0
+		if(_roll==66)
+			mega_bonus = 33
+		end
 
 		crit_bonus = 0
 		case critical.level
@@ -71,7 +75,7 @@ class Weapon
 				crit_bonus += 20
 		end
 	
-		result = _roll + crit_bonus
+		result = _roll + crit_bonus + mega_bonus
 
 		wound = Wound.new()
 
@@ -215,8 +219,8 @@ end
 
 		critical_roll = nil
 		if(critical)
-			text += COLOUR_WHITE_BLINK + "\nCritical: " + critical.level + ' ' + critical.type + "es\n" + COLOUR_RESET
-			_, _text, wound = resolve_critical(attacker, critical, defender)
+			_roll, _text, wound = resolve_critical(attacker, critical, defender)
+			text += COLOUR_WHITE_BLINK + "\nCritical: " + critical.level + ' ' + critical.type + "es, roll=" + COLOUR_YELLOW + _roll.to_s + COLOUR_RESET
 			text += _text
 		end
 
