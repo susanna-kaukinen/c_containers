@@ -14,14 +14,18 @@ require './character.rb'
 require './synchronised_stack.rb'
 require './ansi.rb'
 require './create_character.rb'
-require './games.rb'
 require './choose_game.rb'
 require './waiting_room.rb'
-require './names.rb'
 require './dice.rb'
 require './wound.rb'
 require './mem.rb'
-require './troll.rb'
+require './monsters.rb'
+require './game_core.rb'
+require './game_orcs.rb'
+require './game_trolls.rb'
+require './game_kobold_ambush.rb'
+require './names.rb'
+
 
 Thread.abort_on_exception = true
 
@@ -53,8 +57,9 @@ def main
 	games = Games.new
 	orcs  = Orcs.new(games)
 	troll = Trolls.new(games)
+	kobls = KoboldAmbush.new(games)
 
-	games.add_games(orcs, troll)
+	games.add_games(orcs, troll, kobls)
 
 	_connector_loop(games)
 

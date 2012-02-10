@@ -28,6 +28,7 @@ class Character
 	attr_accessor :personality
 	attr_accessor :ob, :db, :ac, :hp
 	attr_accessor :id
+	# :race will be deduced from Class name
 
 	# base stats
 	attr_accessor :quickness
