@@ -13,18 +13,18 @@ personality: smart
 profession: healer
 mana: 10
 current_player_id: 0c60037d-56cc-4ee4-ae02-1a35abb0eb77
-kills: 2
+kills: 4
 knock_outs_inflicted: 5
-damage_inflicted: 1022
-wounds_inflicted: 21
-deaths: 3
-knock_outs_sustained: 0
-damage_sustained: 927
-wounds_sustained: 19
+damage_inflicted: 1670
+wounds_inflicted: 34
+deaths: 5
+knock_outs_sustained: 1
+damage_sustained: 1074
+wounds_sustained: 23
 raised_dead: 0
 revived: 1
 healed_injuries: 4
-healed_hp: 686
+healed_hp: 1067
 stun: 0
 bleeding: 0
 uparry: 0
@@ -39,7 +39,7 @@ dead_why: ''
 current_hp: 135
 active_weapon: !ruby/object:Weapon
   name: sword
-  fumble: 5
+  fumble: 2
 current_db: 93
 current_ob: 132
 current_mana: 10
@@ -48,4 +48,4 @@ cant_attack_text: no reason
 wounds: []
 current_blocks: {}
 current_side: 
-initiative_roll_this_round: 53
+initiative_roll_this_round: 59

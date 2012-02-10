@@ -187,28 +187,33 @@ class Orcs < Game
 				text += " => result:" + result.to_s() + "\n"
 				#print "ob-db-block+roll=result <=> #{attacker.current_ob}-#{opponent.current_db}-#{block}+#{_roll}=#{result}"
 
-				text += attacker.active_weapon.deal_damage(attacker, opponent, result)
+				_text, fury = attacker.active_weapon.deal_damage(attacker, opponent, result)
+				text += _text
 
-				return text
+				return text, fury
 			end
 
 			# _attack
 
+			fury=false
+
 			can_attack, why_cant = character.can_attack_now()
 
-
 			if(can_attack)
+
 				manner = character.personality
 				if(not override_opponent)
 					opponent, manner = __choose_opponent(character, opponents)
 				end
-				text = __do_attack(character, opponent, manner)
-				opponent.apply_wound_effects_after_attack
-				return true, text, opponent
-			end
 
-			text = _explain_why_not(character, 'attack', why_cant)
-			return false, text, nil
+				text, fury = __do_attack(character, opponent, manner)
+
+				opponent.apply_wound_effects_after_attack
+				return true, text, opponent, fury
+			else	
+				text = _explain_why_not(character, 'attack', why_cant)
+				return false, text, nil, fury
+			end
 		end
 
 
@@ -395,6 +400,8 @@ class Orcs < Game
 				draw_active_player(character, CURSOR_RESTORE)
 			end
 
+			# _prompt_actor_actions
+
 			draw_all_but_active_player(character, "#{character.name} ponders action, please wait...")
 
 			can_attack, why_cant_attack = character.can_attack_now()
@@ -407,13 +414,13 @@ class Orcs < Game
 				if(can_attack == false and can_block == false)
 					text = _explain_why_not(character, 'do anything', 'is incapacitated')
 					draw_active_player(character, text)
-					return
+					return '', false
 				end
 
 				if(character.current_ob<10)
 					text = _explain_why_not(character, 'take more actions', 'all ob used up!')
 					draw_active_player(character, text)
-					return
+					return '', false
 				end	
 
 				draw_active_player(character, 'Choose action:')
@@ -431,9 +438,10 @@ class Orcs < Game
 					when 'a'
 						_cls(character)
 						player_chosen, _, opponent = _player_choose_opponent(character, opponents)
-						did_attack, text = _attack(character, opponents, player_chosen, opponent)
+						did_attack, text, _, fury = _attack(character, opponents, player_chosen, opponent)
+
 						if(did_attack)
-							return text
+							return text, fury
 						end
 					when 'b'
 						_cls(character)
@@ -442,7 +450,7 @@ class Orcs < Game
 						_cls(character)
 						did_heal, text = _heal(character, friends)
 						if(did_heal)
-							return text
+							return text, false
 						end
 				end
 			
@@ -469,12 +477,14 @@ class Orcs < Game
 		text = ''
 		opponent = nil
 
+		fury = false
+
 		if(actor.human?) 
 			draw_subround(round, sub_round_number, actor, opponent)
-			text = _prompt_actor_actions(actor, enemies, friends) # in the future the npc:s could use this interface as well
+			text, fury = _prompt_actor_actions(actor, enemies, friends) # in the future the npc:s could use this interface as well
 
 		else
-			did_attack, text, opponent = _attack(actor, enemies, false, nil)
+			did_attack, text, opponent, fury = _attack(actor, enemies, false, nil)
 			if(did_attack == false) then opponent=nil end
 			draw_subround(round, sub_round_number, actor, opponent)
 		end
@@ -483,6 +493,24 @@ class Orcs < Game
 			text = row_proper + text
 			draw_all(text)
 		end
+
+		while(fury)
+
+			prompt_anyone
+
+			did_attack, text, opponent, fury = _attack(actor, enemies, false, nil)
+			if(did_attack == false) then opponent=nil end
+			draw_subround(round, sub_round_number, actor, opponent)
+
+			if(text)
+				text = row_proper + text
+				draw_all(text)
+			end
+
+
+			break
+		end
+
 	end
 	#/play_sub_round
 

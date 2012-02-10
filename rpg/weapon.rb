@@ -274,9 +274,15 @@ end
 			defender.dead = true
 			text += COLOUR_RED_BLINK + defender.name + " is DEAD!\n" + COLOUR_RESET
 		end
+		
+		fury=false
+		if(wound and wound.dead) # critical kill gives character a 2nd attack
+			fury=true
+			text += COLOUR_YELLOW_BLINK + '<<<FURY>>>' + COLOUR_RESET
+		end
 
-		return text
+		return text, fury
 
-	end
+	end #/deal_damage
 
 end
