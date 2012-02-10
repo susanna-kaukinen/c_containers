@@ -59,4 +59,8 @@ module XP
 		COLOUR_RESET
 	end
 
+	def try_leveling
+		return '?not implemented'
+	end
+
 end

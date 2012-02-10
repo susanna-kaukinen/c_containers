@@ -246,21 +246,37 @@ class Character
 		return @quickness - @penalties + @initiative_roll_this_round
 	end
 
-	def to_s
-		"name:" + @name + 
-		"\n\t br: #{@brains}" +
-		"\n\t cl:" + @profession.to_s() +
-		"\n\t ob:" + @ob.to_s()+ 
-		"\n\t db:" + @db.to_s() + " current_db: " + @current_db.to_s() + 
-		"\n\t ac:" + @ac.to_s()+ 
-		"\n\t hp:" + @hp.to_s() + " current_hp: " + @current_hp.to_s() +
-		"\n\t wp:" + @active_weapon.to_s()+ 
-		"\n\t st:" + @stun.to_s()+ 
-		"\n\t !p:" + @uparry.to_s()+ 
-		"\n\t dw:" + @downed.to_s()+ 
-		"\n\t pr:" + @prone.to_s()+ 
-		"\n\t bl:" + @blind.to_s()+
-		"\n\t wo:" + @wounds.length().to_s
+	def to_s(fold)
+		if(fold=='stats')
+			      "\t cl:" + @profession.to_s() +
+			      "\t ob:" + @ob.to_s()+ 
+			EOL + "\t db:" + @db.to_s() + " current_db: " + @current_db.to_s() + 
+			EOL + "\t hp:" + @hp.to_s() + " current_hp: " + @current_hp.to_s() +
+			      "\t wp:" + @active_weapon.to_s() 
+		elsif(fold=='wounds')
+			      "\t st:" + @stun.to_s()+ 
+			      "\t !p:" + @uparry.to_s()+ 
+			EOL + "\t dw:" + @downed.to_s()+ 
+			      "\t pr:" + @prone.to_s()+ 
+			EOL + "\t bl:" + @blind.to_s()+
+			      "\t wo:" + @wounds.length().to_s
+		else
+			"name:" + @name + 
+			EOL + "\t br: #{@brains}" +
+			EOL + "\t cl:" + @profession.to_s() +
+			EOL + "\t ob:" + @ob.to_s()+ 
+			EOL + "\t db:" + @db.to_s() + " current_db: " + @current_db.to_s() + 
+			EOL + "\t ac:" + @ac.to_s()+ 
+			EOL + "\t hp:" + @hp.to_s() + " current_hp: " + @current_hp.to_s() +
+			EOL + "\t wp:" + @active_weapon.to_s()+ 
+			EOL + "\t st:" + @stun.to_s()+ 
+			EOL + "\t !p:" + @uparry.to_s()+ 
+			EOL + "\t dw:" + @downed.to_s()+ 
+			EOL + "\t pr:" + @prone.to_s()+ 
+			EOL + "\t bl:" + @blind.to_s()+
+			EOL + "\t wo:" + @wounds.length().to_s
+		end
+
 	end
 
 
