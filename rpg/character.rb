@@ -34,12 +34,19 @@ class Character
 
 	#experience
 	attr_accessor :kills
+	attr_accessor :knock_outs_inflicted
 	attr_accessor :damage_inflicted
 	attr_accessor :wounds_inflicted
 
 	attr_accessor :deaths # if own team loses and unco, that should count
+	attr_accessor :knock_outs_sustained
 	attr_accessor :damage_sustained
 	attr_accessor :wounds_sustained
+
+	attr_accessor :raised_dead
+	attr_accessor :revived
+	attr_accessor :healed_injuries
+	attr_accessor :healed_hp
 
 	# current/active
 
@@ -141,11 +148,13 @@ class Character
 				if(result>100)
 					healee.dead        = false
 					healee.unconscious = false
+					@raised_dead +=1
 				end
 			elsif(healee.unconscious)
 				result = power - 25 + result
 				if(result>100)
 					healee.unconscious = false
+					@revived += 1
 				end
 			elsif(healee.prone>0 or healee.downed>0 or healee.stun>0 or healee.uparry>0)
 				result = power - 12 + result
@@ -155,12 +164,24 @@ class Character
 				healee.stun     -= 1 if(healee.stun>0)
 				healee.uparry   -= 1 if(healee.uparry>0)
 				healee.bleeding -= 1 if(healee.bleeding>0)
+
+				@healed_injuries += 1
 			end
 
-			healee.current_hp += ((power + result) / 2.5).to_i
+			old_hp = healee.current_hp
+
+			new_hitpoints = ((power + result) / 2.5).to_i
+			healee.current_hp += new_hitpoints
 			if(healee.current_hp > healee.hp)
 				healee.current_hp = healee.hp
 			end
+
+			a = healee.hp - old_hp
+			b = new_hitpoints
+
+			c = (a<b) ? a : b
+
+			@healed_hp += c if(c>0)
 
 		end
 
@@ -198,7 +219,24 @@ class Character
 
 		@current_mana -= 1
 	end
-	
+
+	def init_xp
+
+		@kills                 = 0
+		@knock_outs_inflicted  = 0
+		@damage_inflicted      = 0
+		@wounds_inflicted      = 0
+
+		@deaths                = 0
+		@knock_outs_sustained  = 0
+		@damage_sustained      = 0
+		@wounds_sustained      = 0
+
+		@raised_dead           = 0
+		@revived               = 0
+		@healed_injuries       = 0
+		@healed_hp             = 0
+	end	
 
 	def initialize(name, party, brains)
 		@id = SecureRandom.uuid
@@ -224,6 +262,8 @@ class Character
 		@mana = generate('mana')
 
 		@current_player_id = nil
+
+		init_xp
 		
 		heal_self_fully(true)
 	end
@@ -256,12 +296,19 @@ class Character
 	def xp_s
 		COLOUR_RED +
 		"kills: #{@kills}" +
+		"\nknock outs inflicted:  #{@knock_outs_inflicted}" +
 		"\ndamage inflicted: #{@damage_inflicted}"  +
 		"\nwounds inflicted: #{@wounds_inflicted}"  +
 		COLOUR_GREEN +
 		"\ndeaths: #{@deaths}" +
-		"\n@damage sustained: #{@damage_sustained}" +
-		"\n@wounds sustained: #{@wounds_sustained}" +
+		"\nknock outs sustained: #{@knock_outs_sustained}" +
+		"\ndamage sustained: #{@damage_sustained}" +
+		"\nwounds sustained: #{@wounds_sustained}" +
+		COLOUR_CYAN +
+		"\nraised dead:     #{@raised_dead}"  +
+		"\nrevived:         #{@revived}" +
+		"\nhealed injuries: #{@healed_injuries}" +
+		"\nhealed hp:       #{@healed_hp}" +
 		COLOUR_RESET
 	end
 
@@ -381,8 +428,12 @@ class Character
 	end
 
 	def block(against, block_amount)
-	
-		@current_blocks[against] = block_amount
+
+		if(@current_blocks[against] and @current_blocks[against] >0)
+			@current_blocks[against] += block_amount
+		else
+			@current_blocks[against] = block_amount
+		end
 	
 		@current_ob -= block_amount
 

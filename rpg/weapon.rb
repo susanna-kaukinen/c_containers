@@ -5,7 +5,7 @@ class Critical
 end
 
 class Weapon
-	attr_accessor :name, :fumble, :criticalType1, :criticalType2, :deal_damage
+	attr_accessor :name, :fumble, :criticalType1, :criticalType2
 
 	def to_s
 		@name + ", fumble=" + @fumble.to_s()	
@@ -54,13 +54,8 @@ class Weapon
 
 	end
 
-	def resolve_critical(critical, defender)
+	def resolve_critical(attacker, critical, defender)
 
-		#print '*** CRITICAL *** ' + "\n"
-		#print '*** CRITICAL *** ' + "\n"
-		#print '*** CRITICAL *** ' + "\n"
-
-	
 		_roll = roll('critical')[1]
 
 
@@ -191,19 +186,20 @@ end
 
 		text = wound.apply(defender, wound.target)
 
-		return _roll, text
+		return _roll, text, wound
 	end
 
 	def deal_damage(attacker, defender, result)
 
 		text=''
 
-		hp_damage, critical = damage_table(result)
+		hp_damage, critical, wound = damage_table(result)
 
-		defender.current_hp -= hp_damage
+		defender.current_hp       -= hp_damage
 
+		 
 		if(hp_damage>0)
-			"\t" + name + " deals " + COLOUR_RED + hp_damage.to_s() + COLOUR_RESET + " hit points of damage.\n"
+			text += "\t" + name + " deals " + COLOUR_RED + hp_damage.to_s() + COLOUR_RESET + " hit points of damage.\n"
 		else
 			if(defender.dead || defender.unconscious)
 				text += attacker.name + "misses"
@@ -220,8 +216,39 @@ end
 		critical_roll = nil
 		if(critical)
 			text += COLOUR_WHITE_BLINK + "\nCritical: " + critical.level + ' ' + critical.type + "es\n" + COLOUR_RESET
-			text += resolve_critical(critical, defender)[1] # roll in [0], text in [1]
+			_, _text, wound = resolve_critical(attacker, critical, defender)
+			text += _text
 		end
+
+
+		# bookkeep
+
+		p attacker
+		p attacker.wounds_inflicted
+
+
+		if(critical and critical.level)
+			defender.wounds_sustained += 1
+			attacker.wounds_inflicted += 1
+		end
+
+		defender.damage_sustained += hp_damage
+		attacker.damage_inflicted += hp_damage
+
+		if(wound) 
+			if(wound.damage>0)
+				defender.damage_sustained += wound.damage
+				attacker.damage_inflicted += wound.damage
+			end
+
+			attacker.knock_outs_inflicted += 1 if(wound.unconscious)
+			defender.knock_outs_sustained += 1 if(wound.unconscious)
+
+			attacker.kills      += 1 if(wound.dead)
+			defender.deaths     += 1 if(wound.dead)
+		end
+
+		# /bookkeep
 
 		colour = COLOUR_GREEN
 		if(defender.current_hp <= 0) 
