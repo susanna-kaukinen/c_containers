@@ -1,9 +1,9 @@
-class Trolls < Orcs
+class Trolls < Game
 
 	def initialize(*args)
-		super(*args)
-
 		@name = 'troll'
+		super(@name, *args)
+
 		@sides = Array.new
 		@sides.push('humans')
 		@sides.push('trolls')

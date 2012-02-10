@@ -8,9 +8,11 @@ require 'yaml'
 require 'securerandom'
 require 'monitor'
 
-require './player.rb'
+
+
 require './weapon.rb'
-require './character.rb'
+require './player.rb'
+
 require './synchronised_stack.rb'
 require './ansi.rb'
 require './create_character.rb'
@@ -19,12 +21,17 @@ require './waiting_room.rb'
 require './dice.rb'
 require './wound.rb'
 require './mem.rb'
-require './monsters.rb'
-require './game_core.rb'
-require './game_orcs.rb'
-require './game_trolls.rb'
-require './game_kobold_ambush.rb'
-require './names.rb'
+
+require './xp.rb' 
+	require './character.rb'
+		require './monsters.rb'
+			require './names.rb'
+
+	require './rule_monster_engine.rb'
+	require './game_core.rb'
+		require './game_orcs.rb'
+		require './game_trolls.rb'
+		require './game_kobold_ambush.rb'
 
 
 Thread.abort_on_exception = true

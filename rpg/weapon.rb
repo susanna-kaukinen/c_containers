@@ -1,5 +1,4 @@
 
-
 class Critical
 	attr_accessor :type, :level
 end
@@ -146,6 +145,7 @@ end
 				wound.dead   = true
 				target_bonus = 60
 		end
+wound.dead   = true #FIXME
 
 		if(critical.type == 'slash')
 			wound.bleeding = wound.stun

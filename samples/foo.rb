@@ -1,5 +1,19 @@
 
+
+module B
+
+	attr_accessor :bbb1
+
+	def initialize
+		@bbb1 = 0
+		@bbb2 = 0
+	end
+end
+
+
 class A
+
+	include B
 
 	attr_accessor :a
 
@@ -31,6 +45,8 @@ case clas
 
 	when A:
 		print 'yes, class a'
+		
+		puts   clas.bbb1
 	else
 		print 'que?'
 	
@@ -50,3 +66,6 @@ if(b === A)
 else
 	print 'no'
 end
+
+
+

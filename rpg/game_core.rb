@@ -140,6 +140,8 @@ end
 
 class Game
 
+	include RuleMonsterEngine
+
 	attr_accessor :name
 	attr_accessor :instance_id
 	

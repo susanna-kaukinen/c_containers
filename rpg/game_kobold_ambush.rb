@@ -1,9 +1,10 @@
-class KoboldAmbush < Orcs
+
+class KoboldAmbush < Game
 
 	def initialize(*args)
-		super(*args)
-
 		@name = 'kobold ambush'
+		super(@name, *args)
+
 		@sides = Array.new
 		@sides.push('humans')
 		@sides.push('kobolds')
