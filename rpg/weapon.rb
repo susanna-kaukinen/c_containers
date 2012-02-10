@@ -145,7 +145,7 @@ end
 				wound.dead   = true
 				target_bonus = 60
 		end
-wound.dead   = true #FIXME
+#wound.dead   = true # test fury
 
 		if(critical.type == 'slash')
 			wound.bleeding = wound.stun
@@ -278,7 +278,7 @@ wound.dead   = true #FIXME
 		fury=false
 		if(wound and wound.dead) # critical kill gives character a 2nd attack
 			fury=true
-			text += COLOUR_YELLOW_BLINK + '<<<FURY>>>' + COLOUR_RESET
+			text += COLOUR_YELLOW_BLINK + COLOUR_REVERSE  + '<<<FURY>>>' + COLOUR_RESET
 		end
 
 		return text, fury

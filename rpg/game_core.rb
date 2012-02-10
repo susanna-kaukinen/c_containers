@@ -198,8 +198,6 @@ class Game
 
 	def enter(player)
 
-		mem_dump
-
 		Thread.start() do
 	
 			begin	

@@ -467,13 +467,13 @@ module RuleMonsterEngine
 		fury = false
 
 		if(actor.human?) 
-			draw_subround(round, sub_round_number, actor, opponent)
+			draw_subround(round, sub_round_number, actor, opponent, fury)
 			text, fury = _prompt_actor_actions(actor, enemies, friends) # in the future the npc:s could use this interface as well
 
 		else
 			did_attack, text, opponent, fury = _attack(actor, enemies, false, nil)
 			if(did_attack == false) then opponent=nil end
-			draw_subround(round, sub_round_number, actor, opponent)
+			draw_subround(round, sub_round_number, actor, opponent, fury)
 		end
 
 		if(text)
@@ -486,8 +486,10 @@ module RuleMonsterEngine
 			prompt_anyone
 
 			did_attack, text, opponent, fury = _attack(actor, enemies, false, nil)
+
 			if(did_attack == false) then opponent=nil end
-			draw_subround(round, sub_round_number, actor, opponent)
+
+			draw_subround(round, sub_round_number, actor, opponent, fury)
 
 			if(text)
 				text = row_proper + text
@@ -509,15 +511,19 @@ module RuleMonsterEngine
 		row = "\033[" + (3+h).to_s + ';H'
 	end
 
-	def draw_subround(rnd, sub_round_number, active_xpc, opponent)
+	def draw_subround(rnd, sub_round_number, active_xpc, opponent, fury)
 
-		def _colour_names(xpc, active_xpc, opponent)
+		def _colour_names(xpc, active_xpc, opponent, fury)
 		
 			name = xpc.name
 	
 			if(name == active_xpc.name)
 				if(xpc.can_attack_now[0])
-					name = COLOUR_GREEN + COLOUR_REVERSE + name + COLOUR_RESET
+					if(fury)
+						name = COLOUR_YELLOW + COLOUR_REVERSE + name + COLOUR_RESET
+					else
+						name = COLOUR_GREEN + COLOUR_REVERSE + name + COLOUR_RESET
+					end
 				else
 					name = COLOUR_RED   + COLOUR_REVERSE + name + COLOUR_RESET
 				end
@@ -585,7 +591,7 @@ module RuleMonsterEngine
 			row_col = "\033[" + (2+i).to_s + ';' + '0' + 'H'
 			str += row_col
 
-			str += _colour_names(xpc, active_xpc, opponent)
+			str += _colour_names(xpc, active_xpc, opponent, fury)
 
 			set_pos_y = "\033[" + '20' + 'G'
 			str += set_pos_y
@@ -598,7 +604,7 @@ module RuleMonsterEngine
 			row_col = "\033[" + (2+i).to_s + ';' + '36' + 'H'
 			str += row_col
 
-			str += _colour_names(xpc, active_xpc, opponent)
+			str += _colour_names(xpc, active_xpc, opponent, fury)
 			
 			set_pos_y = "\033[" + (36+20).to_s + 'G'
 			str += set_pos_y
@@ -634,6 +640,9 @@ module RuleMonsterEngine
 
 	def play_round(round)
 		p '<<<NEW ROUND>>>'
+
+
+		mem_dump
 
 
 		sub_round_number=1
