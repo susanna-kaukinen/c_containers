@@ -75,13 +75,8 @@ def create_character(player)
 
 		write COLOUR_YELLOW_BLINK    + ' RR' + COLOUR_RESET + ' = Reroll Stats   ' +
 			COLOUR_BLUE_BLINK    + ' M ' + COLOUR_RESET  + ' = Main menu      ' +
-			COLOUR_GREEN_BLINK   + ' L ' + COLOUR_RESET  + ' = Level character'
-#TODO : rotate stats w/one key, e.g. 's', kind of a ring buffer st
-		write COLOUR_WHITE_BLINK     + ' S ' + COLOUR_RESET + ' = view Stats     ' +
-			COLOUR_CYAN_BLINK    + ' W ' + COLOUR_RESET + ' = view Wounds    ' +
-			COLOUR_YELLOW_BLINK  + ' X ' + COLOUR_RESET + ' = view XP        '
-			
-		write EOL
+			COLOUR_GREEN_BLINK   + ' L ' + COLOUR_RESET  + ' = Level character' +
+		EOL
 
 		player.write player.character.to_s(what)
 
@@ -99,11 +94,18 @@ def create_character(player)
 
 		#| _character
 
-		what = 'stats'
-		bottom_text = 'name:' + player.character.name
+		stat_types = Array.new
+		stat_types.push('stats')
+		stat_types.push('xp')
+		stat_types.push('wounds')
 
+		what = stat_types[0]
+
+		#bottom_text = 'name:' + player.character.name
+		bottom_text = COLOUR_WHITE_BLINK     + '<enter>' + COLOUR_RESET + ' = rotate stats     '
+
+		i=0
 		loop {
-
 			__draw_character_screen(player, write, bottom_text, what)
 			
 			bottom_text = nil
@@ -117,22 +119,19 @@ def create_character(player)
 					player.character.current_player_id = player.id
 					bottom_text = "#{player.character.name} reborn!"
 				when 'l'
-					if(player.character.can_level?)
+					if(player.character.xp.can_level?)
 						_level(player, write, bottom_text)
 					else
 						bottom_text = "?need more XP"
 					end
-				when 's'
-					what = 'stats'
-					bottom_text = 'name:' + player.character.name
-				when 'w'
-					what = 'wounds'
-					bottom_text = 'name:' + player.character.name
-				when 'x'
-					what = 'xp'
-					bottom_text = 'name:' + player.character.name
 				when 'm'
 					return
+				else
+					i += 1
+					i = 0 if(i==stat_types.length)
+				
+					what = stat_types[i]
+					bottom_text = 'name:' + player.character.name
 			end
 
 			clear_screen(player.method(:write))

@@ -195,7 +195,6 @@ module RuleMonsterEngine
 
 				text, fury = __do_attack(character, opponent, manner)
 
-				opponent.apply_wound_effects_after_attack
 				return true, text, opponent, fury
 			else	
 				text = _explain_why_not(character, 'attack', why_cant)

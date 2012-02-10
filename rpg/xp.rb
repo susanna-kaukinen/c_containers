@@ -16,14 +16,23 @@ end
 class ArmsLevel
 
 	def initialize
+
+		@critical_kills              = 0
+		@critical_kills_list         = Array.new
+
+		@critical_kos_inflicted      = 0
+		@critical_kos_inflicted_list = Array.new
+
+		@wounds_inflicted      = 0
+		@wounds_inflicted_list = Array.new
+
+	#
+
 		@kills                 = 0
 		@kills_list            = Array.new
 
 		@kos_inflicted         = 0
 		@kos_inflicted_list    = Array.new
-
-		@wounds_inflicted      = 0
-		@wounds_inflicted_list = Array.new
 
 		@damage_inflicted      = 0
 
@@ -32,6 +41,9 @@ class ArmsLevel
 	#
 	attr_accessor :kills
 	attr_accessor :kills_list
+
+	attr_accessor :critical_kos_inflicted
+	attr_accessor :critical_kos_inflicted_list
 
 	attr_accessor :kos_inflicted
 	attr_accessor :kos_inflicted_list
@@ -145,6 +157,14 @@ class XP
 		false #TODO
 	end
 
+	def add_critical_kill(opponent)
+		@total_arms_lvl.critical_kills   += 1
+		@total_arms_lvl.critical_kills_list.push(opponent)
+	
+		@current_arms_lvl.critical_kills += 1
+		@current_arms_lvl.critical_kills_list.push(opponent)
+	end
+
 	def add_kill(opponent)
 		@total_arms_lvl.kills   += 1
 		@total_arms_lvl.kills_list.push(opponent)
@@ -153,7 +173,16 @@ class XP
 		@current_arms_lvl.kills_list.push(opponent)
 	end
 
-	def add_ko_inflicted(opponent)
+	def add_critical_ko_inflicted(opponent)
+		@total_arms_lvl.critical_kos_inflicted   += 1
+		@total_arms_lvl.critical_kos_inflicted_list.push(opponent)
+	
+		@current_arms_lvl.critical_kos_inflicted += 1
+		@currnt_arms_lvl.critical_kos_inflicted_list.push(opponent)
+	end
+
+
+	def add_ko_inflicted()
 		@total_arms_lvl.kos_inflicted   += 1
 		@total_arms_lvl.kos_inflicted_list.push(opponent)
 	
@@ -185,8 +214,8 @@ class XP
 
 	def get_xp_stats
 		"\tarms: #{@arms_level} (#{get_current_arms_xp})/(#{get_total_arms_xp})" +
-		EOL + "\tbody: #{@body_level}" +
-		EOL + "\theal: #{@heal_level}"
+		EOL + "\tbody: #{@body_level} (not yet)" +
+		EOL + "\theal: #{@heal_level} (not yet)"
 	end
 
 end

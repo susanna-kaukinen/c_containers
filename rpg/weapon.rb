@@ -225,34 +225,7 @@ end
 		end
 
 
-		# bookkeep
-
-		p attacker
-		p attacker.wounds_inflicted
-
-
-		if(critical and critical.level)
-			defender.wounds_sustained += 1
-			attacker.wounds_inflicted += 1
-		end
-
-		defender.damage_sustained += hp_damage
-		attacker.damage_inflicted += hp_damage
-
-		if(wound) 
-			if(wound.damage>0)
-				defender.damage_sustained += wound.damage
-				attacker.damage_inflicted += wound.damage
-			end
-
-			attacker.knock_outs_inflicted += 1 if(wound.unconscious)
-			defender.knock_outs_sustained += 1 if(wound.unconscious)
-
-			attacker.kills      += 1 if(wound.dead)
-			defender.deaths     += 1 if(wound.dead)
-		end
-
-		# /bookkeep
+		resove_attack_effects_and_xp_bookkeep(attacker, defender, hp_damage, wound)
 
 		colour = COLOUR_GREEN
 		if(defender.current_hp <= 0) 
@@ -286,3 +259,63 @@ end
 	end #/deal_damage
 
 end
+
+def resove_attack_effects_and_xp_bookkeep(attacker, defender, hp_damage, wound)
+
+	p attacker
+
+	# first figure out if the defender is already out cold
+
+	already_unco = false
+	already_unco = true  if(defender.unconscious)
+
+	already_dead = false
+	already_dead = true  if(defender.dead)
+
+	if(already_unco or already_dead)
+		# no xp to either
+	else
+		attacker.xp.add_damage_inflicted(hp_damage)
+		#defender.damage_sustained += hp_damage
+
+		if(wound) 
+
+			if(wound.damage>0)
+				attacker.xp.add_damage_inflicted(wound.damage)
+				#defender.damage_sustained += wound.damage
+			end
+
+			attacker.xp.add_wound_inflicted(wound)
+			#defender.wounds_sustained += 1
+
+			attacker.xp.add_critical_ko_inflicted(defender) if(wound.unconscious)
+			#defender.knock_outs_sustained += 1 if(wound.unconscious)
+
+			attacker.xp.add_critical_kill(defender) if(wound.dead)
+			#defender.deaths     += 1 if(wound.dead)
+		end
+	end
+
+
+	defender.apply_wound_effects_after_attack # apply damage NOW
+
+
+	if(already_unco or already_dead)
+		# no xp
+	else
+		if(defender.unconscious)
+			attacker.xp.add_ko_inflicted()
+			# def...
+		end
+
+		if(defender.dead)
+			attacker.xp.add_kill_inflicted()
+			# def...
+		end
+	end
+
+	p attacker
+
+end
+
+
