@@ -1,14 +1,80 @@
 
-module XP
+def level_table(current_level)
+	needed_xp = current_level * 1000
+end
 
-	#experience
+def can_level?(current_level, current_level_xp)
+	needed_xp = level_table(current_level)
+
+	if(current_level_xp >= needed_xp)
+		return true
+	end
+
+	return false
+end
+
+class ArmsLevel
+
+	def initialize
+		@kills                 = 0
+		@kills_list            = Array.new
+
+		@kos_inflicted         = 0
+		@kos_inflicted_list    = Array.new
+
+		@wounds_inflicted      = 0
+		@wounds_inflicted_list = Array.new
+
+		@damage_inflicted      = 0
+
+	end
+
+	#
 	attr_accessor :kills
-		attr_accessor :kill_list
-	attr_accessor :knock_outs_inflicted
-		attr_accessor :ko_list
-	attr_accessor :damage_inflicted
-	attr_accessor :wounds_inflicted
+	attr_accessor :kills_list
 
+	attr_accessor :kos_inflicted
+	attr_accessor :kos_inflicted_list
+
+	attr_accessor :wounds_inflicted
+	attr_accessor :wounds_inflicted_list
+
+	attr_accessor :damage_inflicted
+
+	def to_s
+		COLOUR_RED +
+		"kills: #{@kills}" +
+		"\nknock outs inflicted:  #{@knock_outs_inflicted}" +
+		"\ndamage inflicted: #{@damage_inflicted}"  +
+		"\nwounds inflicted: #{@wounds_inflicted}"  +
+		COLOUR_RESET
+	end
+	
+	def get_xp
+		xp=0
+
+		kills_list.each        { |scalp| xp += scalp.strength     }
+		kos_inflicted_list     { |scalp| xp += (scalp.strength/2) }
+		wounds_inflicted_list  { |slash| xp += 100 }
+		
+		xp += damage_inflicted
+
+		xp.to_i
+	end 
+
+end
+
+
+class BodyLevel
+
+	def initialize
+		@deaths                = 0
+		@knock_outs_sustained  = 0
+		@damage_sustained      = 0
+		@wounds_sustained      = 0
+	end
+
+	#
 	attr_accessor :deaths # if own team loses and unco, that should count
 		attr_accessor :death_list
 	attr_accessor :knock_outs_sustained
@@ -16,6 +82,27 @@ module XP
 	attr_accessor :damage_sustained
 	attr_accessor :wounds_sustained
 
+	def to_s
+		COLOUR_GREEN +
+		"\ndeaths: #{@deaths}" +
+		"\nknock outs sustained: #{@knock_outs_sustained}" +
+		"\ndamage sustained: #{@damage_sustained}" +
+		"\nwounds sustained: #{@wounds_sustained}" +
+		COLOUR_RESET
+	end
+
+end
+
+
+class HealLevel
+
+	def initialize
+		@raised_dead           = 0
+		@revived               = 0
+		@healed_injuries       = 0
+		@healed_hp             = 0
+	end
+	
 	attr_accessor :raised_dead
 		attr_accessor :raised_list
 	attr_accessor :revived
@@ -23,34 +110,7 @@ module XP
 	attr_accessor :healed_injuries
 	attr_accessor :healed_hp
 
-	def init_xp
-		@kills                 = 0
-		@knock_outs_inflicted  = 0
-		@damage_inflicted      = 0
-		@wounds_inflicted      = 0
-
-		@deaths                = 0
-		@knock_outs_sustained  = 0
-		@damage_sustained      = 0
-		@wounds_sustained      = 0
-
-		@raised_dead           = 0
-		@revived               = 0
-		@healed_injuries       = 0
-		@healed_hp             = 0
-	end
-
-	def xp_s
-		COLOUR_RED +
-		"kills: #{@kills}" +
-		"\nknock outs inflicted:  #{@knock_outs_inflicted}" +
-		"\ndamage inflicted: #{@damage_inflicted}"  +
-		"\nwounds inflicted: #{@wounds_inflicted}"  +
-		COLOUR_GREEN +
-		"\ndeaths: #{@deaths}" +
-		"\nknock outs sustained: #{@knock_outs_sustained}" +
-		"\ndamage sustained: #{@damage_sustained}" +
-		"\nwounds sustained: #{@wounds_sustained}" +
+	def to_s
 		COLOUR_CYAN +
 		"\nraised dead:     #{@raised_dead}"  +
 		"\nrevived:         #{@revived}" +
@@ -58,9 +118,76 @@ module XP
 		"\nhealed hp:       #{@healed_hp}" +
 		COLOUR_RESET
 	end
+end
 
-	def try_leveling
-		return '?not implemented'
+class XP 
+
+	attr_accessor :arms_level
+	attr_accessor :body_level
+	attr_accessor :heal_level
+
+	def initialize
+		@arms_level            = 1
+		@body_level            = 1
+		@heal_level            = 1
+
+		@total_arms_lvl = ArmsLevel.new
+		@total_body_lvl = BodyLevel.new
+		@total_heal_lvl = HealLevel.new
+
+		@current_arms_lvl = ArmsLevel.new
+		@current_body_lvl = BodyLevel.new
+		@current_heal_lvl = HealLevel.new
+	end
+
+
+	def can_level?
+		false #TODO
+	end
+
+	def add_kill(opponent)
+		@total_arms_lvl.kills   += 1
+		@total_arms_lvl.kills_list.push(opponent)
+	
+		@current_arms_lvl.kills += 1
+		@current_arms_lvl.kills_list.push(opponent)
+	end
+
+	def add_ko_inflicted(opponent)
+		@total_arms_lvl.kos_inflicted   += 1
+		@total_arms_lvl.kos_inflicted_list.push(opponent)
+	
+		@current_arms_lvl.kos_inflicted += 1
+		@currnt_arms_lvl.kos_inflicted_list.push(opponent)
+	end
+
+	def add_damage_inflicted(hp)
+		@total_arms_lvl.damage_inflicted   += hp
+		@current_arms_lvl.damage_inflicted += hp
+	end
+
+
+	def add_wound_inflicted(wound)
+		@total_arms_lvl.wounds_inflicted   += 1
+		@total_arms_lvl.wounds_inflicted_list.push(wound)
+	
+		@current_arms_lvl.wounds_inflicted += 1
+		@current_arms_lvl.wounds_inflicted_list.push(wound)
+	end
+
+	def get_total_arms_xp
+		@total_arms_lvl.get_xp
+	end
+
+	def get_current_arms_xp
+		@current_arms_lvl.get_xp
+	end
+
+	def get_xp_stats
+		"\tarms: #{@arms_level} (#{get_current_arms_xp})/(#{get_total_arms_xp})" +
+		EOL + "\tbody: #{@body_level}" +
+		EOL + "\theal: #{@heal_level}"
 	end
 
 end
+

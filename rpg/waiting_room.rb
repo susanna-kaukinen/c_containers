@@ -51,7 +51,7 @@ def waiting_room(game, player)
 				throw(:done)
 			when 'g'
 				game.leave(player)
-				player.tell('choose_game')
+				send_msg(player, 'choose_game')
 				throw(:done)
 		end
 

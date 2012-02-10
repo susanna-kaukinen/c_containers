@@ -1,42 +1,18 @@
 
-def generate(*vargs)
-
-	case vargs[0]
-		when "hp", "ob"
-			return 1+50+rand(100)
-		when "mana"
-			case @profession
-				when 'fighter'
-					return 0
-				when 'warrior monk'
-					return rand(2)+1
-				when 'healer'
-					return 3
-				else
-					throw :unknown_profession
-			end
-		
-	else
-		return 1+rand(100)
-	end
-end
-
 class Character 
-
-	include XP
+	# :race will be deduced from Class name
 
 	# base, or so
 	attr_accessor :full_name, :name, :party, :brains
 	attr_accessor :personality
 	attr_accessor :ob, :db, :ac, :hp
 	attr_accessor :id
-	# :race will be deduced from Class name
 
 	# base stats
 	attr_accessor :quickness
 
-
 	# current/active
+	attr_accessor :xp
 
 	attr_accessor :current_player_id
 
@@ -233,9 +209,9 @@ class Character
 
 		@current_player_id = nil
 
-		init_xp
-		
 		heal_self_fully(true)
+
+		@xp = XP.new
 	end
 
 	def roll_initiative
@@ -260,6 +236,8 @@ class Character
 			      "\t pr:" + @prone.to_s()+ 
 			EOL + "\t bl:" + @blind.to_s()+
 			      "\t wo:" + @wounds.length().to_s
+		elsif(fold=='xp')
+			return @xp.get_xp_stats	
 		else
 			"name:" + @name + 
 			EOL + "\t br: #{@brains}" +
@@ -444,5 +422,28 @@ class Character
 	end
 
 
+end
+
+
+def generate(*vargs)
+
+	case vargs[0]
+		when "hp", "ob"
+			return 1+50+rand(100)
+		when "mana"
+			case @profession
+				when 'fighter'
+					return 0
+				when 'warrior monk'
+					return rand(2)+1
+				when 'healer'
+					return 3
+				else
+					throw :unknown_profession
+			end
+		
+	else
+		return 1+rand(100)
+	end
 end
 
