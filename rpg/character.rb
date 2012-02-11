@@ -11,6 +11,9 @@ class Character
 	# base stats
 	attr_accessor :quickness
 
+	# game specific
+	attr_accessor :kumite_streak
+
 	# current/active
 	attr_accessor :xp
 
@@ -105,7 +108,7 @@ class Character
 
 		def _do_heal(healee, power)
 
-			result = roll('heal')[0]
+			result, _, _ = roll_die('heal')
 
 			if(healee.dead)
 				result = power - 50 + result
@@ -211,7 +214,10 @@ class Character
 
 		heal_self_fully(true)
 
+		@kumite_streak = 0
+
 		@xp = XP.new
+
 	end
 
 	def roll_initiative
@@ -241,7 +247,9 @@ class Character
 			EOL + "\t bl:" + @blind.to_s()+
 			      "\t wo:" + @wounds.length().to_s
 		elsif(fold=='xp')
-			return @xp.get_xp_stats
+			str = @xp.get_xp_stats
+			str += EOL
+			str += "kumite streak: #{kumite_streak}"
 		else
 			"name:" + @name + 
 			EOL + "\t br: #{@brains}" +
@@ -326,26 +334,31 @@ class Character
 
 	def can_attack_now() # i.e. can this character attack now
 
-		@can_attack = true
+		def _sub
+			if(@dead)        then return false, "dead"        end
+			if(@unconscious) then return false, "unconscious" end
+			if(@prone>0)     then return false, "prone"       end
+			if(@downed>0)    then return false, "downed"      end
+
+			if(@stun>0)
+				str = 'stunned'
+				
+				if(@uparry > 0)
+					 str += " and unable to parry"
+				end
+
+				return false, str
+			end
+
+			return true, 'no reason'
+		end
 
 		check_hitpoints
 
-		if(@dead)        then return false, "dead"        end
-		if(@unconscious) then return false, "unconscious" end
-		if(@prone>0)     then return false, "prone"       end
-  		if(@downed>0)    then return false, "downed"      end
+		@can_attack, cause = _sub
 
-		if(@stun>0)
-			str = 'stunned'
-			
-			if(@uparry > 0)
-				 str += " and unable to parry"
-			end
 
-			return false, str
-		end
-
-		return @can_attack, 'no reason'
+		return @can_attack, cause
 
 	end
 

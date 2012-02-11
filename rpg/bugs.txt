@@ -1,6 +1,39 @@
 
 
 
+
+<> se on vähän hassua, että jos tappelee ihmisten puolella ni on yksi viidestä
+<susanna> ku alkaa tulla expoo
+<> mut jos vastustajien, ni menee niille lisäksi
+
+---
+
+number(100)
+<susanna> end
+<> joo, tossa piirrossa on joku update bugi
+<> taas juuttu siihen critin rolliin
+<susanna> ok
+<> ja jos critti zippaa koko rollia ei näy
+<> ainoostaan Zip
+<susanna> aa!
+
+---
+
+<> olin pos. healthilla ennen rundin vaihtumista
+<> ja sitte unc
+<> ei ollu ees bleedejä, ainoastaan stunni
+
+
+["Banza (evil) chose: Kuoleman Paluu"]
+"<<<SUB ROUND ERR HANDLER>>>"
+"undefined method `unconscious' for nil:NilClass"
+"undefined method `unconscious' for nil:NilClass"
+"[\"/home/susanna/c_containers/rpg/weapon.rb:312:in `resove_attack_effects_and_xp_bookkeep'\", \"/home/susanna/c_containers/rpg/weapon.rb:240:in `deal_damage'\", \"/home/susanna/c_containers/rpg/rule_monster_engine.rb:63:in `do_attack'\", \"/home/susanna/c_containers/rpg/rule_monster_engine.rb:81:in `_attack'\", \"/home/susanna/c_containers/rpg/rule_monster_engine.rb:463:in `play_sub_round'\", \"/home/susanna/c_containers/rpg/rule_monster_engine.rb:689:in `block in play_round'\", \"/home/susanna/c_containers/rpg/rule_monster_engine.rb:670:in `each'\", \"/home/susanna/c_containers/rpg/rule_monster_engine.rb:670:in `play_round'\", \"/home/susanna/c_containers/rpg/rule_monster_engine.rb:730:in `block in play_rounds'\", \"/home/susanna/c_containers/rpg/rule_monster_engine.rb:719:in `catch'\", \"/home/susanna/c_containers/rpg/rule_monster_engine.rb:719:in `play_rounds'\", \"/home/susanna/c_containers/rpg/rule_monster_engine.rb:6:in `fight'\", \"/home/susanna/c_containers/rpg/game_core.rb:204:in `block in enter'\"]"
+
+---
+
+
+
 <susanna> mä katon tota krittitablee
 <susanna> ja toi bleed on huono
 <susanna> ku se on niin tehoton

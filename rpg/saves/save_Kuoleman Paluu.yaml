@@ -1,0 +1,3957 @@
+--- !ruby/object:Character
+id: 94f77de3-060d-4d73-812e-9eebdc035491
+full_name: Kuoleman Paluu
+name: Kuoleman Paluu
+party: pc
+brains: biological
+ob: 124
+db: 90
+ac: 43
+hp: 120
+quickness: 54
+personality: stupid
+profession: warrior monk
+mana: 2
+current_player_id: 620be032-4d2d-4a95-b96d-d77e5e2f2574
+stun: 0
+bleeding: 0
+uparry: 0
+downed: 0
+prone: 0
+blind: 0
+penalties: 0
+unconscious: false
+unconscious_why: ''
+dead: false
+dead_why: ''
+current_hp: 120
+active_weapon: !ruby/object:Weapon
+  name: sword
+  fumble: 6
+current_db: 90
+current_ob: 124
+current_mana: 2
+can_attack: true
+cant_attack_text: no reason
+wounds: []
+current_blocks: {}
+kumite_streak: 0
+current_side: 
+xp: !ruby/object:XP
+  arms_level: 1
+  body_level: 1
+  heal_level: 1
+  total_arms_lvl: !ruby/object:ArmsLevel
+    critical_kills: 7
+    critical_kills_list:
+    - &87631700 !ruby/object:Kobold
+      id: c69b3756-91ed-4f0b-b145-4985a192f793
+      full_name: dummy
+      name: Ruuhuu
+      party: pc
+      brains: artificial
+      ob: 41
+      db: 71
+      ac: 12
+      hp: 39
+      quickness: 30
+      personality: evil
+      profession: fighter
+      mana: 0
+      current_player_id: 
+      stun: 0
+      bleeding: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      blind: 0
+      penalties: 0
+      unconscious: false
+      unconscious_why: ''
+      dead: true
+      dead_why: ''
+      current_hp: 2
+      active_weapon: !ruby/object:Weapon
+        name: sword
+        fumble: 8
+      current_db: 51
+      current_ob: 41
+      current_mana: 0
+      can_attack: true
+      cant_attack_text: no reason
+      wounds:
+      - &87630520 !ruby/object:Wound
+        damage: 9
+        bleeding: 0
+        stun: 1
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: throat
+        text: Ruuhuu was hit in the throat and was dealt 9 extra damage and is stunned
+          for 1 rounds
+      - &87629640 !ruby/object:Wound
+        damage: 0
+        bleeding: 0
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: true
+        target: elbow
+        text: Ruuhuu was hit in the elbow and was dealt 0 extra damage and is dead
+      current_blocks: {}
+      current_side: 2
+      xp: !ruby/object:XP
+        arms_level: 1
+        body_level: 1
+        heal_level: 1
+        total_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        total_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        total_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+        current_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        current_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        current_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+      initiative_roll_this_round: 31
+    - &87640280 !ruby/object:Kobold
+      id: 7bed2429-ca18-4494-a72c-b52b6babab09
+      full_name: dummy
+      name: Buhh
+      party: pc
+      brains: artificial
+      ob: 60
+      db: 73
+      ac: 29
+      hp: 99
+      quickness: 39
+      personality: stupid
+      profession: warrior monk
+      mana: 2
+      current_player_id: 
+      stun: 0
+      bleeding: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      blind: 0
+      penalties: 0
+      unconscious: false
+      unconscious_why: ''
+      dead: true
+      dead_why: ''
+      current_hp: 99
+      active_weapon: !ruby/object:Weapon
+        name: sword
+        fumble: 6
+      current_db: 73
+      current_ob: 60
+      current_mana: 2
+      can_attack: true
+      cant_attack_text: no reason
+      wounds:
+      - &87638070 !ruby/object:Wound
+        damage: 0
+        bleeding: 0
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: true
+        target: groin
+        text: Buhh was hit in the groin and was dealt 0 extra damage and is dead
+      current_blocks: {}
+      current_side: 2
+      xp: !ruby/object:XP
+        arms_level: 1
+        body_level: 1
+        heal_level: 1
+        total_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        total_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        total_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+        current_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        current_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        current_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+      initiative_roll_this_round: 40
+    - &87649300 !ruby/object:Kobold
+      id: d4d8b4e2-de6c-4391-8114-cc2ade1aaf90
+      full_name: dummy
+      name: Teenee
+      party: pc
+      brains: artificial
+      ob: 72
+      db: 45
+      ac: 20
+      hp: 48
+      quickness: 43
+      personality: stupid
+      profession: fighter
+      mana: 0
+      current_player_id: 
+      stun: 0
+      bleeding: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      blind: 0
+      penalties: 0
+      unconscious: false
+      unconscious_why: ''
+      dead: true
+      dead_why: ''
+      current_hp: 3
+      active_weapon: !ruby/object:Weapon
+        name: sword
+        fumble: 7
+      current_db: 45
+      current_ob: 72
+      current_mana: 0
+      can_attack: true
+      cant_attack_text: no reason
+      wounds:
+      - !ruby/object:Wound
+        damage: 23
+        bleeding: 0
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: elbow
+        text: Teenee was hit in the elbow and was dealt 23 extra damage
+      - &87647590 !ruby/object:Wound
+        damage: 0
+        bleeding: 0
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: true
+        target: elbow
+        text: Teenee was hit in the elbow and was dealt 0 extra damage and is dead
+      current_blocks: {}
+      current_side: 2
+      xp: !ruby/object:XP
+        arms_level: 1
+        body_level: 1
+        heal_level: 1
+        total_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 24
+        total_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        total_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+        current_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 24
+        current_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        current_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+      initiative_roll_this_round: 43
+    - &87642490 !ruby/object:Human
+      id: 504a8851-6918-4f28-83bd-ed937df3ca71
+      full_name: dummy
+      name: Aramir the Invincible
+      party: pc
+      brains: artificial
+      ob: 146
+      db: 91
+      ac: 80
+      hp: 91
+      quickness: 51
+      personality: smart
+      profession: healer
+      mana: 3
+      current_player_id: 
+      stun: 1
+      bleeding: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      blind: 0
+      penalties: 0
+      unconscious: false
+      unconscious_why: ''
+      dead: true
+      dead_why: ''
+      current_hp: 12
+      active_weapon: !ruby/object:Weapon
+        name: sword
+        fumble: 2
+      current_db: 71
+      current_ob: 146
+      current_mana: 3
+      can_attack: true
+      cant_attack_text: no reason
+      wounds:
+      - !ruby/object:Wound
+        damage: 10
+        bleeding: 0
+        stun: 1
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: left leg
+        text: Aramir the Invincible was hit in the left leg and was dealt 10 extra
+          damage and is stunned for 1 rounds
+      - &87655840 !ruby/object:Wound
+        damage: 0
+        bleeding: 0
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: true
+        target: groin
+        text: Aramir the Invincible was hit in the groin and was dealt 0 extra damage
+          and is dead
+      current_blocks: {}
+      current_side: 1
+      xp: !ruby/object:XP
+        arms_level: 1
+        body_level: 1
+        heal_level: 1
+        total_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        total_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        total_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+        current_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        current_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        current_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+      initiative_roll_this_round: 95
+    - &87650740 !ruby/object:Troll
+      id: 38e09466-0c4a-470e-bc25-fc2c7b49079a
+      full_name: ''
+      name: Gargath the Troll
+      party: pc
+      brains: artificial
+      ob: 132
+      db: 1
+      ac: 83
+      hp: 237
+      quickness: 38
+      personality: stupid
+      profession: warrior monk
+      mana: 1
+      current_player_id: 
+      stun: 0
+      bleeding: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      blind: 0
+      penalties: 0
+      unconscious: false
+      unconscious_why: ''
+      dead: true
+      dead_why: ''
+      current_hp: 237
+      active_weapon: !ruby/object:Weapon
+        name: sword
+        fumble: 4
+      current_db: 1
+      current_ob: 132
+      current_mana: 1
+      can_attack: true
+      cant_attack_text: no reason
+      wounds:
+      - &87656680 !ruby/object:Wound
+        damage: 0
+        bleeding: 0
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: true
+        target: groin
+        text: Gargath the Troll was hit in the groin and was dealt 0 extra damage
+          and is dead
+      current_blocks: {}
+      current_side: 2
+      xp: !ruby/object:XP
+        arms_level: 1
+        body_level: 1
+        heal_level: 1
+        total_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 1
+        total_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        total_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+        current_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 1
+        current_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        current_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+      initiative_roll_this_round: 80
+    - &87650840 !ruby/object:Human
+      id: 8bb207b1-a56b-4938-ab86-9f498a69479d
+      full_name: dummy
+      name: Ezmu the Small
+      party: pc
+      brains: artificial
+      ob: 114
+      db: 9
+      ac: 67
+      hp: 55
+      quickness: 67
+      personality: evil
+      profession: warrior monk
+      mana: 1
+      current_player_id: 
+      stun: 0
+      bleeding: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      blind: 0
+      penalties: 0
+      unconscious: false
+      unconscious_why: ''
+      dead: true
+      dead_why: ''
+      current_hp: 55
+      active_weapon: !ruby/object:Weapon
+        name: sword
+        fumble: 7
+      current_db: 9
+      current_ob: 114
+      current_mana: 1
+      can_attack: true
+      cant_attack_text: no reason
+      wounds:
+      - &86695220 !ruby/object:Wound
+        damage: 0
+        bleeding: 0
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: true
+        target: elbow
+        text: Ezmu the Small was hit in the elbow and was dealt 0 extra damage and
+          is dead
+      current_blocks: {}
+      current_side: 1
+      xp: !ruby/object:XP
+        arms_level: 1
+        body_level: 1
+        heal_level: 1
+        total_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        total_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        total_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+        current_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        current_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        current_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+      initiative_roll_this_round: 39
+    - &87399340 !ruby/object:Troll
+      id: eb266bf3-3508-48f2-94eb-91d12f431a95
+      full_name: ''
+      name: Bargunth the Troll
+      party: pc
+      brains: artificial
+      ob: 140
+      db: 50
+      ac: 30
+      hp: 285
+      quickness: 67
+      personality: evil
+      profession: healer
+      mana: 3
+      current_player_id: 
+      stun: 2
+      bleeding: 0
+      uparry: 1
+      downed: 0
+      prone: 0
+      blind: 0
+      penalties: 0
+      unconscious: false
+      unconscious_why: ''
+      dead: true
+      dead_why: ''
+      current_hp: 216
+      active_weapon: !ruby/object:Weapon
+        name: sword
+        fumble: 6
+      current_db: 30
+      current_ob: 140
+      current_mana: 3
+      can_attack: true
+      cant_attack_text: no reason
+      wounds:
+      - &87638330 !ruby/object:Wound
+        damage: 12
+        bleeding: 0
+        stun: 2
+        uparry: 1
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: stomach
+        text: Bargunth the Troll was hit in the stomach and was dealt 12 extra damage
+          and is stunned for 2 rounds and is unable to parry for 1 rounds
+      - !ruby/object:Wound
+        damage: 30
+        bleeding: 0
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: shoulder
+        text: Bargunth the Troll was hit in the shoulder and was dealt 30 extra damage
+      - &87399590 !ruby/object:Wound
+        damage: 0
+        bleeding: 0
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: true
+        target: throat
+        text: Bargunth the Troll was hit in the throat and was dealt 0 extra damage
+          and is dead
+      current_blocks: {}
+      current_side: 2
+      xp: !ruby/object:XP
+        arms_level: 1
+        body_level: 1
+        heal_level: 1
+        total_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 2
+          wounds_inflicted_list:
+          - &87077330 !ruby/object:Wound
+            damage: 18
+            bleeding: 2
+            stun: 0
+            uparry: 0
+            downed: 0
+            prone: 0
+            unconscious: false
+            dead: false
+            target: back
+            text: Bereth the Strong was hit in the back and was dealt 18 extra damage
+              and is bleeding 2 hits worth each round
+          - &86697150 !ruby/object:Wound
+            damage: 1
+            bleeding: 0
+            stun: 0
+            uparry: 0
+            downed: 0
+            prone: 0
+            unconscious: false
+            dead: false
+            target: groin
+            text: Beanel the 4th was hit in the groin and was dealt 1 extra damage
+          kills: 0
+          kills_list: []
+          kos_inflicted: 1
+          kos_inflicted_list:
+          - &87077040 !ruby/object:Human
+            id: e84ec0e5-82d3-4dcc-bd5b-45561a351388
+            full_name: dummy
+            name: Bereth the Strong
+            party: pc
+            brains: artificial
+            ob: 59
+            db: 56
+            ac: 21
+            hp: 120
+            quickness: 96
+            personality: smart
+            profession: warrior monk
+            mana: 1
+            current_player_id: 
+            stun: 1
+            bleeding: 3
+            uparry: 0
+            downed: 0
+            prone: 0
+            blind: 0
+            penalties: 0
+            unconscious: false
+            unconscious_why: ''
+            dead: false
+            dead_why: ''
+            current_hp: 3
+            active_weapon: !ruby/object:Weapon
+              name: sword
+              fumble: 8
+            current_db: 36
+            current_ob: 59
+            current_mana: 1
+            can_attack: true
+            cant_attack_text: no reason
+            wounds:
+            - &86930050 !ruby/object:Wound
+              damage: 6
+              bleeding: 1
+              stun: 0
+              uparry: 0
+              downed: 0
+              prone: 0
+              unconscious: false
+              dead: false
+              target: groin
+              text: Bereth the Strong was hit in the groin and was dealt 6 extra damage
+                and is bleeding 1 hits worth each round
+            - &87054070 !ruby/object:Wound
+              damage: 9
+              bleeding: 0
+              stun: 1
+              uparry: 0
+              downed: 0
+              prone: 0
+              unconscious: false
+              dead: false
+              target: side
+              text: Bereth the Strong was hit in the side and was dealt 9 extra damage
+                and is stunned for 1 rounds
+            - *87077330
+            - !ruby/object:Wound
+              damage: 16
+              bleeding: 0
+              stun: 2
+              uparry: 1
+              downed: 0
+              prone: 0
+              unconscious: false
+              dead: false
+              target: back
+              text: Bereth the Strong was hit in the back and was dealt 16 extra damage
+                and is stunned for 2 rounds and is unable to parry for 1 rounds
+            current_blocks: {}
+            current_side: 1
+            xp: !ruby/object:XP
+              arms_level: 1
+              body_level: 1
+              heal_level: 1
+              total_arms_lvl: !ruby/object:ArmsLevel
+                critical_kills: 0
+                critical_kills_list: []
+                critical_kos_inflicted: 0
+                critical_kos_inflicted_list: []
+                wounds_inflicted: 0
+                wounds_inflicted_list: []
+                kills: 0
+                kills_list: []
+                kos_inflicted: 0
+                kos_inflicted_list: []
+                damage_inflicted: 9
+              total_body_lvl: !ruby/object:BodyLevel
+                deaths: 0
+                knock_outs_sustained: 0
+                damage_sustained: 0
+                wounds_sustained: 0
+              total_heal_lvl: !ruby/object:HealLevel
+                raised_dead: 0
+                revived: 0
+                healed_injuries: 0
+                healed_hp: 0
+              current_arms_lvl: !ruby/object:ArmsLevel
+                critical_kills: 0
+                critical_kills_list: []
+                critical_kos_inflicted: 0
+                critical_kos_inflicted_list: []
+                wounds_inflicted: 0
+                wounds_inflicted_list: []
+                kills: 0
+                kills_list: []
+                kos_inflicted: 0
+                kos_inflicted_list: []
+                damage_inflicted: 9
+              current_body_lvl: !ruby/object:BodyLevel
+                deaths: 0
+                knock_outs_sustained: 0
+                damage_sustained: 0
+                wounds_sustained: 0
+              current_heal_lvl: !ruby/object:HealLevel
+                raised_dead: 0
+                revived: 0
+                healed_injuries: 0
+                healed_hp: 0
+            initiative_roll_this_round: 38
+            kumite_streak: 0
+          damage_inflicted: 96
+        total_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        total_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+        current_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 2
+          wounds_inflicted_list:
+          - *87077330
+          - *86697150
+          kills: 0
+          kills_list: []
+          kos_inflicted: 1
+          kos_inflicted_list:
+          - *87077040
+          damage_inflicted: 96
+        current_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        current_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+      initiative_roll_this_round: 15
+      kumite_streak: 0
+    critical_kos_inflicted: 3
+    critical_kos_inflicted_list:
+    - &86690080 !ruby/object:Orc
+      id: 67e9ab53-0391-4074-8acb-6f0c8662604c
+      full_name: dummy
+      name: Hugnarl the Orc
+      party: pc
+      brains: artificial
+      ob: 133
+      db: 58
+      ac: 45
+      hp: 51
+      quickness: 75
+      personality: stupid
+      profession: warrior monk
+      mana: 1
+      current_player_id: 
+      stun: 0
+      bleeding: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      blind: 0
+      penalties: 0
+      unconscious: true
+      unconscious_why: ''
+      dead: false
+      dead_why: ''
+      current_hp: 51
+      active_weapon: !ruby/object:Weapon
+        name: sword
+        fumble: 8
+      current_db: 58
+      current_ob: 133
+      current_mana: 1
+      can_attack: true
+      cant_attack_text: no reason
+      wounds:
+      - &87648730 !ruby/object:Wound
+        damage: 50
+        bleeding: 0
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: true
+        dead: false
+        target: groin
+        text: ! 'Hugnarl the Orc was hit in the groin and was dealt 50 extra damage
+          and is unconscious '
+      - !ruby/object:Wound
+        damage: 19
+        bleeding: 0
+        stun: 2
+        uparry: 1
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: throat
+        text: Hugnarl the Orc was hit in the throat and was dealt 19 extra damage
+          and is stunned for 2 rounds and is unable to parry for 1 rounds
+      current_blocks: {}
+      current_side: 2
+      xp: !ruby/object:XP
+        arms_level: 1
+        body_level: 1
+        heal_level: 1
+        total_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 1
+          wounds_inflicted_list:
+          - &87646760 !ruby/object:Wound
+            damage: 17
+            bleeding: 0
+            stun: 0
+            uparry: 0
+            downed: 0
+            prone: 0
+            unconscious: false
+            dead: false
+            target: throat
+            text: Bereth the Strong was hit in the throat and was dealt 17 extra damage
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 28
+        total_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        total_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+        current_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 1
+          wounds_inflicted_list:
+          - *87646760
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 28
+        current_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        current_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+      initiative_roll_this_round: 2
+    - &86719060 !ruby/object:Troll
+      id: 37443f80-f78c-49d2-a9bd-e8d6fe82a548
+      full_name: ''
+      name: Bargunth the Troll
+      party: pc
+      brains: artificial
+      ob: 200
+      db: 88
+      ac: 50
+      hp: 214
+      quickness: 73
+      personality: evil
+      profession: healer
+      mana: 3
+      current_player_id: 
+      stun: 1
+      bleeding: 3
+      uparry: 0
+      downed: 0
+      prone: 0
+      blind: 0
+      penalties: 0
+      unconscious: true
+      unconscious_why: ''
+      dead: false
+      dead_why: ''
+      current_hp: 90
+      active_weapon: !ruby/object:Weapon
+        name: sword
+        fumble: 2
+      current_db: 68
+      current_ob: 200
+      current_mana: 3
+      can_attack: true
+      cant_attack_text: no reason
+      wounds:
+      - &86716870 !ruby/object:Wound
+        damage: 12
+        bleeding: 0
+        stun: 2
+        uparry: 1
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: weapon arm
+        text: Bargunth the Troll was hit in the weapon arm and was dealt 12 extra
+          damage and is stunned for 2 rounds and is unable to parry for 1 rounds
+      - !ruby/object:Wound
+        damage: 16
+        bleeding: 3
+        stun: 0
+        uparry: 1
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: groin
+        text: Bargunth the Troll was hit in the groin and was dealt 16 extra damage
+          and is bleeding 3 hits worth each round and is unable to parry for 1 rounds
+      - !ruby/object:Wound
+        damage: 4
+        bleeding: 0
+        stun: 1
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: groin
+        text: Bargunth the Troll was hit in the groin and was dealt 4 extra damage
+          and is stunned for 1 rounds
+      - &86714690 !ruby/object:Wound
+        damage: 58
+        bleeding: 0
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: true
+        dead: false
+        target: knee
+        text: ! 'Bargunth the Troll was hit in the knee and was dealt 58 extra damage
+          and is unconscious '
+      current_blocks: {}
+      current_side: 2
+      xp: !ruby/object:XP
+        arms_level: 1
+        body_level: 1
+        heal_level: 1
+        total_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 3
+          wounds_inflicted_list:
+          - &86713520 !ruby/object:Wound
+            damage: 16
+            bleeding: 3
+            stun: 0
+            uparry: 1
+            downed: 0
+            prone: 0
+            unconscious: false
+            dead: false
+            target: groin
+            text: Drendon the Old was hit in the groin and was dealt 16 extra damage
+              and is bleeding 3 hits worth each round and is unable to parry for 1
+              rounds
+          - &86712800 !ruby/object:Wound
+            damage: 19
+            bleeding: 0
+            stun: 3
+            uparry: 2
+            downed: 0
+            prone: 0
+            unconscious: false
+            dead: false
+            target: groin
+            text: Ezmu the Small was hit in the groin and was dealt 19 extra damage
+              and is stunned for 3 rounds and is unable to parry for 2 rounds
+          - &86712080 !ruby/object:Wound
+            damage: 3
+            bleeding: 0
+            stun: 1
+            uparry: 0
+            downed: 0
+            prone: 0
+            unconscious: false
+            dead: false
+            target: groin
+            text: Beanel the 4th was hit in the groin and was dealt 3 extra damage
+              and is stunned for 1 rounds
+          kills: 0
+          kills_list: []
+          kos_inflicted: 3
+          kos_inflicted_list:
+          - &87641700 !ruby/object:Human
+            id: 5b54ec5c-2379-44c0-a127-2b379cdc24f2
+            full_name: dummy
+            name: Drendon the Old
+            party: pc
+            brains: artificial
+            ob: 142
+            db: 34
+            ac: 4
+            hp: 52
+            quickness: 36
+            personality: evil
+            profession: warrior monk
+            mana: 1
+            current_player_id: 
+            stun: 0
+            bleeding: 3
+            uparry: 1
+            downed: 0
+            prone: 0
+            blind: 0
+            penalties: 0
+            unconscious: false
+            unconscious_why: ''
+            dead: false
+            dead_why: ''
+            current_hp: 52
+            active_weapon: !ruby/object:Weapon
+              name: sword
+              fumble: 4
+            current_db: 34
+            current_ob: 142
+            current_mana: 1
+            can_attack: true
+            cant_attack_text: no reason
+            wounds:
+            - *86713520
+            - !ruby/object:Wound
+              damage: 16
+              bleeding: 2
+              stun: 0
+              uparry: 0
+              downed: 0
+              prone: 0
+              unconscious: false
+              dead: false
+              target: groin
+              text: Drendon the Old was hit in the groin and was dealt 16 extra damage
+                and is bleeding 2 hits worth each round
+            current_blocks: {}
+            current_side: 1
+            xp: !ruby/object:XP
+              arms_level: 1
+              body_level: 1
+              heal_level: 1
+              total_arms_lvl: !ruby/object:ArmsLevel
+                critical_kills: 0
+                critical_kills_list: []
+                critical_kos_inflicted: 0
+                critical_kos_inflicted_list: []
+                wounds_inflicted: 1
+                wounds_inflicted_list:
+                - &87637660 !ruby/object:Wound
+                  damage: 31
+                  bleeding: 0
+                  stun: 0
+                  uparry: 0
+                  downed: 0
+                  prone: 3
+                  unconscious: false
+                  dead: false
+                  target: knee
+                  text: Harag the Troll was hit in the knee and was dealt 31 extra
+                    damage and is prone for 3 rounds
+                kills: 0
+                kills_list: []
+                kos_inflicted: 0
+                kos_inflicted_list: []
+                damage_inflicted: 64
+              total_body_lvl: !ruby/object:BodyLevel
+                deaths: 0
+                knock_outs_sustained: 0
+                damage_sustained: 0
+                wounds_sustained: 0
+              total_heal_lvl: !ruby/object:HealLevel
+                raised_dead: 0
+                revived: 0
+                healed_injuries: 0
+                healed_hp: 0
+              current_arms_lvl: !ruby/object:ArmsLevel
+                critical_kills: 0
+                critical_kills_list: []
+                critical_kos_inflicted: 0
+                critical_kos_inflicted_list: []
+                wounds_inflicted: 1
+                wounds_inflicted_list:
+                - *87637660
+                kills: 0
+                kills_list: []
+                kos_inflicted: 0
+                kos_inflicted_list: []
+                damage_inflicted: 64
+              current_body_lvl: !ruby/object:BodyLevel
+                deaths: 0
+                knock_outs_sustained: 0
+                damage_sustained: 0
+                wounds_sustained: 0
+              current_heal_lvl: !ruby/object:HealLevel
+                raised_dead: 0
+                revived: 0
+                healed_injuries: 0
+                healed_hp: 0
+            initiative_roll_this_round: 30
+          - &86739890 !ruby/object:Human
+            id: 77272da7-9076-4497-b483-07c4f398af0d
+            full_name: dummy
+            name: Ezmu the Small
+            party: pc
+            brains: artificial
+            ob: 79
+            db: 15
+            ac: 39
+            hp: 83
+            quickness: 69
+            personality: stupid
+            profession: warrior monk
+            mana: 2
+            current_player_id: 
+            stun: 3
+            bleeding: 0
+            uparry: 2
+            downed: 0
+            prone: 0
+            blind: 0
+            penalties: 0
+            unconscious: false
+            unconscious_why: ''
+            dead: false
+            dead_why: ''
+            current_hp: 83
+            active_weapon: !ruby/object:Weapon
+              name: sword
+              fumble: 5
+            current_db: 15
+            current_ob: 79
+            current_mana: 2
+            can_attack: true
+            cant_attack_text: no reason
+            wounds:
+            - *86712800
+            - !ruby/object:Wound
+              damage: 3
+              bleeding: 1
+              stun: 0
+              uparry: 0
+              downed: 0
+              prone: 0
+              unconscious: false
+              dead: false
+              target: secondary arm
+              text: Ezmu the Small was hit in the secondary arm and was dealt 3 extra
+                damage and is bleeding 1 hits worth each round
+            current_blocks: {}
+            current_side: 1
+            xp: !ruby/object:XP
+              arms_level: 1
+              body_level: 1
+              heal_level: 1
+              total_arms_lvl: !ruby/object:ArmsLevel
+                critical_kills: 0
+                critical_kills_list: []
+                critical_kos_inflicted: 0
+                critical_kos_inflicted_list: []
+                wounds_inflicted: 0
+                wounds_inflicted_list: []
+                kills: 0
+                kills_list: []
+                kos_inflicted: 0
+                kos_inflicted_list: []
+                damage_inflicted: 0
+              total_body_lvl: !ruby/object:BodyLevel
+                deaths: 0
+                knock_outs_sustained: 0
+                damage_sustained: 0
+                wounds_sustained: 0
+              total_heal_lvl: !ruby/object:HealLevel
+                raised_dead: 0
+                revived: 0
+                healed_injuries: 0
+                healed_hp: 0
+              current_arms_lvl: !ruby/object:ArmsLevel
+                critical_kills: 0
+                critical_kills_list: []
+                critical_kos_inflicted: 0
+                critical_kos_inflicted_list: []
+                wounds_inflicted: 0
+                wounds_inflicted_list: []
+                kills: 0
+                kills_list: []
+                kos_inflicted: 0
+                kos_inflicted_list: []
+                damage_inflicted: 0
+              current_body_lvl: !ruby/object:BodyLevel
+                deaths: 0
+                knock_outs_sustained: 0
+                damage_sustained: 0
+                wounds_sustained: 0
+              current_heal_lvl: !ruby/object:HealLevel
+                raised_dead: 0
+                revived: 0
+                healed_injuries: 0
+                healed_hp: 0
+            initiative_roll_this_round: 79
+          - &87632460 !ruby/object:Human
+            id: a318ac1e-dd18-4a21-882c-5783f4abf19c
+            full_name: dummy
+            name: Beanel the 4th
+            party: pc
+            brains: artificial
+            ob: 52
+            db: 43
+            ac: 46
+            hp: 106
+            quickness: 73
+            personality: smart
+            profession: healer
+            mana: 3
+            current_player_id: 
+            stun: 1
+            bleeding: 0
+            uparry: 0
+            downed: 0
+            prone: 0
+            blind: 0
+            penalties: 0
+            unconscious: false
+            unconscious_why: ''
+            dead: false
+            dead_why: ''
+            current_hp: 106
+            active_weapon: !ruby/object:Weapon
+              name: sword
+              fumble: 1
+            current_db: 43
+            current_ob: 52
+            current_mana: 3
+            can_attack: true
+            cant_attack_text: no reason
+            wounds:
+            - *86712080
+            current_blocks: {}
+            current_side: 1
+            xp: !ruby/object:XP
+              arms_level: 1
+              body_level: 1
+              heal_level: 1
+              total_arms_lvl: !ruby/object:ArmsLevel
+                critical_kills: 0
+                critical_kills_list: []
+                critical_kos_inflicted: 0
+                critical_kos_inflicted_list: []
+                wounds_inflicted: 2
+                wounds_inflicted_list:
+                - &87630680 !ruby/object:Wound
+                  damage: 6
+                  bleeding: 0
+                  stun: 0
+                  uparry: 0
+                  downed: 0
+                  prone: 0
+                  unconscious: false
+                  dead: false
+                  target: left leg
+                  text: Harag the Troll was hit in the left leg and was dealt 6 extra
+                    damage
+                - &87629870 !ruby/object:Wound
+                  damage: 14
+                  bleeding: 0
+                  stun: 3
+                  uparry: 2
+                  downed: 0
+                  prone: 0
+                  unconscious: false
+                  dead: false
+                  target: back
+                  text: Harag the Troll was hit in the back and was dealt 14 extra
+                    damage and is stunned for 3 rounds and is unable to parry for
+                    2 rounds
+                kills: 0
+                kills_list: []
+                kos_inflicted: 1
+                kos_inflicted_list:
+                - &87628970 !ruby/object:Troll
+                  id: c770b0d4-ac4f-486a-a3fb-9bb7d47adb33
+                  full_name: ''
+                  name: Harag the Troll
+                  party: pc
+                  brains: artificial
+                  ob: 120
+                  db: 42
+                  ac: 55
+                  hp: 245
+                  quickness: 92
+                  personality: evil
+                  profession: fighter
+                  mana: 0
+                  current_player_id: 
+                  stun: 6
+                  bleeding: 0
+                  uparry: 3
+                  downed: 0
+                  prone: 1
+                  blind: 0
+                  penalties: 0
+                  unconscious: false
+                  unconscious_why: ''
+                  dead: false
+                  dead_why: ''
+                  current_hp: 60
+                  active_weapon: !ruby/object:Weapon
+                    name: sword
+                    fumble: 7
+                  current_db: -28
+                  current_ob: 120
+                  current_mana: 0
+                  can_attack: true
+                  cant_attack_text: no reason
+                  wounds:
+                  - !ruby/object:Wound
+                    damage: 4
+                    bleeding: 0
+                    stun: 1
+                    uparry: 0
+                    downed: 0
+                    prone: 0
+                    unconscious: false
+                    dead: false
+                    target: elbow
+                    text: Harag the Troll was hit in the elbow and was dealt 4 extra
+                      damage and is stunned for 1 rounds
+                  - *87637660
+                  - *87630680
+                  - !ruby/object:Wound
+                    damage: 17
+                    bleeding: 0
+                    stun: 2
+                    uparry: 1
+                    downed: 0
+                    prone: 0
+                    unconscious: false
+                    dead: false
+                    target: knee
+                    text: Harag the Troll was hit in the knee and was dealt 17 extra
+                      damage and is stunned for 2 rounds and is unable to parry for
+                      1 rounds
+                  - *87629870
+                  current_blocks: {}
+                  current_side: 2
+                  xp: !ruby/object:XP
+                    arms_level: 1
+                    body_level: 1
+                    heal_level: 1
+                    total_arms_lvl: !ruby/object:ArmsLevel
+                      critical_kills: 0
+                      critical_kills_list: []
+                      critical_kos_inflicted: 0
+                      critical_kos_inflicted_list: []
+                      wounds_inflicted: 0
+                      wounds_inflicted_list: []
+                      kills: 0
+                      kills_list: []
+                      kos_inflicted: 0
+                      kos_inflicted_list: []
+                      damage_inflicted: 0
+                    total_body_lvl: !ruby/object:BodyLevel
+                      deaths: 0
+                      knock_outs_sustained: 0
+                      damage_sustained: 0
+                      wounds_sustained: 0
+                    total_heal_lvl: !ruby/object:HealLevel
+                      raised_dead: 0
+                      revived: 0
+                      healed_injuries: 0
+                      healed_hp: 0
+                    current_arms_lvl: !ruby/object:ArmsLevel
+                      critical_kills: 0
+                      critical_kills_list: []
+                      critical_kos_inflicted: 0
+                      critical_kos_inflicted_list: []
+                      wounds_inflicted: 0
+                      wounds_inflicted_list: []
+                      kills: 0
+                      kills_list: []
+                      kos_inflicted: 0
+                      kos_inflicted_list: []
+                      damage_inflicted: 0
+                    current_body_lvl: !ruby/object:BodyLevel
+                      deaths: 0
+                      knock_outs_sustained: 0
+                      damage_sustained: 0
+                      wounds_sustained: 0
+                    current_heal_lvl: !ruby/object:HealLevel
+                      raised_dead: 0
+                      revived: 0
+                      healed_injuries: 0
+                      healed_hp: 0
+                  initiative_roll_this_round: 7
+                damage_inflicted: 131
+              total_body_lvl: !ruby/object:BodyLevel
+                deaths: 0
+                knock_outs_sustained: 0
+                damage_sustained: 0
+                wounds_sustained: 0
+              total_heal_lvl: !ruby/object:HealLevel
+                raised_dead: 0
+                revived: 0
+                healed_injuries: 0
+                healed_hp: 0
+              current_arms_lvl: !ruby/object:ArmsLevel
+                critical_kills: 0
+                critical_kills_list: []
+                critical_kos_inflicted: 0
+                critical_kos_inflicted_list: []
+                wounds_inflicted: 2
+                wounds_inflicted_list:
+                - *87630680
+                - *87629870
+                kills: 0
+                kills_list: []
+                kos_inflicted: 1
+                kos_inflicted_list:
+                - *87628970
+                damage_inflicted: 131
+              current_body_lvl: !ruby/object:BodyLevel
+                deaths: 0
+                knock_outs_sustained: 0
+                damage_sustained: 0
+                wounds_sustained: 0
+              current_heal_lvl: !ruby/object:HealLevel
+                raised_dead: 0
+                revived: 0
+                healed_injuries: 0
+                healed_hp: 0
+            initiative_roll_this_round: 50
+          damage_inflicted: 283
+        total_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        total_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+        current_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 3
+          wounds_inflicted_list:
+          - *86713520
+          - *86712800
+          - *86712080
+          kills: 0
+          kills_list: []
+          kos_inflicted: 3
+          kos_inflicted_list:
+          - *87641700
+          - *86739890
+          - *87632460
+          damage_inflicted: 283
+        current_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        current_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+      initiative_roll_this_round: 84
+    - &86781500 !ruby/object:Human
+      id: fc580e44-d7bb-44b9-a028-aa15eb81f231
+      full_name: dummy
+      name: Aramir the Invincible
+      party: pc
+      brains: artificial
+      ob: 112
+      db: 36
+      ac: 70
+      hp: 111
+      quickness: 89
+      personality: stupid
+      profession: healer
+      mana: 3
+      current_player_id: 
+      stun: 0
+      bleeding: 3
+      uparry: 0
+      downed: 0
+      prone: 0
+      blind: 0
+      penalties: 0
+      unconscious: true
+      unconscious_why: ''
+      dead: false
+      dead_why: ''
+      current_hp: 20
+      active_weapon: !ruby/object:Weapon
+        name: sword
+        fumble: 4
+      current_db: 36
+      current_ob: 112
+      current_mana: 3
+      can_attack: true
+      cant_attack_text: no reason
+      wounds:
+      - &86780540 !ruby/object:Wound
+        damage: 7
+        bleeding: 0
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: left leg
+        text: Aramir the Invincible was hit in the left leg and was dealt 7 extra
+          damage
+      - &86779820 !ruby/object:Wound
+        damage: 14
+        bleeding: 3
+        stun: 0
+        uparry: 1
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: elbow
+        text: Aramir the Invincible was hit in the elbow and was dealt 14 extra damage
+          and is bleeding 3 hits worth each round and is unable to parry for 1 rounds
+      - &86779100 !ruby/object:Wound
+        damage: 57
+        bleeding: 0
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: true
+        dead: false
+        target: groin
+        text: ! 'Aramir the Invincible was hit in the groin and was dealt 57 extra
+          damage and is unconscious '
+      current_blocks: {}
+      current_side: 1
+      xp: !ruby/object:XP
+        arms_level: 1
+        body_level: 1
+        heal_level: 1
+        total_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 1
+          critical_kos_inflicted_list:
+          - &86778020 !ruby/object:Troll
+            id: 89a83d53-37f8-42f8-95d5-abc2503c55ad
+            full_name: dummy
+            name: Bargunth the Troll
+            party: pc
+            brains: artificial
+            ob: 266
+            db: 38
+            ac: 14
+            hp: 288
+            quickness: 70
+            personality: evil
+            profession: warrior monk
+            mana: 1
+            current_player_id: 
+            stun: 0
+            bleeding: 3
+            uparry: 0
+            downed: 0
+            prone: 0
+            blind: 0
+            penalties: 0
+            unconscious: true
+            unconscious_why: ''
+            dead: false
+            dead_why: ''
+            current_hp: 218
+            active_weapon: !ruby/object:Weapon
+              name: sword
+              fumble: 7
+            current_db: 18
+            current_ob: 266
+            current_mana: 1
+            can_attack: true
+            cant_attack_text: no reason
+            wounds:
+            - !ruby/object:Wound
+              damage: 19
+              bleeding: 3
+              stun: 0
+              uparry: 1
+              downed: 0
+              prone: 0
+              unconscious: false
+              dead: false
+              target: right leg
+              text: Bargunth the Troll was hit in the right leg and was dealt 19 extra
+                damage and is bleeding 3 hits worth each round and is unable to parry
+                for 1 rounds
+            - &86774570 !ruby/object:Wound
+              damage: 3
+              bleeding: 0
+              stun: 1
+              uparry: 0
+              downed: 0
+              prone: 0
+              unconscious: false
+              dead: false
+              target: elbow
+              text: Bargunth the Troll was hit in the elbow and was dealt 3 extra
+                damage and is stunned for 1 rounds
+            - &86801080 !ruby/object:Wound
+              damage: 45
+              bleeding: 0
+              stun: 0
+              uparry: 0
+              downed: 0
+              prone: 0
+              unconscious: true
+              dead: false
+              target: elbow
+              text: ! 'Bargunth the Troll was hit in the elbow and was dealt 45 extra
+                damage and is unconscious '
+            current_blocks: {}
+            current_side: 2
+            xp: !ruby/object:XP
+              arms_level: 1
+              body_level: 1
+              heal_level: 1
+              total_arms_lvl: !ruby/object:ArmsLevel
+                critical_kills: 0
+                critical_kills_list: []
+                critical_kos_inflicted: 0
+                critical_kos_inflicted_list: []
+                wounds_inflicted: 1
+                wounds_inflicted_list:
+                - &86799960 !ruby/object:Wound
+                  damage: 27
+                  bleeding: 0
+                  stun: 0
+                  uparry: 0
+                  downed: 0
+                  prone: 0
+                  unconscious: false
+                  dead: false
+                  target: skull
+                  text: Ezmu the Small was hit in the skull and was dealt 27 extra
+                    damage
+                kills: 0
+                kills_list: []
+                kos_inflicted: 1
+                kos_inflicted_list:
+                - &86799110 !ruby/object:Human
+                  id: 51cdc75c-4ed2-467d-8302-564d251a651a
+                  full_name: dummy
+                  name: Ezmu the Small
+                  party: pc
+                  brains: artificial
+                  ob: 63
+                  db: 93
+                  ac: 76
+                  hp: 92
+                  quickness: 30
+                  personality: smart
+                  profession: warrior monk
+                  mana: 1
+                  current_player_id: 
+                  stun: 0
+                  bleeding: 0
+                  uparry: 0
+                  downed: 0
+                  prone: 0
+                  blind: 0
+                  penalties: 0
+                  unconscious: false
+                  unconscious_why: ''
+                  dead: false
+                  dead_why: ''
+                  current_hp: 92
+                  active_weapon: !ruby/object:Weapon
+                    name: sword
+                    fumble: 4
+                  current_db: 93
+                  current_ob: 63
+                  current_mana: 1
+                  can_attack: true
+                  cant_attack_text: no reason
+                  wounds:
+                  - *86799960
+                  - !ruby/object:Wound
+                    damage: 10
+                    bleeding: 0
+                    stun: 0
+                    uparry: 0
+                    downed: 0
+                    prone: 0
+                    unconscious: false
+                    dead: false
+                    target: back
+                    text: Ezmu the Small was hit in the back and was dealt 10 extra
+                      damage
+                  - !ruby/object:Wound
+                    damage: 21
+                    bleeding: 3
+                    stun: 0
+                    uparry: 1
+                    downed: 0
+                    prone: 0
+                    unconscious: false
+                    dead: false
+                    target: groin
+                    text: Ezmu the Small was hit in the groin and was dealt 21 extra
+                      damage and is bleeding 3 hits worth each round and is unable
+                      to parry for 1 rounds
+                  current_blocks: {}
+                  current_side: 1
+                  xp: !ruby/object:XP
+                    arms_level: 1
+                    body_level: 1
+                    heal_level: 1
+                    total_arms_lvl: !ruby/object:ArmsLevel
+                      critical_kills: 0
+                      critical_kills_list: []
+                      critical_kos_inflicted: 0
+                      critical_kos_inflicted_list: []
+                      wounds_inflicted: 0
+                      wounds_inflicted_list: []
+                      kills: 0
+                      kills_list: []
+                      kos_inflicted: 0
+                      kos_inflicted_list: []
+                      damage_inflicted: 0
+                    total_body_lvl: !ruby/object:BodyLevel
+                      deaths: 0
+                      knock_outs_sustained: 0
+                      damage_sustained: 0
+                      wounds_sustained: 0
+                    total_heal_lvl: !ruby/object:HealLevel
+                      raised_dead: 0
+                      revived: 0
+                      healed_injuries: 0
+                      healed_hp: 0
+                    current_arms_lvl: !ruby/object:ArmsLevel
+                      critical_kills: 0
+                      critical_kills_list: []
+                      critical_kos_inflicted: 0
+                      critical_kos_inflicted_list: []
+                      wounds_inflicted: 0
+                      wounds_inflicted_list: []
+                      kills: 0
+                      kills_list: []
+                      kos_inflicted: 0
+                      kos_inflicted_list: []
+                      damage_inflicted: 0
+                    current_body_lvl: !ruby/object:BodyLevel
+                      deaths: 0
+                      knock_outs_sustained: 0
+                      damage_sustained: 0
+                      wounds_sustained: 0
+                    current_heal_lvl: !ruby/object:HealLevel
+                      raised_dead: 0
+                      revived: 0
+                      healed_injuries: 0
+                      healed_hp: 0
+                  initiative_roll_this_round: 95
+                damage_inflicted: 104
+              total_body_lvl: !ruby/object:BodyLevel
+                deaths: 0
+                knock_outs_sustained: 0
+                damage_sustained: 0
+                wounds_sustained: 0
+              total_heal_lvl: !ruby/object:HealLevel
+                raised_dead: 0
+                revived: 0
+                healed_injuries: 0
+                healed_hp: 0
+              current_arms_lvl: !ruby/object:ArmsLevel
+                critical_kills: 0
+                critical_kills_list: []
+                critical_kos_inflicted: 0
+                critical_kos_inflicted_list: []
+                wounds_inflicted: 1
+                wounds_inflicted_list:
+                - *86799960
+                kills: 0
+                kills_list: []
+                kos_inflicted: 1
+                kos_inflicted_list:
+                - *86799110
+                damage_inflicted: 104
+              current_body_lvl: !ruby/object:BodyLevel
+                deaths: 0
+                knock_outs_sustained: 0
+                damage_sustained: 0
+                wounds_sustained: 0
+              current_heal_lvl: !ruby/object:HealLevel
+                raised_dead: 0
+                revived: 0
+                healed_injuries: 0
+                healed_hp: 0
+            initiative_roll_this_round: 38
+          wounds_inflicted: 2
+          wounds_inflicted_list:
+          - *86774570
+          - *86801080
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 124
+        total_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        total_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+        current_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 1
+          critical_kos_inflicted_list:
+          - *86778020
+          wounds_inflicted: 2
+          wounds_inflicted_list:
+          - *86774570
+          - *86801080
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 124
+        current_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        current_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+      initiative_roll_this_round: 46
+    wounds_inflicted: 48
+    wounds_inflicted_list:
+    - *87648730
+    - &86842440 !ruby/object:Wound
+      damage: 11
+      bleeding: 2
+      stun: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: throat
+      text: Visnasch the Orc was hit in the throat and was dealt 11 extra damage and
+        is bleeding 2 hits worth each round
+    - &86841720 !ruby/object:Wound
+      damage: 10
+      bleeding: 1
+      stun: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: neck
+      text: Gurlar the Orc was hit in the neck and was dealt 10 extra damage and is
+        bleeding 1 hits worth each round
+    - &86840960 !ruby/object:Wound
+      damage: 6
+      bleeding: 0
+      stun: 1
+      uparry: 0
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: neck
+      text: Bronthor the Orc was hit in the neck and was dealt 6 extra damage and
+        is stunned for 1 rounds
+    - &86840240 !ruby/object:Wound
+      damage: 10
+      bleeding: 1
+      stun: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: skull
+      text: Bronthor the Orc was hit in the skull and was dealt 10 extra damage and
+        is bleeding 1 hits worth each round
+    - &86839520 !ruby/object:Wound
+      damage: 18
+      bleeding: 0
+      stun: 2
+      uparry: 1
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: stomach
+      text: Unknown4 the Orc was hit in the stomach and was dealt 18 extra damage
+        and is stunned for 2 rounds and is unable to parry for 1 rounds
+    - &86838760 !ruby/object:Wound
+      damage: 23
+      bleeding: 0
+      stun: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: knee
+      text: Unknown4 the Orc was hit in the knee and was dealt 23 extra damage
+    - *87630520
+    - *87629640
+    - *87638070
+    - *87647590
+    - &86838040 !ruby/object:Wound
+      damage: 16
+      bleeding: 2
+      stun: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: right leg
+      text: Gargath the Troll was hit in the right leg and was dealt 16 extra damage
+        and is bleeding 2 hits worth each round
+    - *86716870
+    - *86714690
+    - &86837320 !ruby/object:Wound
+      damage: 17
+      bleeding: 2
+      stun: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: back
+      text: Hugnarl the Orc was hit in the back and was dealt 17 extra damage and
+        is bleeding 2 hits worth each round
+    - &86860930 !ruby/object:Wound
+      damage: 25
+      bleeding: 0
+      stun: 3
+      uparry: 2
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: groin
+      text: Visnasch the Orc was hit in the groin and was dealt 25 extra damage and
+        is stunned for 3 rounds and is unable to parry for 2 rounds
+    - &86860210 !ruby/object:Wound
+      damage: 20
+      bleeding: 2
+      stun: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: groin
+      text: Gurlar the Orc was hit in the groin and was dealt 20 extra damage and
+        is bleeding 2 hits worth each round
+    - &86859490 !ruby/object:Wound
+      damage: 9
+      bleeding: 0
+      stun: 1
+      uparry: 0
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: back
+      text: Drendon the Old was hit in the back and was dealt 9 extra damage and is
+        stunned for 1 rounds
+    - *86780540
+    - *86779820
+    - *86779100
+    - *87655840
+    - &86858770 !ruby/object:Wound
+      damage: 25
+      bleeding: 3
+      stun: 0
+      uparry: 1
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: groin
+      text: Drendon the Old was hit in the groin and was dealt 25 extra damage and
+        is bleeding 3 hits worth each round and is unable to parry for 1 rounds
+    - &86858050 !ruby/object:Wound
+      damage: 18
+      bleeding: 2
+      stun: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: shoulder
+      text: Hugnarl the Orc was hit in the shoulder and was dealt 18 extra damage
+        and is bleeding 2 hits worth each round
+    - &86857290 !ruby/object:Wound
+      damage: 2
+      bleeding: 0
+      stun: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: groin
+      text: Visnasch the Orc was hit in the groin and was dealt 2 extra damage
+    - &86856570 !ruby/object:Wound
+      damage: 26
+      bleeding: 0
+      stun: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: groin
+      text: Visnasch the Orc was hit in the groin and was dealt 26 extra damage
+    - &86855850 !ruby/object:Wound
+      damage: 25
+      bleeding: 3
+      stun: 0
+      uparry: 1
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: groin
+      text: Unknown4 the Orc was hit in the groin and was dealt 25 extra damage and
+        is bleeding 3 hits worth each round and is unable to parry for 1 rounds
+    - &86855130 !ruby/object:Wound
+      damage: 19
+      bleeding: 0
+      stun: 3
+      uparry: 2
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: right leg
+      text: Unknown4 the Orc was hit in the right leg and was dealt 19 extra damage
+        and is stunned for 3 rounds and is unable to parry for 2 rounds
+    - *87656680
+    - &86854410 !ruby/object:Wound
+      damage: 31
+      bleeding: 0
+      stun: 0
+      uparry: 0
+      downed: 0
+      prone: 3
+      unconscious: false
+      dead: false
+      target: groin
+      text: Bargunth the Troll was hit in the groin and was dealt 31 extra damage
+        and is prone for 3 rounds
+    - &86853690 !ruby/object:Wound
+      damage: 14
+      bleeding: 3
+      stun: 0
+      uparry: 1
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: elbow
+      text: Harag the Troll was hit in the elbow and was dealt 14 extra damage and
+        is bleeding 3 hits worth each round and is unable to parry for 1 rounds
+    - &86877940 !ruby/object:Wound
+      damage: 19
+      bleeding: 0
+      stun: 2
+      uparry: 1
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: groin
+      text: Gargath the Troll was hit in the groin and was dealt 19 extra damage and
+        is stunned for 2 rounds and is unable to parry for 1 rounds
+    - &86877220 !ruby/object:Wound
+      damage: 22
+      bleeding: 3
+      stun: 0
+      uparry: 1
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: knee
+      text: Gargath the Troll was hit in the knee and was dealt 22 extra damage and
+        is bleeding 3 hits worth each round and is unable to parry for 1 rounds
+    - &86876500 !ruby/object:Wound
+      damage: 31
+      bleeding: 0
+      stun: 0
+      uparry: 0
+      downed: 0
+      prone: 3
+      unconscious: false
+      dead: false
+      target: groin
+      text: Gargath the Troll was hit in the groin and was dealt 31 extra damage and
+        is prone for 3 rounds
+    - &86875780 !ruby/object:Wound
+      damage: 13
+      bleeding: 0
+      stun: 2
+      uparry: 1
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: right leg
+      text: Gargath the Troll was hit in the right leg and was dealt 13 extra damage
+        and is stunned for 2 rounds and is unable to parry for 1 rounds
+    - &86875060 !ruby/object:Wound
+      damage: 20
+      bleeding: 0
+      stun: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: side
+      text: Ruuhuu was hit in the side and was dealt 20 extra damage
+    - &86874290 !ruby/object:Wound
+      damage: 19
+      bleeding: 0
+      stun: 2
+      uparry: 1
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: skull
+      text: Beuo was hit in the skull and was dealt 19 extra damage and is stunned
+        for 2 rounds and is unable to parry for 1 rounds
+    - &86873570 !ruby/object:Wound
+      damage: 16
+      bleeding: 3
+      stun: 0
+      uparry: 1
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: neck
+      text: Beuo was hit in the neck and was dealt 16 extra damage and is bleeding
+        3 hits worth each round and is unable to parry for 1 rounds
+    - &86872850 !ruby/object:Wound
+      damage: 4
+      bleeding: 0
+      stun: 1
+      uparry: 0
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: knee
+      text: Banza was hit in the knee and was dealt 4 extra damage and is stunned
+        for 1 rounds
+    - &86872130 !ruby/object:Wound
+      damage: 22
+      bleeding: 0
+      stun: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: throat
+      text: Teenee was hit in the throat and was dealt 22 extra damage
+    - &86871410 !ruby/object:Wound
+      damage: 3
+      bleeding: 0
+      stun: 1
+      uparry: 0
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: elbow
+      text: Teenee was hit in the elbow and was dealt 3 extra damage and is stunned
+        for 1 rounds
+    - &86870690 !ruby/object:Wound
+      damage: 15
+      bleeding: 0
+      stun: 3
+      uparry: 2
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: elbow
+      text: Buhh was hit in the elbow and was dealt 15 extra damage and is stunned
+        for 3 rounds and is unable to parry for 2 rounds
+    - &86895010 !ruby/object:Wound
+      damage: 18
+      bleeding: 0
+      stun: 2
+      uparry: 1
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: groin
+      text: Buhh was hit in the groin and was dealt 18 extra damage and is stunned
+        for 2 rounds and is unable to parry for 1 rounds
+    - *86695220
+    - &86894290 !ruby/object:Wound
+      damage: 29
+      bleeding: 0
+      stun: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: skull
+      text: Aramir the Invincible was hit in the skull and was dealt 29 extra damage
+    - &86951120 !ruby/object:Wound
+      damage: 20
+      bleeding: 0
+      stun: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: back
+      text: Harag the Troll was hit in the back and was dealt 20 extra damage
+    - *87638330
+    - *87399590
+    kills: 0
+    kills_list: []
+    kos_inflicted: 14
+    kos_inflicted_list:
+    - &86893490 !ruby/object:Orc
+      id: 571ff204-29bf-485b-9b20-ca485608fdab
+      full_name: dummy
+      name: Visnasch the Orc
+      party: pc
+      brains: artificial
+      ob: 53
+      db: 11
+      ac: 44
+      hp: 133
+      quickness: 60
+      personality: smart
+      profession: healer
+      mana: 3
+      current_player_id: 
+      stun: 2
+      bleeding: 2
+      uparry: 1
+      downed: 0
+      prone: 0
+      blind: 0
+      penalties: 0
+      unconscious: false
+      unconscious_why: ''
+      dead: false
+      dead_why: ''
+      current_hp: 1
+      active_weapon: !ruby/object:Weapon
+        name: sword
+        fumble: 1
+      current_db: -9
+      current_ob: 53
+      current_mana: 3
+      can_attack: true
+      cant_attack_text: no reason
+      wounds:
+      - !ruby/object:Wound
+        damage: 29
+        bleeding: 0
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: groin
+        text: Visnasch the Orc was hit in the groin and was dealt 29 extra damage
+      - !ruby/object:Wound
+        damage: 22
+        bleeding: 0
+        stun: 3
+        uparry: 2
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: stomach
+        text: Visnasch the Orc was hit in the stomach and was dealt 22 extra damage
+          and is stunned for 3 rounds and is unable to parry for 2 rounds
+      - *86842440
+      current_blocks: {}
+      current_side: 2
+      xp: !ruby/object:XP
+        arms_level: 1
+        body_level: 1
+        heal_level: 1
+        total_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        total_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        total_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+        current_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        current_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        current_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+      initiative_roll_this_round: 38
+    - &86915840 !ruby/object:Orc
+      id: c47ffa5f-abdf-4b32-a784-9ad906d59505
+      full_name: dummy
+      name: Unknown4 the Orc
+      party: pc
+      brains: artificial
+      ob: 74
+      db: 86
+      ac: 9
+      hp: 125
+      quickness: 80
+      personality: stupid
+      profession: fighter
+      mana: 0
+      current_player_id: 
+      stun: 1
+      bleeding: 2
+      uparry: 0
+      downed: 0
+      prone: 0
+      blind: 0
+      penalties: 0
+      unconscious: false
+      unconscious_why: ''
+      dead: false
+      dead_why: ''
+      current_hp: 54
+      active_weapon: !ruby/object:Weapon
+        name: sword
+        fumble: 5
+      current_db: 66
+      current_ob: 74
+      current_mana: 0
+      can_attack: true
+      cant_attack_text: no reason
+      wounds:
+      - *86839520
+      - !ruby/object:Wound
+        damage: 15
+        bleeding: 2
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: back
+        text: Unknown4 the Orc was hit in the back and was dealt 15 extra damage and
+          is bleeding 2 hits worth each round
+      - *86838760
+      current_blocks: {}
+      current_side: 2
+      xp: !ruby/object:XP
+        arms_level: 1
+        body_level: 1
+        heal_level: 1
+        total_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 1
+        total_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        total_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+        current_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 1
+        current_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        current_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+      initiative_roll_this_round: 63
+    - *87631700
+    - *87649300
+    - &86909760 !ruby/object:Orc
+      id: 4775d63f-726a-4196-989f-aed68e3ab73d
+      full_name: dummy
+      name: Hugnarl the Orc
+      party: pc
+      brains: artificial
+      ob: 96
+      db: 24
+      ac: 19
+      hp: 55
+      quickness: 78
+      personality: smart
+      profession: healer
+      mana: 3
+      current_player_id: 
+      stun: 0
+      bleeding: 2
+      uparry: 0
+      downed: 0
+      prone: 0
+      blind: 0
+      penalties: 0
+      unconscious: false
+      unconscious_why: ''
+      dead: false
+      dead_why: ''
+      current_hp: 16
+      active_weapon: !ruby/object:Weapon
+        name: sword
+        fumble: 4
+      current_db: 24
+      current_ob: 96
+      current_mana: 3
+      can_attack: true
+      cant_attack_text: no reason
+      wounds:
+      - !ruby/object:Wound
+        damage: 22
+        bleeding: 0
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: groin
+        text: Hugnarl the Orc was hit in the groin and was dealt 22 extra damage
+      - *86837320
+      - !ruby/object:Wound
+        damage: 22
+        bleeding: 3
+        stun: 0
+        uparry: 1
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: elbow
+        text: Hugnarl the Orc was hit in the elbow and was dealt 22 extra damage and
+          is bleeding 3 hits worth each round and is unable to parry for 1 rounds
+      current_blocks: {}
+      current_side: 2
+      xp: !ruby/object:XP
+        arms_level: 1
+        body_level: 1
+        heal_level: 1
+        total_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        total_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        total_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+        current_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        current_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        current_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+      initiative_roll_this_round: 79
+    - *87642490
+    - &86924270 !ruby/object:Orc
+      id: 88d2f5ed-589f-4b6f-bae4-d95a527915c5
+      full_name: dummy
+      name: Unknown4 the Orc
+      party: pc
+      brains: artificial
+      ob: 94
+      db: 53
+      ac: 44
+      hp: 114
+      quickness: 42
+      personality: evil
+      profession: fighter
+      mana: 0
+      current_player_id: 
+      stun: 3
+      bleeding: 3
+      uparry: 2
+      downed: 0
+      prone: 0
+      blind: 0
+      penalties: 0
+      unconscious: false
+      unconscious_why: ''
+      dead: false
+      dead_why: ''
+      current_hp: 35
+      active_weapon: !ruby/object:Weapon
+        name: sword
+        fumble: 4
+      current_db: 53
+      current_ob: 94
+      current_mana: 0
+      can_attack: true
+      cant_attack_text: no reason
+      wounds:
+      - *86855850
+      - *86855130
+      - !ruby/object:Wound
+        damage: 31
+        bleeding: 0
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 3
+        unconscious: false
+        dead: false
+        target: neck
+        text: Unknown4 the Orc was hit in the neck and was dealt 31 extra damage and
+          is prone for 3 rounds
+      current_blocks: {}
+      current_side: 2
+      xp: !ruby/object:XP
+        arms_level: 1
+        body_level: 1
+        heal_level: 1
+        total_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 1
+          wounds_inflicted_list:
+          - &86952060 !ruby/object:Wound
+            damage: 17
+            bleeding: 3
+            stun: 0
+            uparry: 1
+            downed: 0
+            prone: 0
+            unconscious: false
+            dead: false
+            target: throat
+            text: Bereth the Strong was hit in the throat and was dealt 17 extra damage
+              and is bleeding 3 hits worth each round and is unable to parry for 1
+              rounds
+          kills: 0
+          kills_list: []
+          kos_inflicted: 1
+          kos_inflicted_list:
+          - &86951260 !ruby/object:Human
+            id: 3b063bfe-73e0-47d0-b348-f636dae00148
+            full_name: dummy
+            name: Bereth the Strong
+            party: pc
+            brains: artificial
+            ob: 93
+            db: 62
+            ac: 19
+            hp: 55
+            quickness: 21
+            personality: smart
+            profession: fighter
+            mana: 0
+            current_player_id: 
+            stun: 0
+            bleeding: 4
+            uparry: 1
+            downed: 0
+            prone: 0
+            blind: 0
+            penalties: 0
+            unconscious: false
+            unconscious_why: ''
+            dead: false
+            dead_why: ''
+            current_hp: 14
+            active_weapon: !ruby/object:Weapon
+              name: sword
+              fumble: 6
+            current_db: 62
+            current_ob: 93
+            current_mana: 0
+            can_attack: true
+            cant_attack_text: no reason
+            wounds:
+            - !ruby/object:Wound
+              damage: 2
+              bleeding: 1
+              stun: 0
+              uparry: 0
+              downed: 0
+              prone: 0
+              unconscious: false
+              dead: false
+              target: shoulder
+              text: Bereth the Strong was hit in the shoulder and was dealt 2 extra
+                damage and is bleeding 1 hits worth each round
+            - *86952060
+            - !ruby/object:Wound
+              damage: 30
+              bleeding: 0
+              stun: 0
+              uparry: 0
+              downed: 0
+              prone: 0
+              unconscious: false
+              dead: false
+              target: throat
+              text: Bereth the Strong was hit in the throat and was dealt 30 extra
+                damage
+            current_blocks: {}
+            current_side: 1
+            xp: !ruby/object:XP
+              arms_level: 1
+              body_level: 1
+              heal_level: 1
+              total_arms_lvl: !ruby/object:ArmsLevel
+                critical_kills: 0
+                critical_kills_list: []
+                critical_kos_inflicted: 0
+                critical_kos_inflicted_list: []
+                wounds_inflicted: 1
+                wounds_inflicted_list:
+                - &86946720 !ruby/object:Wound
+                  damage: 10
+                  bleeding: 0
+                  stun: 1
+                  uparry: 0
+                  downed: 0
+                  prone: 0
+                  unconscious: false
+                  dead: false
+                  target: side
+                  text: Bronthor the Orc was hit in the side and was dealt 10 extra
+                    damage and is stunned for 1 rounds
+                kills: 0
+                kills_list: []
+                kos_inflicted: 0
+                kos_inflicted_list: []
+                damage_inflicted: 31
+              total_body_lvl: !ruby/object:BodyLevel
+                deaths: 0
+                knock_outs_sustained: 0
+                damage_sustained: 0
+                wounds_sustained: 0
+              total_heal_lvl: !ruby/object:HealLevel
+                raised_dead: 0
+                revived: 0
+                healed_injuries: 0
+                healed_hp: 0
+              current_arms_lvl: !ruby/object:ArmsLevel
+                critical_kills: 0
+                critical_kills_list: []
+                critical_kos_inflicted: 0
+                critical_kos_inflicted_list: []
+                wounds_inflicted: 1
+                wounds_inflicted_list:
+                - *86946720
+                kills: 0
+                kills_list: []
+                kos_inflicted: 0
+                kos_inflicted_list: []
+                damage_inflicted: 31
+              current_body_lvl: !ruby/object:BodyLevel
+                deaths: 0
+                knock_outs_sustained: 0
+                damage_sustained: 0
+                wounds_sustained: 0
+              current_heal_lvl: !ruby/object:HealLevel
+                raised_dead: 0
+                revived: 0
+                healed_injuries: 0
+                healed_hp: 0
+            initiative_roll_this_round: 64
+          damage_inflicted: 36
+        total_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        total_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+        current_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 1
+          wounds_inflicted_list:
+          - *86952060
+          kills: 0
+          kills_list: []
+          kos_inflicted: 1
+          kos_inflicted_list:
+          - *86951260
+          damage_inflicted: 36
+        current_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        current_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+      initiative_roll_this_round: 43
+    - &86998050 !ruby/object:Kobold
+      id: 58763e1f-8840-4648-b957-95c8074eb529
+      full_name: dummy
+      name: Ruuhuu
+      party: pc
+      brains: artificial
+      ob: 53
+      db: 33
+      ac: 40
+      hp: 52
+      quickness: 74
+      personality: evil
+      profession: warrior monk
+      mana: 2
+      current_player_id: 
+      stun: 0
+      bleeding: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      blind: 0
+      penalties: 0
+      unconscious: false
+      unconscious_why: ''
+      dead: false
+      dead_why: ''
+      current_hp: 35
+      active_weapon: !ruby/object:Weapon
+        name: sword
+        fumble: 2
+      current_db: 33
+      current_ob: 53
+      current_mana: 2
+      can_attack: true
+      cant_attack_text: no reason
+      wounds:
+      - *86875060
+      - !ruby/object:Wound
+        damage: 14
+        bleeding: 0
+        stun: 3
+        uparry: 2
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: side
+        text: Ruuhuu was hit in the side and was dealt 14 extra damage and is stunned
+          for 3 rounds and is unable to parry for 2 rounds
+      current_blocks: {}
+      current_side: 2
+      xp: !ruby/object:XP
+        arms_level: 1
+        body_level: 1
+        heal_level: 1
+        total_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        total_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        total_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+        current_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        current_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        current_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+      initiative_roll_this_round: 83
+    - &86990800 !ruby/object:Kobold
+      id: c00e7833-3736-42ed-9a34-a4829fba2450
+      full_name: dummy
+      name: Beuo
+      party: pc
+      brains: artificial
+      ob: 48
+      db: 42
+      ac: 64
+      hp: 54
+      quickness: 81
+      personality: stupid
+      profession: fighter
+      mana: 0
+      current_player_id: 
+      stun: 1
+      bleeding: 3
+      uparry: 1
+      downed: 0
+      prone: 0
+      blind: 0
+      penalties: 0
+      unconscious: false
+      unconscious_why: ''
+      dead: false
+      dead_why: ''
+      current_hp: 8
+      active_weapon: !ruby/object:Weapon
+        name: sword
+        fumble: 4
+      current_db: 22
+      current_ob: 48
+      current_mana: 0
+      can_attack: true
+      cant_attack_text: no reason
+      wounds:
+      - *86874290
+      - *86873570
+      - !ruby/object:Wound
+        damage: 7
+        bleeding: 1
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: knee
+        text: Beuo was hit in the knee and was dealt 7 extra damage and is bleeding
+          1 hits worth each round
+      current_blocks: {}
+      current_side: 2
+      xp: !ruby/object:XP
+        arms_level: 1
+        body_level: 1
+        heal_level: 1
+        total_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        total_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        total_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+        current_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        current_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        current_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+      initiative_roll_this_round: 42
+    - &87014680 !ruby/object:Kobold
+      id: 7d828919-a7f2-4ffe-8e45-81cdc966bd9d
+      full_name: dummy
+      name: Banza
+      party: pc
+      brains: artificial
+      ob: 64
+      db: 45
+      ac: 0
+      hp: 75
+      quickness: 31
+      personality: smart
+      profession: healer
+      mana: 3
+      current_player_id: 
+      stun: 2
+      bleeding: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      blind: 0
+      penalties: 0
+      unconscious: false
+      unconscious_why: ''
+      dead: false
+      dead_why: ''
+      current_hp: 15
+      active_weapon: !ruby/object:Weapon
+        name: sword
+        fumble: 1
+      current_db: 25
+      current_ob: 64
+      current_mana: 3
+      can_attack: true
+      cant_attack_text: no reason
+      wounds:
+      - !ruby/object:Wound
+        damage: 20
+        bleeding: 0
+        stun: 3
+        uparry: 2
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: back
+        text: Banza was hit in the back and was dealt 20 extra damage and is stunned
+          for 3 rounds and is unable to parry for 2 rounds
+      - *86872850
+      - !ruby/object:Wound
+        damage: 10
+        bleeding: 1
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: left leg
+        text: Banza was hit in the left leg and was dealt 10 extra damage and is bleeding
+          1 hits worth each round
+      - !ruby/object:Wound
+        damage: 11
+        bleeding: 2
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: neck
+        text: Banza was hit in the neck and was dealt 11 extra damage and is bleeding
+          2 hits worth each round
+      current_blocks: {}
+      current_side: 2
+      xp: !ruby/object:XP
+        arms_level: 1
+        body_level: 1
+        heal_level: 1
+        total_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        total_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        total_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+        current_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        current_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        current_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+      initiative_roll_this_round: 53
+    - &87618870 !ruby/object:Kobold
+      id: 9d6da4eb-758b-483c-b7df-62abe1b8a646
+      full_name: dummy
+      name: Teenee
+      party: pc
+      brains: artificial
+      ob: 84
+      db: 12
+      ac: 40
+      hp: 107
+      quickness: 16
+      personality: evil
+      profession: fighter
+      mana: 0
+      current_player_id: 
+      stun: 1
+      bleeding: 1
+      uparry: 0
+      downed: 0
+      prone: 0
+      blind: 0
+      penalties: 0
+      unconscious: false
+      unconscious_why: ''
+      dead: false
+      dead_why: ''
+      current_hp: 31
+      active_weapon: !ruby/object:Weapon
+        name: sword
+        fumble: 5
+      current_db: 12
+      current_ob: 84
+      current_mana: 0
+      can_attack: true
+      cant_attack_text: no reason
+      wounds:
+      - !ruby/object:Wound
+        damage: 3
+        bleeding: 1
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: back
+        text: Teenee was hit in the back and was dealt 3 extra damage and is bleeding
+          1 hits worth each round
+      - *86872130
+      - *86871410
+      - !ruby/object:Wound
+        damage: 17
+        bleeding: 0
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: throat
+        text: Teenee was hit in the throat and was dealt 17 extra damage
+      - !ruby/object:Wound
+        damage: 7
+        bleeding: 1
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: knee
+        text: Teenee was hit in the knee and was dealt 7 extra damage and is bleeding
+          1 hits worth each round
+      current_blocks: {}
+      current_side: 2
+      xp: !ruby/object:XP
+        arms_level: 1
+        body_level: 1
+        heal_level: 1
+        total_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 4
+        total_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        total_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+        current_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 4
+        current_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        current_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+      initiative_roll_this_round: 78
+    - &87640240 !ruby/object:Kobold
+      id: fd4f2997-3d95-4340-b875-e09116af61ca
+      full_name: dummy
+      name: Buhh
+      party: pc
+      brains: artificial
+      ob: 53
+      db: 57
+      ac: 67
+      hp: 107
+      quickness: 43
+      personality: evil
+      profession: warrior monk
+      mana: 1
+      current_player_id: 
+      stun: 4
+      bleeding: 0
+      uparry: 2
+      downed: 0
+      prone: 0
+      blind: 0
+      penalties: 0
+      unconscious: false
+      unconscious_why: ''
+      dead: false
+      dead_why: ''
+      current_hp: 20
+      active_weapon: !ruby/object:Weapon
+        name: sword
+        fumble: 6
+      current_db: 37
+      current_ob: 53
+      current_mana: 1
+      can_attack: true
+      cant_attack_text: no reason
+      wounds:
+      - *86870690
+      - *86895010
+      current_blocks: {}
+      current_side: 2
+      xp: !ruby/object:XP
+        arms_level: 1
+        body_level: 1
+        heal_level: 1
+        total_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 1
+          wounds_inflicted_list:
+          - &87638810 !ruby/object:Wound
+            damage: 1
+            bleeding: 1
+            stun: 0
+            uparry: 0
+            downed: 0
+            prone: 0
+            unconscious: false
+            dead: false
+            target: throat
+            text: Drendon the Old was hit in the throat and was dealt 1 extra damage
+              and is bleeding 1 hits worth each round
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 14
+        total_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        total_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+        current_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 1
+          wounds_inflicted_list:
+          - *87638810
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 14
+        current_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        current_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+      initiative_roll_this_round: 83
+    - &87649050 !ruby/object:Human
+      id: 3102cbed-97c8-486b-82e4-5ae7e11e1327
+      full_name: dummy
+      name: Aramir the Invincible
+      party: pc
+      brains: artificial
+      ob: 141
+      db: 49
+      ac: 71
+      hp: 102
+      quickness: 53
+      personality: evil
+      profession: fighter
+      mana: 0
+      current_player_id: 
+      stun: 2
+      bleeding: 0
+      uparry: 1
+      downed: 0
+      prone: 0
+      blind: 0
+      penalties: 0
+      unconscious: false
+      unconscious_why: ''
+      dead: false
+      dead_why: ''
+      current_hp: 8
+      active_weapon: !ruby/object:Weapon
+        name: sword
+        fumble: 1
+      current_db: 29
+      current_ob: 141
+      current_mana: 0
+      can_attack: true
+      cant_attack_text: no reason
+      wounds:
+      - !ruby/object:Wound
+        damage: 25
+        bleeding: 0
+        stun: 3
+        uparry: 2
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: groin
+        text: Aramir the Invincible was hit in the groin and was dealt 25 extra damage
+          and is stunned for 3 rounds and is unable to parry for 2 rounds
+      - *86894290
+      current_blocks: {}
+      current_side: 1
+      xp: !ruby/object:XP
+        arms_level: 1
+        body_level: 1
+        heal_level: 1
+        total_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        total_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        total_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+        current_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        current_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        current_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+      initiative_roll_this_round: 17
+    - &86950880 !ruby/object:Troll
+      id: 0ce199c9-9e38-4e0b-8963-ff3c51683b1d
+      full_name: ''
+      name: Harag the Troll
+      party: pc
+      brains: artificial
+      ob: 186
+      db: 30
+      ac: 44
+      hp: 225
+      quickness: 68
+      personality: smart
+      profession: fighter
+      mana: 0
+      current_player_id: 
+      stun: 1
+      bleeding: 1
+      uparry: 0
+      downed: 0
+      prone: 3
+      blind: 0
+      penalties: 0
+      unconscious: false
+      unconscious_why: ''
+      dead: false
+      dead_why: ''
+      current_hp: 48
+      active_weapon: !ruby/object:Weapon
+        name: sword
+        fumble: 8
+      current_db: -40
+      current_ob: 186
+      current_mana: 0
+      can_attack: false
+      cant_attack_text: no reason
+      wounds:
+      - !ruby/object:Wound
+        damage: 5
+        bleeding: 1
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: knee
+        text: Harag the Troll was hit in the knee and was dealt 5 extra damage and
+          is bleeding 1 hits worth each round
+      - !ruby/object:Wound
+        damage: 19
+        bleeding: 0
+        stun: 2
+        uparry: 1
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: knee
+        text: Harag the Troll was hit in the knee and was dealt 19 extra damage and
+          is stunned for 2 rounds and is unable to parry for 1 rounds
+      - !ruby/object:Wound
+        damage: 20
+        bleeding: 0
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: elbow
+        text: Harag the Troll was hit in the elbow and was dealt 20 extra damage
+      - !ruby/object:Wound
+        damage: 31
+        bleeding: 0
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 3
+        unconscious: false
+        dead: false
+        target: knee
+        text: Harag the Troll was hit in the knee and was dealt 31 extra damage and
+          is prone for 3 rounds
+      - *86951120
+      - !ruby/object:Wound
+        damage: 23
+        bleeding: 0
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: neck
+        text: Harag the Troll was hit in the neck and was dealt 23 extra damage
+      current_blocks: {}
+      current_side: 2
+      xp: !ruby/object:XP
+        arms_level: 1
+        body_level: 1
+        heal_level: 1
+        total_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 2
+          wounds_inflicted_list:
+          - *86930050
+          - *87054070
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 117
+        total_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        total_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+        current_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 2
+          wounds_inflicted_list:
+          - *86930050
+          - *87054070
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 117
+        current_body_lvl: !ruby/object:BodyLevel
+          deaths: 0
+          knock_outs_sustained: 0
+          damage_sustained: 0
+          wounds_sustained: 0
+        current_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+      initiative_roll_this_round: 64
+      kumite_streak: 0
+    damage_inflicted: 2414
+  total_body_lvl: !ruby/object:BodyLevel
+    deaths: 0
+    knock_outs_sustained: 0
+    damage_sustained: 0
+    wounds_sustained: 0
+  total_heal_lvl: !ruby/object:HealLevel
+    raised_dead: 0
+    revived: 0
+    healed_injuries: 0
+    healed_hp: 0
+  current_arms_lvl: !ruby/object:ArmsLevel
+    critical_kills: 7
+    critical_kills_list:
+    - *87631700
+    - *87640280
+    - *87649300
+    - *87642490
+    - *87650740
+    - *87650840
+    - *87399340
+    critical_kos_inflicted: 3
+    critical_kos_inflicted_list:
+    - *86690080
+    - *86719060
+    - *86781500
+    wounds_inflicted: 48
+    wounds_inflicted_list:
+    - *87648730
+    - *86842440
+    - *86841720
+    - *86840960
+    - *86840240
+    - *86839520
+    - *86838760
+    - *87630520
+    - *87629640
+    - *87638070
+    - *87647590
+    - *86838040
+    - *86716870
+    - *86714690
+    - *86837320
+    - *86860930
+    - *86860210
+    - *86859490
+    - *86780540
+    - *86779820
+    - *86779100
+    - *87655840
+    - *86858770
+    - *86858050
+    - *86857290
+    - *86856570
+    - *86855850
+    - *86855130
+    - *87656680
+    - *86854410
+    - *86853690
+    - *86877940
+    - *86877220
+    - *86876500
+    - *86875780
+    - *86875060
+    - *86874290
+    - *86873570
+    - *86872850
+    - *86872130
+    - *86871410
+    - *86870690
+    - *86895010
+    - *86695220
+    - *86894290
+    - *86951120
+    - *87638330
+    - *87399590
+    kills: 0
+    kills_list: []
+    kos_inflicted: 14
+    kos_inflicted_list:
+    - *86893490
+    - *86915840
+    - *87631700
+    - *87649300
+    - *86909760
+    - *87642490
+    - *86924270
+    - *86998050
+    - *86990800
+    - *87014680
+    - *87618870
+    - *87640240
+    - *87649050
+    - *86950880
+    damage_inflicted: 2414
+  current_body_lvl: !ruby/object:BodyLevel
+    deaths: 0
+    knock_outs_sustained: 0
+    damage_sustained: 0
+    wounds_sustained: 0
+  current_heal_lvl: !ruby/object:HealLevel
+    raised_dead: 0
+    revived: 0
+    healed_injuries: 0
+    healed_hp: 0
+initiative_roll_this_round: 17

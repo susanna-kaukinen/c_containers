@@ -32,6 +32,7 @@ require './xp.rb'
 		require './game_orcs.rb'
 		require './game_trolls.rb'
 		require './game_kobold_ambush.rb'
+		require './game_kumite.rb'
 
 
 Thread.abort_on_exception = true
@@ -62,12 +63,13 @@ def main
 
 	port   = ARGV[0].to_i
 
-	games = Games.new
-	orcs  = Orcs.new(games)
-	troll = Trolls.new(games)
-	kobls = KoboldAmbush.new(games)
+	games  = Games.new
+	orcs   = Orcs.new(games)
+	troll  = Trolls.new(games)
+	kobls  = KoboldAmbush.new(games)
+	kumite = Kumite.new(games)
 
-	games.add_games(orcs, troll, kobls)
+	games.add_games(orcs, troll, kobls, kumite)
 
 	_connector_loop(port, games)
 

@@ -330,6 +330,32 @@ class Game
 		return message_handler(question)
 	end
 
+	def play_rounds
+
+		round=1
+		catch (:game_over) do
+			while true
+
+				@side1.each { |char| char.roll_initiative }
+				@side2.each { |char| char.roll_initiative }
+
+				@side1.sort! { |a,b| a.initiative <=> b.initiative }
+				@side2.sort! { |a,b| a.initiative <=> b.initiative }
+
+				@combatants.sort! { |a,b| a.initiative <=> b.initiative }
+
+				play_round(round)
+
+				round=round+1
+			end
+		end
+
+		send_all('clear_screen')
+		send_all('draw', 'GAME OVER - ENTER TO GET BACK')
+		send_all('ack')
+		send_all('game_over')
+	end
+
 end
 
 
