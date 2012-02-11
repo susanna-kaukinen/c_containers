@@ -40,8 +40,8 @@ Thread.abort_on_exception = true
 # <def_main>
 def main
 
-	def _connector_loop(games)
-		server = TCPServer.open(20025)
+	def _connector_loop(port, games)
+		server = TCPServer.open(port)
 		threads = Hash.new
 
 		i=0
@@ -60,6 +60,8 @@ def main
 		end
 	end
 
+	port   = ARGV[0].to_i
+
 	games = Games.new
 	orcs  = Orcs.new(games)
 	troll = Trolls.new(games)
@@ -67,7 +69,7 @@ def main
 
 	games.add_games(orcs, troll, kobls)
 
-	_connector_loop(games)
+	_connector_loop(port, games)
 
 
 end
