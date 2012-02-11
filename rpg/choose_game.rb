@@ -35,20 +35,21 @@ def choose_game(games, player)
 		
 		side = player.read
 		side = side.to_i
+		side -= 1
 
-		if(side>0 && side<=sides.length)
+		if(side>=0 && side<sides.length)
 
-			chosen_side = game.get_sides[side-1]
+			chosen_side = game.get_sides[side]
 
 			if(chosen_side.is_a? String)
 
-				player.character.current_side = side
+				player.character.current_side = side + 1
 
-				return
+				return true
 			end
 		else
 			bottom_text = "Bad game index: #{side}"
-			return nil
+			return false
 		end
 	end
 
@@ -67,9 +68,10 @@ def choose_game(games, player)
 				chosen_game = _choose_game(games, player)
 
 				if(chosen_game != nil)
-					_choose_sides(chosen_game, player)
-					send_msg(player, 'join_game', chosen_game)
-					throw :done
+					if(_choose_sides(chosen_game, player))
+						send_msg(player, 'join_game', chosen_game)
+						throw :done
+					end
 				end
 
 		end

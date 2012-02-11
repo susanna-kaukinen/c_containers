@@ -26,8 +26,6 @@ class ArmsLevel
 		@wounds_inflicted      = 0
 		@wounds_inflicted_list = Array.new
 
-	#
-
 		@kills                 = 0
 		@kills_list            = Array.new
 
@@ -38,40 +36,77 @@ class ArmsLevel
 
 	end
 
-	#
-	attr_accessor :kills
-	attr_accessor :kills_list
+	attr_accessor :critical_kills
+	attr_accessor :critical_kills_list
 
 	attr_accessor :critical_kos_inflicted
 	attr_accessor :critical_kos_inflicted_list
 
-	attr_accessor :kos_inflicted
-	attr_accessor :kos_inflicted_list
-
 	attr_accessor :wounds_inflicted
 	attr_accessor :wounds_inflicted_list
+
+	attr_accessor :kills
+	attr_accessor :kills_list
+
+	attr_accessor :kos_inflicted
+	attr_accessor :kos_inflicted_list
 
 	attr_accessor :damage_inflicted
 
 	def to_s
-		COLOUR_RED +
-		"kills: #{@kills}" +
-		"\nknock outs inflicted:  #{@knock_outs_inflicted}" +
-		"\ndamage inflicted: #{@damage_inflicted}"  +
-		"\nwounds inflicted: #{@wounds_inflicted}"  +
-		COLOUR_RESET
+		"critical_kills         #{COLOUR_RED+COLOUR_REVERSE}#{@critical_kills}#{COLOUR_RESET} (#{COLOUR_RED+COLOUR_REVERSE}#{get_xp('critical_kills')}#{COLOUR_RESET})}" +
+		"critical_kos_inflicted #{COLOUR_RED}#{@critical_kos_inflicted}#{COLOUR_RESET} (#{COLOUR_RED}#{get_xp('critical_kos_inflicted')}#{COLOUR_RESET})}" +
+
+		"kills #{COLOUR_MAGENTA+COLOUR_REVERSE}#{@kills}#{COLOUR_RESET} (#{COLOUR_MAGENTA+COLOUR_REVERSE}#{get_xp('kills')}#{COLOUR_RESET})}" +
+		"kos_inflicted #{COLOUR_MAGENTA}#{@kos_inflicted}#{COLOUR_RESET} (#{COLOUR_MAGENTA}#{get_xp('kos_inflicted')}#{COLOUR_RESET})}" +
+
+		"wounds_inflicted #{COLOUR_YELLOW+COLOUR_REVERSE}#{@wounds_inflicted}#{COLOUR_RESET} (#{COLOUR_YELLOW+COLOUR_REVERSE}#{get_xp('wounds_inflicted')}#{COLOUR_RESET})}" +
+
+		"damage_inflicted #{COLOUR_CYAN+COLOUR_REVERSE}#{@damage_inflicted}#{COLOUR_RESET} (#{COLOUR_CYAN+COLOUR_REVERSE}#{get_xp('damage_inflicted')}#{COLOUR_RESET})}"
+	end
+
+	def get_xp_all
+		xp = 0
+		xp += get_xp('critical_kills')
+		xp += get_xp('critical_kos_inflicted')
+		xp += get_xp('kills')
+		xp += get_xp('kos_inflicted')
+		xp += get_xp('wounds_inflicted')
+		xp += get_xp('damage_inflicted')
+		return xp.to_i
 	end
 	
-	def get_xp
+	def get_xp(what)
 		xp=0
 
-		kills_list.each        { |scalp| xp += scalp.strength     }
-		kos_inflicted_list     { |scalp| xp += (scalp.strength/2) }
-		wounds_inflicted_list  { |slash| xp += 100 }
-		
-		xp += damage_inflicted
+		case what
 
-		xp.to_i
+			when 'critical_kills'
+				@critical_kills_list.each         { |scalp| xp += (scalp.strength*1.5) }
+				return xp.to_i
+			when 'critical_kos_inflicted'
+				@critical_kos_inflicted_list.each { |scalp| xp += scalp.strength       }
+				return xp.to_i
+
+			when 'kills'
+				@kills_list.each                  { |scalp| xp += scalp.strength       }
+				return xp.to_i
+
+			when 'kos_inflicted'
+				@kos_inflicted_list.each          { |scalp| xp += (scalp.strength/2)   }
+				return xp.to_i
+
+			when 'wounds_inflicted'
+				@wounds_inflicted_list.each       { |slash| xp += 100 }
+				return xp.to_i
+	
+			when 'damage_inflicted'	
+				xp += @damage_inflicted
+				return xp.to_i
+		end
+
+		raise ArgumentError("get_xp : what='#{what}'")
+
 	end 
 
 end
@@ -178,16 +213,16 @@ class XP
 		@total_arms_lvl.critical_kos_inflicted_list.push(opponent)
 	
 		@current_arms_lvl.critical_kos_inflicted += 1
-		@currnt_arms_lvl.critical_kos_inflicted_list.push(opponent)
+		@current_arms_lvl.critical_kos_inflicted_list.push(opponent)
 	end
 
 
-	def add_ko_inflicted()
+	def add_ko_inflicted(opponent)
 		@total_arms_lvl.kos_inflicted   += 1
 		@total_arms_lvl.kos_inflicted_list.push(opponent)
 	
 		@current_arms_lvl.kos_inflicted += 1
-		@currnt_arms_lvl.kos_inflicted_list.push(opponent)
+		@current_arms_lvl.kos_inflicted_list.push(opponent)
 	end
 
 	def add_damage_inflicted(hp)
@@ -205,17 +240,18 @@ class XP
 	end
 
 	def get_total_arms_xp
-		@total_arms_lvl.get_xp
+		@total_arms_lvl.get_xp_all
 	end
 
 	def get_current_arms_xp
-		@current_arms_lvl.get_xp
+		@current_arms_lvl.get_xp_all
 	end
 
 	def get_xp_stats
-		"\tarms: #{@arms_level} (#{get_current_arms_xp})/(#{get_total_arms_xp})" +
-		EOL + "\tbody: #{@body_level} (not yet)" +
-		EOL + "\theal: #{@heal_level} (not yet)"
+		p self
+		"\tarms: #{@arms_level} (#{get_current_arms_xp})/(#{get_total_arms_xp})" #+
+		#EOL + "\tbody: #{@body_level} (not yet)" +
+		#EOL + "\theal: #{@heal_level} (not yet)"
 	end
 
 end

@@ -197,11 +197,18 @@ end
 
 		text=''
 
+		already_unco = false
+		already_unco = true  if(defender.unconscious)
+
+		already_dead = false
+		already_dead = true  if(defender.dead)
+
 		hp_damage, critical, wound = damage_table(result)
 
+		
+		defender_hp_pre_base_damage = defender.current_hp
 		defender.current_hp       -= hp_damage
 
-		 
 		if(hp_damage>0)
 			text += "\t" + name + " deals " + COLOUR_RED + hp_damage.to_s() + COLOUR_RESET + " hit points of damage.\n"
 		else
@@ -217,22 +224,13 @@ end
 			end
 		end
 
-		critical_roll = nil
 		if(critical)
 			_roll, _text, wound = resolve_critical(attacker, critical, defender)
 			text += COLOUR_WHITE_BLINK + "\nCritical: " + critical.level + ' ' + critical.type + "es, roll=" + COLOUR_YELLOW + _roll.to_s + COLOUR_RESET
 			text += _text
 		end
 
-
-		resove_attack_effects_and_xp_bookkeep(attacker, defender, hp_damage, wound)
-
-		colour = COLOUR_GREEN
-		if(defender.current_hp <= 0) 
-			colour = COLOUR_RED	
-		end
-		
- 		#print defender.name + " has " + colour + defender.current_hp.to_s() + COLOUR_RESET + " hit points left\n"
+		resove_attack_effects_and_xp_bookkeep(attacker, defender, hp_damage, defender_hp_pre_base_damage, wound, already_dead, already_unco)
 
 		if(defender.current_hp<0 and defender.dead == false)
 			if(defender.unconscious==false)
@@ -260,17 +258,12 @@ end
 
 end
 
-def resove_attack_effects_and_xp_bookkeep(attacker, defender, hp_damage, wound)
+def resove_attack_effects_and_xp_bookkeep(attacker, defender, hp_damage, defender_hp_pre_base_damage, wound, already_dead, already_unco)
 
-	p attacker
+	p attacker.xp
 
 	# first figure out if the defender is already out cold
 
-	already_unco = false
-	already_unco = true  if(defender.unconscious)
-
-	already_dead = false
-	already_dead = true  if(defender.dead)
 
 	if(already_unco or already_dead)
 		# no xp to either
@@ -278,6 +271,16 @@ def resove_attack_effects_and_xp_bookkeep(attacker, defender, hp_damage, wound)
 		attacker.xp.add_damage_inflicted(hp_damage)
 		#defender.damage_sustained += hp_damage
 
+	end
+
+	defender_before_wound = defender.clone
+	defender_before_wound.current_hp = defender_hp_pre_base_damage
+	
+	defender.apply_wound_effects_after_attack # apply damage NOW
+
+	if(already_unco or already_dead)
+		# no xp to either
+	else
 		if(wound) 
 
 			if(wound.damage>0)
@@ -288,33 +291,31 @@ def resove_attack_effects_and_xp_bookkeep(attacker, defender, hp_damage, wound)
 			attacker.xp.add_wound_inflicted(wound)
 			#defender.wounds_sustained += 1
 
-			attacker.xp.add_critical_ko_inflicted(defender) if(wound.unconscious)
+			attacker.xp.add_critical_ko_inflicted(defender_before_wound) if(wound.unconscious)
 			#defender.knock_outs_sustained += 1 if(wound.unconscious)
 
-			attacker.xp.add_critical_kill(defender) if(wound.dead)
+			attacker.xp.add_critical_kill(defender_before_wound) if(wound.dead)
 			#defender.deaths     += 1 if(wound.dead)
 		end
 	end
 
-
-	defender.apply_wound_effects_after_attack # apply damage NOW
-
-
 	if(already_unco or already_dead)
 		# no xp
 	else
-		if(defender.unconscious)
-			attacker.xp.add_ko_inflicted()
+		if(defender.unconscious and not wound.unconscious)
+			attacker.xp.add_ko_inflicted(defender_before_wound)
 			# def...
 		end
 
-		if(defender.dead)
-			attacker.xp.add_kill_inflicted()
+		if(defender.dead and not wound.unconscious)
+			attacker.xp.add_kill(defender_before_wound)
 			# def...
 		end
 	end
 
-	p attacker
+	p attacker.xp
+	p 'U>>>' + already_unco.to_s
+	p 'D>>>' + already_dead.to_s
 
 end
 

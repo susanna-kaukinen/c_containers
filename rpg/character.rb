@@ -222,7 +222,11 @@ class Character
 		return @quickness - @penalties + @initiative_roll_this_round
 	end
 
-	def to_s(fold)
+	def to_s
+		to_str('none')
+	end
+
+	def to_str(fold)
 		if(fold=='stats')
 			      "\t cl:" + @profession.to_s() +
 			      "\t ob:" + @ob.to_s()+ 
@@ -237,7 +241,7 @@ class Character
 			EOL + "\t bl:" + @blind.to_s()+
 			      "\t wo:" + @wounds.length().to_s
 		elsif(fold=='xp')
-			return @xp.get_xp_stats	
+			return @xp.get_xp_stats
 		else
 			"name:" + @name + 
 			EOL + "\t br: #{@brains}" +

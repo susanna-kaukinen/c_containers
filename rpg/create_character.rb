@@ -73,12 +73,14 @@ def create_character(player)
 
 		_print_header(write)
 
-		write COLOUR_YELLOW_BLINK    + ' RR' + COLOUR_RESET + ' = Reroll Stats   ' +
+		write ' '                    +
+                      COLOUR_REVERSE         +
+                      COLOUR_YELLOW_BLINK    +  'RR' + COLOUR_RESET + ' = Reroll Stats   ' +
 			COLOUR_BLUE_BLINK    + ' M ' + COLOUR_RESET  + ' = Main menu      ' +
 			COLOUR_GREEN_BLINK   + ' L ' + COLOUR_RESET  + ' = Level character' +
 		EOL
 
-		player.write player.character.to_s(what)
+		player.write player.character.to_str(what)
 
 		if(bottom_text!=nil)
 			# nop			
@@ -113,6 +115,9 @@ def create_character(player)
 			cmd = player.prompt('cmd')
 
 			case cmd
+				when 'rr'
+					bottom_text = "?use capital " + COLOUR_REVERSE + COLOUR_YELLOW_BLINK +
+						      "RR"            + COLOUR_RESET   + " to ReRoll"
 				when 'RR'
 					what = 'stats'
 					player.character = Character.new(character.name, 'pc', 'biological')
@@ -194,7 +199,7 @@ def create_character(player)
 				when 'x'
 					clear_screen(player.method(:write))
 					if(player.character)
-						player.write player.character.xp_s
+						player.write player.character.to_str('xp')
 						player.read
 					else
 						bottom_text = no_character_txt
