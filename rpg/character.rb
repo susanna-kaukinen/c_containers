@@ -433,7 +433,8 @@ class Character
 			return nil
 		end
 
-		p char_as_yaml
+		#p char_as_yaml
+		p "load: #{name} loaded"
 
 		return YAML::load(char_as_yaml)
 	end

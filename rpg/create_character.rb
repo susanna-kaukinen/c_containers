@@ -71,6 +71,73 @@ def create_character(player)
 		write_bottom_text(write, bottom_text)
 	end
 
+	def training_hall(player, write, bottom_text)
+
+		def draw_training_hall(player, write, bottom_text)
+
+			_print_header(write)
+
+			write COLOUR_YELLOW_BLINK    + ' A ' + COLOUR_RESET + ' = level Arms     '   +
+				COLOUR_BLUE_BLINK    + ' B ' + COLOUR_RESET + ' = level Body     '   +
+				COLOUR_GREEN_BLINK   + ' H ' + COLOUR_RESET + ' = level Heal     '   +
+				EOL
+
+			write COLOUR_BLUE_BLINK    + ' M ' + COLOUR_RESET  + ' = Main menu      ' +
+				EOL
+
+			EOL
+			
+
+			if(bottom_text!=nil)
+				# nop			
+			elsif(character != nil)
+				bottom_text = "player: #{character.name}"
+			else
+				bottom_text = no_character_txt
+			end
+
+			write_bottom_text(write, bottom_text)
+
+		end
+
+		bottom_text = 'training hall'
+
+		i=0
+		loop {
+			draw_training_hall(player, write, bottom_text)
+			
+			bottom_text = nil
+
+			cmd = player.prompt('cmd')
+
+			case cmd
+				when 'a'
+					
+					ok, old_ob, _, old_qu, _ = player.character.xp.level_arms(player.character)
+					
+					if(not ok)
+						bottom_text = "? xp: #{player.character.xp.total_arms_lvl.get_xp_all}, need: #{old_ob}"
+					else
+
+					bottom_text = "arms lvl=#{player.character.xp.arms_level}, ob: #{old_ob} => #{player.character.ob}, qu: #{old_qu} => #{player.character.quickness}"
+					
+					end
+
+				when 'b'
+					bottom_text = "?not implemented"
+				when 'h'
+					bottom_text = "?not implemented"
+				when 'm'
+					return
+				else
+
+					bottom_text = '?huh'
+			end
+
+			clear_screen(player.method(:write))
+		}
+	end
+
 	def _character(player, write, bottom_text)
 
 		def __draw_character_screen(player, write, bottom_text, what)
@@ -130,7 +197,7 @@ def create_character(player)
 					bottom_text = "#{player.character.name} reborn!"
 				when 'l'
 					if(player.character.xp.can_level?)
-						_level(player, write, bottom_text)
+						training_hall(player, write, bottom_text)
 					else
 						bottom_text = "?need more XP"
 					end

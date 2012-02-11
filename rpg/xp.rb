@@ -1,10 +1,13 @@
 
 def level_table(current_level)
-	needed_xp = current_level * 1000
+	lvl = current_level
+	needed_xp = 1000+1000*(lvl+0)*(lvl+0)
 end
 
-def can_level?(current_level, current_level_xp)
+def _can_level?(current_level, current_level_xp)
 	needed_xp = level_table(current_level)
+
+	p "_can_level: needed_xp=#{needed_xp}, current_level_xp=${current_level_xp}"
 
 	if(current_level_xp >= needed_xp)
 		return true
@@ -13,7 +16,34 @@ def can_level?(current_level, current_level_xp)
 	return false
 end
 
+
+# </leveling>
+
 class ArmsLevel
+
+	def give_level_ups(character)
+
+		old_ob = character.ob
+	
+		ob_inc = _1d3()
+		ob_inc += _1d3()
+		ob_inc += _1d3()
+
+		character.ob += ob_inc
+
+		#
+
+		old_qu = character.quickness
+
+		qu_inc = _1d3()
+
+		character.quickness += qu_inc
+
+
+		return true, old_ob, character.ob, old_qu, character.quickness
+			
+
+	end
 
 	def initialize
 
@@ -170,6 +200,8 @@ end
 class XP 
 
 	attr_accessor :arms_level
+	attr_accessor :total_arms_lvl
+
 	attr_accessor :body_level
 	attr_accessor :heal_level
 
@@ -187,10 +219,6 @@ class XP
 		@current_heal_lvl = HealLevel.new
 	end
 
-
-	def can_level?
-		false #TODO
-	end
 
 	def add_critical_kill(opponent)
 		@total_arms_lvl.critical_kills   += 1
@@ -247,11 +275,47 @@ class XP
 		@current_arms_lvl.get_xp_all
 	end
 
-	def get_xp_stats
+	def get_xp_stats # to_s
 		p self
 		"\tarms: #{@arms_level} (#{get_current_arms_xp})/(#{get_total_arms_xp})" #+
 		#EOL + "\tbody: #{@body_level} (not yet)" +
 		#EOL + "\theal: #{@heal_level} (not yet)"
+	end
+
+
+
+# leveling:
+
+	def can_level?
+
+		p 'foo'
+
+	#	if(_can_level(@arms_level, get_current_arms_xp))
+			return true
+	#	end
+
+	#	return false
+	end
+
+	def inc_level(level_of_char, level_data, character)
+
+		try_lvl = level_of_char+1
+		needed_xp = level_table(try_lvl)
+
+		current_xp = level_data.get_xp_all
+
+		if(current_xp>needed_xp)
+			@arms_level += 1 # hack for arms for now
+			return level_data.give_level_ups(character)
+		end
+
+		return false, needed_xp
+	end
+
+	def level_arms(character)
+		p "old level=#{@arms_level}"
+		return inc_level(@arms_level, @total_arms_lvl, character)
+		p "new level=#{@arms_level}"
 	end
 
 end

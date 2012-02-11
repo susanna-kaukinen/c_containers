@@ -5,6 +5,10 @@ def d100(n)
 	#TODO
 end
 
+def _1d3()
+  return 1 + SecureRandom.random_number(3)
+end
+
 def _1d100()	
   #return 1 + rand(100)
   return 1 + SecureRandom.random_number(100)
