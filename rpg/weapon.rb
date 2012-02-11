@@ -55,7 +55,7 @@ class Weapon
 
 	def resolve_critical(attacker, critical, defender)
 
-		_roll = roll('critical')[1]
+		_roll = roll_die('critical')[1][0]
 
 		mega_bonus = 0
 		if(_roll==66)

@@ -154,7 +154,8 @@ module RuleMonsterEngine
 					 manner +
 					 " manner..\n"
 
-				__roll  = roll('attack', attacker.active_weapon, attacker, method(:__do_attack))
+				__roll  = roll_die('attack', attacker.active_weapon.fumble)
+#, attacker, method(:__do_attack))
 				_roll   = __roll[0]
 				fumble  = __roll[2]
 				text   += __roll[3]
