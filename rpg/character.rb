@@ -112,13 +112,13 @@ class Character
 				if(result>100)
 					healee.dead        = false
 					healee.unconscious = false
-					@raised_dead +=1
+				#	@raised_dead +=1
 				end
 			elsif(healee.unconscious)
 				result = power - 25 + result
 				if(result>100)
 					healee.unconscious = false
-					@revived += 1
+				#	@revived += 1
 				end
 			elsif(healee.prone>0 or healee.downed>0 or healee.stun>0 or healee.uparry>0)
 				result = power - 12 + result
@@ -129,7 +129,7 @@ class Character
 				healee.uparry   -= 1 if(healee.uparry>0)
 				healee.bleeding -= 1 if(healee.bleeding>0)
 
-				@healed_injuries += 1
+				#@healed_injuries += 1
 			end
 
 			old_hp = healee.current_hp
@@ -145,7 +145,7 @@ class Character
 
 			c = (a<b) ? a : b
 
-			@healed_hp += c if(c>0)
+			#@healed_hp += c if(c>0)
 
 		end
 
