@@ -1,4 +1,4 @@
-OPEN_END_START = 56
+OPEN_END_START = 96
 ROLL_DELAY     = 0.8
 
 def d100(n)
@@ -42,6 +42,7 @@ def roll_die(type, *vargs)
 
 	rolls = Array.new
 	rolls[0] = _1d100
+	#rolls[0] = 65 + rand(3)
 
 	fumbled = false
 	if(type=='attack' and fumble and rolls[0]<fumble) then
@@ -60,7 +61,7 @@ def roll_die(type, *vargs)
 	end
 end
 
-def colour_1d100_roll_s(roll, fumble)
+def colour_1d100_roll_s(roll, fumble, has_open_end) # FIXME has_open_end really means: is not critical
 
 	#p "colour_1d100_roll_s: roll=#{roll}, fumble=#{fumble}"
 
@@ -69,7 +70,15 @@ def colour_1d100_roll_s(roll, fumble)
 			die_colour = COLOUR_RED
 		when fumble .. 25
 			die_colour = ''
-		when 26 .. 75
+		when 26 .. 65
+			die_colour = COLOUR_WHITE
+		when 66
+			if(not has_open_end)
+				die_colour = COLOUR_GREEN
+			else
+				die_colour = COLOUR_WHITE
+			end
+		when 67 .. 76
 			die_colour = COLOUR_WHITE
 		when 76 .. OPEN_END_START
 			die_colour = COLOUR_GREEN
@@ -80,15 +89,17 @@ def colour_1d100_roll_s(roll, fumble)
 	die_colour + '<' + COLOUR_REVERSE + roll.to_s + COLOUR_RESET + die_colour + '>' + COLOUR_RESET
 end 
 
-def draw_roll(write, die_roll, has_open_end, has_fumble, fumble)
 
+def roll_to_s( die_roll, critical, has_fumble, fumble)
+
+	text = Array.new
 	
 	result     = die_roll[0]
 	rolls      = die_roll[1]
 	fumbled    = die_roll[2]
 
 	#p "roll_to_s: result=#{result}, rolls=#{rolls}, fumbled=#{fumbled}"
-	#p "roll_to_s: has_open_end=#{has_open_end}, has_fumble=#{has_fumble}, fumble=#{fumble}"
+	#p "roll_to_s: critical=#{critical}, has_fumble=#{has_fumble}, fumble=#{fumble}"
 
 
 	if(has_fumble==false)
@@ -96,14 +107,12 @@ def draw_roll(write, die_roll, has_open_end, has_fumble, fumble)
 	end
 
 	str = 'Rolling... '
-	if(has_open_end)
-		roll_colour = COLOUR_MAGENTA
-	else
+	if(critical)
 		roll_colour = COLOUR_CYAN
+	else
+		roll_colour = COLOUR_MAGENTA
 	end
-	write(roll_colour + str + COLOUR_RESET)
-
-	sleep(ROLL_DELAY)
+	text.push(roll_colour + str + COLOUR_RESET)
 
 	str = ''
 
@@ -111,10 +120,9 @@ def draw_roll(write, die_roll, has_open_end, has_fumble, fumble)
 		
 		rolls.each_with_index { |roll,i|
 
-			str += colour_1d100_roll_s(roll, fumble)
+			str += colour_1d100_roll_s(roll, fumble, critical)
 
-			write str
-			sleep(ROLL_DELAY)
+			text.push(str)
 
 			if(i > rolls.length)
 				break
@@ -126,18 +134,35 @@ def draw_roll(write, die_roll, has_open_end, has_fumble, fumble)
 
 
 	else
-		str = colour_1d100_roll_s(rolls[0], fumble)
-		write str
-		sleep(ROLL_DELAY)
+		str = colour_1d100_roll_s(rolls[0], fumble, critical)
+		text.push(str)
 	end
 
 	#str = ' ===> ' + roll_colour + '<' + COLOUR_REVERSE + result.to_s + COLOUR_RESET +
 	#	         roll_colour + '>' + COLOUR_RESET + EOR
 
-	str = " ===> " + colour_1d100_roll_s(result, fumble)
+	str = " ===> " + colour_1d100_roll_s(result, fumble, critical)
 
-	write str
+	text.push(str)
+
+	return result, rolls, fumbled, text # text is ARRAY
 end
+
+def draw_roll(roll_strs)
+
+	roll_strs.each_with_index {|str,i|
+		print str
+		if(i<roll_strs.length-1)
+			sleep(ROLL_DELAY)
+		end
+	}
+	print EOL
+
+end
+
+
+
+
 
 
 

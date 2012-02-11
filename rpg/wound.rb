@@ -103,7 +103,7 @@ class Wound
 		
 		#p self
 		
-		return COLOUR_CYAN + "\t===> " + @text + "\n" + COLOUR_RESET
+		return @text
 
 	end
 

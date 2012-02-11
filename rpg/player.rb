@@ -257,7 +257,12 @@ class Player
 			p v
 			print COLOUR_RESET
 =end
-			@socket.puts(v)
+=begin
+			print COLOUR_CYAN
+			p v
+			print COLOUR_RESET
+=end
+			@socket.write(v)
 		}
 		
 		@socket.flush

@@ -215,7 +215,7 @@ class Character
 	end
 
 	def roll_initiative
-		@initiative_roll_this_round = roll('initiative')[0]
+		@initiative_roll_this_round , _, _ = roll_die('initiative')
 	end
 
 	def initiative

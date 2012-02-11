@@ -316,7 +316,12 @@ class Game
 	end
 
 	def prompt_anyone()
-		return ask_all('prompt_anyone')
+		str = cursor_to(13,64)
+		str += COLOUR_BLUE + COLOUR_REVERSE
+		str += '<enter>'
+		str += COLOUR_RESET
+		draw_all(str)
+		ask_all('prompt_anyone')
 	end
 
 

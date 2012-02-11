@@ -46,17 +46,18 @@ def create_character(player)
 		write COLOUR_YELLOW_BLINK    + ' N ' + COLOUR_RESET + ' = New character  '   +
 			COLOUR_BLUE_BLINK    + ' L ' + COLOUR_RESET + ' = Load character '   +
 			COLOUR_GREEN_BLINK   + ' H ' + COLOUR_RESET + ' = Heal character '   +
-			EOR
+			EOL
 
 		write COLOUR_WHITE_BLINK     + ' S ' + COLOUR_RESET + ' = Save character '   +
 			COLOUR_CYAN_BLINK    + ' T ' + COLOUR_RESET + ' = Toggle screen  '   +
 			COLOUR_YELLOW_BLINK  + ' C ' + COLOUR_RESET + ' = Character '        +
-			EOR
+			EOL
 
 		write COLOUR_RED_BLINK       + " Q " + COLOUR_RESET + ' = Quit           '   + 
 			COLOUR_GREEN_BLINK   + ' P ' + COLOUR_RESET + ' = Play (start)   '   +
 			COLOUR_MAGENTA_BLINK + ' X ' + COLOUR_RESET + ' = view eXperience'   +
-			EOR
+			EOL +
+		EOL
 		
 
 		if(bottom_text!=nil)
@@ -81,9 +82,10 @@ def create_character(player)
                       COLOUR_YELLOW_BLINK    +  'RR' + COLOUR_RESET + ' = Reroll Stats   ' +
 			COLOUR_BLUE_BLINK    + ' M ' + COLOUR_RESET  + ' = Main menu      ' +
 			COLOUR_GREEN_BLINK   + ' L ' + COLOUR_RESET  + ' = Level character' +
+		     EOL +
 		EOL
 
-		player.write player.character.to_str(what)
+		player.write player.character.to_str(what) + EOL
 
 		if(bottom_text!=nil)
 			# nop			

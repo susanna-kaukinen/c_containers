@@ -5,9 +5,9 @@ def waiting_room(game, player)
 
 		_print_header(write)
 
-		write COLOUR_REVERSE + "Game: #{game.name}" + COLOUR_RESET + EOR
+		write COLOUR_REVERSE + "Game: #{game.name}" + COLOUR_RESET + EOL
 		
-		write "Players waiting: #{game.amt_players}" + EOR
+		write "Players waiting: #{game.amt_players}" + EOL
 
 		players = game.players
 
@@ -20,17 +20,18 @@ def waiting_room(game, player)
 
 
 			if(i>=2) 
-				write "#{stats}..." + EOR
+				write "#{stats}..." + EOL
 				break
 			else
-				write "#{stats}" + EOR
+				write "#{stats}" + EOL
 			end
 			
 		}
 		
 	
-		write COLOUR_YELLOW_BLINK + ' F' + COLOUR_RESET + ' = start Fight'    + EOR
-		write COLOUR_GREEN_BLINK  + ' G' + COLOUR_RESET + ' = re-choose Game' + EOR
+		write COLOUR_YELLOW_BLINK + ' F' + COLOUR_RESET + ' = start Fight'    + EOL
+		write COLOUR_GREEN_BLINK  + ' G' + COLOUR_RESET + ' = re-choose Game' + EOL +
+		EOL
 
 		if(bottom_text!=nil)
 			# nop			

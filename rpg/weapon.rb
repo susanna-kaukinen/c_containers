@@ -55,7 +55,8 @@ class Weapon
 
 	def resolve_critical(attacker, critical, defender)
 
-		_roll = roll_die('critical')[1][0]
+		_, rolls, _, dice_arr = roll_to_s(roll_die('critical'), false, false, nil)
+		_roll = rolls[0]
 
 		mega_bonus = 0
 		if(_roll==66)
@@ -191,12 +192,13 @@ end
 
 		text = wound.apply(defender, wound.target)
 
-		return _roll, text, wound
+		return _roll, text, wound, dice_arr
 	end
+	# /resolve_critical
 
 	def deal_damage(attacker, defender, result)
 
-		text=''
+		text_dice_mix_arr = Array.new
 
 		already_unco = false
 		already_unco = true  if(defender.unconscious)
@@ -211,49 +213,53 @@ end
 		defender.current_hp       -= hp_damage
 
 		if(hp_damage>0)
-			text += "\t" + name + " deals " + COLOUR_RED + hp_damage.to_s() + COLOUR_RESET + " hit points of damage.\n"
+			text_dice_mix_arr << name + " deals " + COLOUR_RED + hp_damage.to_s() + COLOUR_RESET + " hit points of damage "
 		else
 			if(defender.dead || defender.unconscious)
-				text += attacker.name + "misses"
+				text_dice_mix_arr << attacker.name + "misses"
 			else
 				if(rand(2)==1)
 					evade = "dodges"
 				else
 					evade = "blocks"
 				end
-				text += defender.name + " " + evade + " the attack\n"
+				text_dice_mix_arr << defender.name + " " + evade + " the attack\n"
 			end
 		end
 
 		if(critical)
-			_roll, _text, wound = resolve_critical(attacker, critical, defender)
-			text += COLOUR_WHITE_BLINK + "\nCritical: " + critical.level + ' ' + critical.type + "es, roll=" + COLOUR_YELLOW + _roll.to_s + COLOUR_RESET
-			text += _text
+			_roll, crit_text, wound, dice_arr = resolve_critical(attacker, critical, defender)
+			#text2 = COLOUR_WHITE_BLINK + "\nCritical: " + critical.level + ' ' + critical.type + "es, roll=" + COLOUR_YELLOW + _roll.to_s + COLOUR_RESET
+			text_dice_mix_arr << COLOUR_WHITE_BLINK + " ==> Critical: " + critical.level + ' ' + critical.type + COLOUR_RESET + EOL
+			text_dice_mix_arr << dice_arr
+			text_dice_mix_arr << EOL
+			text_dice_mix_arr << crit_text 
+			text_dice_mix_arr << EOL
 		end
 
 		resove_attack_effects_and_xp_bookkeep(attacker, defender, hp_damage, defender_hp_pre_base_damage, wound, already_dead, already_unco)
 
 		if(defender.current_hp<0 and defender.dead == false)
 			if(defender.unconscious==false)
-				text += COLOUR_YELLOW_BLINK + defender.name + " falls unconscious.\n" + COLOUR_RESET
+				text_dice_mix_arr << COLOUR_YELLOW_BLINK + defender.name + " falls unconscious.\n" + COLOUR_RESET
 			else
-				text += COLOUR_YELLOW_BLINK + defender.name + " is unconscious.\n" + COLOUR_RESET
+				text_dice_mix_arr << COLOUR_YELLOW_BLINK + defender.name + " is unconscious.\n" + COLOUR_RESET
 			end
 			defender.unconscious = true
 		end
 
 		if(defender.current_hp < -defender.hp or defender.dead == true)
 			defender.dead = true
-			text += COLOUR_RED_BLINK + defender.name + " is DEAD!\n" + COLOUR_RESET
+			text_dice_mix_arr << COLOUR_RED_BLINK + defender.name + " is DEAD!\n" + COLOUR_RESET
 		end
 		
 		fury=false
 		if(wound and wound.dead) # critical kill gives character a 2nd attack
 			fury=true
-			text += COLOUR_YELLOW_BLINK + COLOUR_REVERSE  + '<<<FURY>>>' + COLOUR_RESET
+			text_dice_mix_arr << COLOUR_YELLOW_BLINK + COLOUR_REVERSE + cursor_to(12, 61) + '<<<FURY>>>' + COLOUR_RESET
 		end
 
-		return text, fury
+		return fury, text_dice_mix_arr
 
 	end #/deal_damage
 
@@ -261,7 +267,7 @@ end
 
 def resove_attack_effects_and_xp_bookkeep(attacker, defender, hp_damage, defender_hp_pre_base_damage, wound, already_dead, already_unco)
 
-	p attacker.xp
+	#p attacker.xp
 
 	# first figure out if the defender is already out cold
 
@@ -314,9 +320,9 @@ def resove_attack_effects_and_xp_bookkeep(attacker, defender, hp_damage, defende
 		end
 	end
 
-	p attacker.xp
-	p 'U>>>' + already_unco.to_s
-	p 'D>>>' + already_dead.to_s
+	#p attacker.xp
+	#p 'U>>>' + already_unco.to_s
+	#p 'D>>>' + already_dead.to_s
 
 end
 

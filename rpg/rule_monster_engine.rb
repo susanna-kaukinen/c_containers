@@ -18,441 +18,432 @@ module RuleMonsterEngine
 		print "\n"
 	end
 
-	def play_sub_round(round, sub_round_number, combatants, friends, enemies, actor )
+	def do_attack(attacker, opponent, manner)
 
-		def _attack(character, opponents, override_opponent, opponent)
+		mix_attack_arr = Array.new
 
-			def __choose_opponent(attacker, opponents)
-
-				def ___prune_non_targets(personality, opponents)
-
-					choice=''
-			
-					opps = Array.new
-
-					if(personality == 'evil')
-
-						choice = 'weakest'
-
-						opponents.each { |opp|
-
-							opp.check_hitpoints
-
-							if (not opp.dead)
-								target_debug COLOUR_GREEN + "#{opp.name} not dead, good target" + COLOUR_RESET
-								opps.push(opp)
-							else
-								target_debug COLOUR_RED + "#{opp.name} is dead, not a target" + COLOUR_RESET
-							end
-						}
-					else
-						opponents.each { |opp|
-
-							opp.check_hitpoints
-
-							if (opp.current_hp>0 and not opp.dead and not opp.unconscious)
-								target_debug COLOUR_GREEN + "#{opp.name} good target" + COLOUR_RESET
-								opps.push(opp)
-							else
-								target_debug COLOUR_RED + "#{opp.name} not hp>0+not dead+not unco, not a target" + COLOUR_RESET
-							end
-						}
-
-						if(personality == 'smart')
-							choice = 'weakest'
-						else
-							choice = 'strongest'
-						end
-
-					end
-
-					return opps, choice
-				end
-
-				def ___choose_from_remaining(opps, choice)
-
-					def ____stronger(opp1, opp2)
-			
-						if(opp1.strength > opp2.strength)
-							return true
-						end
-			
-						return false
-					end
-
-					def ____weaker(opp1, opp2)
-
-						if(opp1.strength < opp2.strength)
-							return true
-						end
-			
-						return false
-
-					end
-
-					case choice
-						when 'weakest'
-							idx = opps.each_with_index.inject(0) { | min_i, (opp, i) |
-								if (____weaker(opp, opps[min_i]))
-									i
-								else
-									min_i
-								end
-							}
-							return opps[idx]
-
-						when 'strongest'
-
-							idx = opps.each_with_index.inject(0) { | max_i, (opp, i) |
-								if (____stronger(opp, opps[max_i]))
-									i
-								else
-									max_i
-								end
-								
-							}
-							return opps[idx]
-					end
-				end
-
-				# __choose_opponent
-		
-				target_debug "total targets: #{opponents.length}"
-				opps, choice = ___prune_non_targets(attacker.personality, opponents)
-				target_debug "pruned targets: #{opps.length}"
-				chosen_opponent = ___choose_from_remaining(opps, choice)
-
-				opponents.each { |o| target_debug "#{o.name}=#{o.strength.to_s} (str)" }
-
-				if(attacker and chosen_opponent)
-					target_debug "#{attacker.name} (#{attacker.personality}) chose: #{chosen_opponent.name}"
-				end
-
-				return chosen_opponent, attacker.personality
-
-			end
-
-			def __do_attack(attacker, opponent, manner)
-
-				if(opponent==nil)
-					draw_all "No-one to attack!"
-					return
-				end
-
-				text = COLOUR_GREEN + 
-				 	 COLOUR_REVERSE + 
-					 attacker.name +
-					 COLOUR_RESET +
-					 " ATTACKS " +
-					 COLOUR_RED +
-					 COLOUR_REVERSE +
-					 opponent.name +
-					 COLOUR_RESET +
-					  " with " +
-					 attacker.active_weapon.name +
-					 " in a " +
-					 manner +
-					 " manner..\n"
-
-				__roll  = roll_die('attack', attacker.active_weapon.fumble)
-#, attacker, method(:__do_attack))
-				_roll   = __roll[0]
-				fumble  = __roll[2]
-				text   += __roll[3]
-
-				if(fumble==true)
-					return
-				end 
-
-				block = opponent.blocks?(attacker.name)
-
-				if(block>0)
-					text += opponent.name + COLOUR_CYAN + ' blocks' + COLOUR_RESET + ' against ' + attacker.name + " w/#{block}"
-				end
-
-				result = attacker.current_ob - opponent.current_db - block + _roll
-
-				text += " => result:" + result.to_s() + "\n"
-				#print "ob-db-block+roll=result <=> #{attacker.current_ob}-#{opponent.current_db}-#{block}+#{_roll}=#{result}"
-
-				_text, fury = attacker.active_weapon.deal_damage(attacker, opponent, result)
-				text += _text
-
-				return text, fury
-			end
-
-			# _attack
-
-			fury=false
-
-			can_attack, why_cant = character.can_attack_now()
-
-			if(can_attack)
-
-				manner = character.personality
-				if(not override_opponent)
-					opponent, manner = __choose_opponent(character, opponents)
-				end
-
-				text, fury = __do_attack(character, opponent, manner)
-
-				return true, text, opponent, fury
-			else	
-				text = _explain_why_not(character, 'attack', why_cant)
-				return false, text, nil, fury
-			end
+		if(opponent==nil)
+			mix_attack_arr << "No-one to attack!"
+			return false, mix_attack_arr, nil, opponent, false
 		end
 
+		#mix_attack_arr << COLOUR_GREEN + COLOUR_REVERSE + attacker.name + COLOUR_RESET + " ATTACKS "
+		#mix_attack_arr << COLOUR_RED + COLOUR_REVERSE + opponent.name + COLOUR_RESET + " with "
+		#mix_attack_arr << attacker.active_weapon.name + " in a " + manner + " manner.." +
+		#EOL
 
-		def _explain_why_not(character, what, why_cant)
+		mix_attack_arr << cursor_to(7,28)
+		mix_attack_arr << '<<< ATTACK >>>'
+		mix_attack_arr << EOL
 
-			str = COLOUR_WHITE + COLOUR_REVERSE + character.name + COLOUR_RESET + " cannot " + what + ", reason: "
+		f = attacker.active_weapon.fumble
+		roll_result, rolls, fumbled, attack_dice_array = roll_to_s(roll_die('attack', f), true, true, f)
 
-			if    (why_cant == nil)
-				str += COLOR_MAGENTA + 'not able'
-			elsif (why_cant == 'dead')
-				str += COLOUR_RED + COLOUR_REVERSE
-			elsif (why_cant == 'unconscious')
-				str += COLOUR_RED
-			elsif (why_cant == 'prone')
-				str += COLOUR_YELLOW + COLOUR_REVERSE
-			elsif (why_cant == 'downed')
-				str += COLOUR_YELLOW_BLINK
-			else
-				str += COLOUR_YELLOW
-			end
+		mix_attack_arr << attack_dice_array
 
-			str += " " + why_cant + COLOUR_RESET
+		if(fumbled==true) # @TODO
+			mix_attack_arr << '<<<attacker fumbled>>>' +
+			EOL
+			return false, mix_attack_arr, nil, opponent, false
+		end 
 
-			return str
+		block = opponent.blocks?(attacker.name)
 
+		if(block>0)
+			mix_attack_arr << opponent.name + COLOUR_CYAN + ' blocks' + COLOUR_RESET
+			mix_attack_arr << ' against ' + attacker.name + " w/#{block}" +
+			EOL
 		end
 
-		def _heal(character, friends)
+		result = attacker.current_ob - opponent.current_db - block + roll_result
 
-			if(not character.can_heal?)
-				text = _explain_why_not(character, 'heal', 'not enough mana?')
-				draw_active_player(character, text)
+		mix_attack_arr << " => result:" + result.to_s() +
+		EOL
+
+		fury, mix_damage_arr = attacker.active_weapon.deal_damage(attacker, opponent, result)
+
+		return fury, mix_attack_arr, mix_damage_arr
+	end
+
+	def _attack(character, opponents, override_opponent, opponent)
+
+		fury=false
+
+		can_attack, why_cant = character.can_attack_now()
+
+		if(can_attack)
+
+			manner = character.personality
+			if(not override_opponent)
+				opponent, manner = choose_opponent(character, opponents)
+			end
+
+			fury, mix_attack_arr, mix_damage_arr = do_attack(character, opponent, manner)
+
+			return true, mix_attack_arr, mix_damage_arr, opponent, fury
+		else	
+			text = _explain_why_not(character, 'attack', why_cant)
+			return false, text, nil, nil, fury
+		end
+	end
+
+	def choose_opponent(attacker, opponents)
+
+		def ___choose_from_remaining(opps, choice)
+
+			def ____stronger(opp1, opp2)
+	
+				if(opp1.strength > opp2.strength)
+					return true
+				end
+	
 				return false
 			end
 
-			text='' #TODO
+			def ____weaker(opp1, opp2)
 
-			loop {
-				draw_active_player(character, 'Choose action:')
+				if(opp1.strength < opp2.strength)
+					return true
+				end
+	
+				return false
 
-				prompt = ' (e)=all Equally' + "\n "
+			end
 
-				friends.each_with_index { |opponent,i|
-					prompt += "(#{i})" + opponent.name + " "
-					if(i%2==1)
-						prompt += "\r\n "
-					end
-				}
-				
-				draw_active_player(character, prompt)
-
-				cmd = ask_active_player(character, 'heal_action')
-
-				if(cmd == 'e')
-					_cls(character)
-
-					character.heal(friends)
-
-					draw_active_player(character, "Healing all friends.")
-
-					return true, text
-				else
-					_cls(character)
-
-					friends.each_with_index { |healee,i|
-						if(cmd == i.to_s)
-							character.heal(healee)
-							draw_active_player(character, "Healing " + healee.name)
+			case choice
+				when 'weakest'
+					idx = opps.each_with_index.inject(0) { | min_i, (opp, i) |
+						if (____weaker(opp, opps[min_i]))
+							i
+						else
+							min_i
 						end
 					}
+					return opps[idx]
 
-					return true, text
+				when 'strongest'
+
+					idx = opps.each_with_index.inject(0) { | max_i, (opp, i) |
+						if (____stronger(opp, opps[max_i]))
+							i
+						else
+							max_i
+						end
+						
+					}
+					return opps[idx]
+			end
+		end
+
+		target_debug "total targets: #{opponents.length}"
+		opps, choice = prune_non_targets(attacker.personality, opponents)
+		target_debug "pruned targets: #{opps.length}"
+		chosen_opponent = ___choose_from_remaining(opps, choice)
+
+		opponents.each { |o| target_debug "#{o.name}=#{o.strength.to_s} (str)" }
+
+		if(attacker and chosen_opponent)
+			target_debug "#{attacker.name} (#{attacker.personality}) chose: #{chosen_opponent.name}"
+		end
+
+		return chosen_opponent, attacker.personality
+
+	end
+
+
+	def prune_non_targets(personality, opponents)
+
+		choice=''
+
+		opps = Array.new
+
+		if(personality == 'evil')
+
+			choice = 'weakest'
+
+			opponents.each { |opp|
+
+				opp.check_hitpoints
+
+				if (not opp.dead)
+					target_debug COLOUR_GREEN + "#{opp.name} not dead, good target" + COLOUR_RESET
+					opps.push(opp)
+				else
+					target_debug COLOUR_RED + "#{opp.name} is dead, not a target" + COLOUR_RESET
 				end
-			
-				_cls(character)
+			}
+		else
+			opponents.each { |opp|
 
+				opp.check_hitpoints
+
+				if (opp.current_hp>0 and not opp.dead and not opp.unconscious)
+					target_debug COLOUR_GREEN + "#{opp.name} good target" + COLOUR_RESET
+					opps.push(opp)
+				else
+					target_debug COLOUR_RED + "#{opp.name} not hp>0+not dead+not unco, not a target" + COLOUR_RESET
+				end
 			}
 
+			if(personality == 'smart')
+				choice = 'weakest'
+			else
+				choice = 'strongest'
+			end
 
 		end
 
-		def _block(character, opponents)
-		
-			can_block, why_cant = character.can_block_now()
+		return opps, choice
+	end
 
-			if(can_block==false)
-				text = _explain_why_not(character, 'block', why_cant)
-				draw_active_player(character, text)
-				return false
+	def _explain_why_not(character, what, why_cant)
+
+		str = COLOUR_WHITE + COLOUR_REVERSE + character.name + COLOUR_RESET + " cannot " + what + ", reason: "
+
+		if    (why_cant == nil)
+			str += COLOR_MAGENTA + 'not able'
+		elsif (why_cant == 'dead')
+			str += COLOUR_RED + COLOUR_REVERSE
+		elsif (why_cant == 'unconscious')
+			str += COLOUR_RED
+		elsif (why_cant == 'prone')
+			str += COLOUR_YELLOW + COLOUR_REVERSE
+		elsif (why_cant == 'downed')
+			str += COLOUR_YELLOW_BLINK
+		else
+			str += COLOUR_YELLOW
+		end
+
+		str += " " + why_cant + COLOUR_RESET
+
+		return str
+
+	end
+
+	def _heal(character, friends)
+
+		if(not character.can_heal?)
+			text = _explain_why_not(character, 'heal', 'not enough mana?')
+			draw_active_player(character, text)
+			return false
+		end
+
+		text='' #TODO
+
+		loop {
+			draw_active_player(character, 'Choose action:')
+
+			prompt = ' (e)=all Equally' + "\n "
+
+			friends.each_with_index { |opponent,i|
+				prompt += "(#{i})" + opponent.name + " "
+				if(i%2==1)
+					prompt += "\r\n "
+				end
+			}
+			
+			draw_active_player(character, prompt)
+
+			cmd = ask_active_player(character, 'heal_action')
+
+			if(cmd == 'e')
+				_cls(character)
+
+				character.heal(friends)
+
+				draw_active_player(character, "Healing all friends.")
+
+				return true, text
+			else
+				_cls(character)
+
+				friends.each_with_index { |healee,i|
+					if(cmd == i.to_s)
+						character.heal(healee)
+						draw_active_player(character, "Healing " + healee.name)
+					end
+				}
+
+				return true, text
 			end
+		
+			_cls(character)
 
-			loop {
-				draw_active_player(character, 'Choose action:')
+		}
 
-				prompt = ' (e)=all Equally' + "\n "
+
+	end
+
+	def _block(character, opponents)
+	
+		can_block, why_cant = character.can_block_now()
+
+		if(can_block==false)
+			text = _explain_why_not(character, 'block', why_cant)
+			draw_active_player(character, text)
+			return false
+		end
+
+		loop {
+			draw_active_player(character, 'Choose action:')
+
+			prompt = ' (e)=all Equally' + "\n "
+
+			opponents.each_with_index { |opponent,i|
+				prompt += "(#{i})" + opponent.name + " "
+				if(i%2==1)
+					prompt += "\r\n "
+				end
+			}
+			
+			draw_active_player(character, prompt)
+
+			cmd = ask_active_player(character, 'block_action')
+
+			if(cmd == 'e')
+		
+				how_much = character.current_ob / opponents.length
+				
+				opponents.each_with_index { |opponent,i|
+					character.block(opponent.name, how_much)
+				}
+
+				draw_active_player(character, "Blocking w/#{how_much} against all opponents.")
+
+				return true
+			else
+				how_much = character.current_ob / 2
 
 				opponents.each_with_index { |opponent,i|
-					prompt += "(#{i})" + opponent.name + " "
-					if(i%2==1)
-						prompt += "\r\n "
-					end
-				}
-				
-				draw_active_player(character, prompt)
-
-				cmd = ask_active_player(character, 'block_action')
-
-				if(cmd == 'e')
-			
-					how_much = character.current_ob / opponents.length
-					
-					opponents.each_with_index { |opponent,i|
+					if(cmd == i.to_s)
 						character.block(opponent.name, how_much)
-					}
-
-					draw_active_player(character, "Blocking w/#{how_much} against all opponents.")
-
-					return true
-				else
-					how_much = character.current_ob / 2
-
-					opponents.each_with_index { |opponent,i|
-						if(cmd == i.to_s)
-							character.block(opponent.name, how_much)
-							draw_active_player(character, "Blocking w/#{how_much} against " + opponent.name)
-						end
-					}
-
-					return true
-				end
-			
-
-			}
-		end
-
-		def _prompt_actor_actions(character, opponents, friends)
-
-			def _player_choose_opponent(character, opponents)
-
-				text='' #TODO
-
-				loop {
-					draw_active_player(character, 'Choose opponent:')
-
-					prompt = ' (a)=Auto target' + "\n "
-
-					opponents.each_with_index { |opponent,i|
-						prompt += "(#{i})" + opponent.name + " "
-						if(i%2==1)
-							prompt += EOL
-						end
-					}
-					
-					draw_active_player(character, prompt)
-
-					cmd = ask_active_player(character, 'attack_option')
-
-					if(cmd == 'a')
-						_cls(character)
-						return false, text
-					else
-						_cls(character)
-
-						chosen_opponent = nil
-
-						opponents.each_with_index { |opponent,i|
-							if(cmd == i.to_s)
-								chosen_opponent = opponent
-								break
-							end
-						}
-
-						return true, text, chosen_opponent
+						draw_active_player(character, "Blocking w/#{how_much} against " + opponent.name)
 					end
-				
-					_cls(character)
-
 				}
+
+				return true
 			end
-
-			def _cls(character)
-				draw_active_player(character, CURSOR_RESTORE)
-				send_active_player(character, 'cursor_clear_rows', 10)
-				draw_active_player(character, CURSOR_RESTORE)
-			end
-
-			# _prompt_actor_actions
-
-			draw_all_but_active_player(character, "#{character.name} ponders action, please wait...")
-
-			can_attack, why_cant_attack = character.can_attack_now()
-			can_block,  why_cant_block  = character.can_block_now()
-
 		
-			draw_active_player(character, CURSOR_SAVE)	
-			loop {
 
-				if(can_attack == false and can_block == false)
-					text = _explain_why_not(character, 'do anything', 'is incapacitated')
-					draw_active_player(character, text)
-					return '', false
-				end
+		}
+	end
 
-				if(character.current_ob<10)
-					text = _explain_why_not(character, 'take more actions', 'all ob used up!')
-					draw_active_player(character, text)
-					return '', false
-				end	
+	def _prompt_actor_actions(character, opponents, friends)
 
-				draw_active_player(character, 'Choose action:')
+		draw_all_but_active_player(character, "#{character.name} ponders action, please wait...")
 
-				prompt = ' '
-				prompt += "(a)=attack (#{character.current_ob}) " if(can_attack)
-				prompt += '(b)=block  ' if(can_block)
-				prompt += '(h)=heal   ' if(character.can_heal?)
-				
-				draw_active_player(character, prompt)
+		can_attack, why_cant_attack = character.can_attack_now()
+		can_block,  why_cant_block  = character.can_block_now()
 
-				cmd = ask_active_player(character, 'sub_round_action')
+	
+		draw_active_player(character, CURSOR_SAVE)	
+		loop {
 
-				case cmd
-					when 'a'
-						_cls(character)
-						player_chosen, _, opponent = _player_choose_opponent(character, opponents)
-						did_attack, text, _, fury = _attack(character, opponents, player_chosen, opponent)
+			if(can_attack == false and can_block == false)
+				text = _explain_why_not(character, 'do anything', 'is incapacitated')
+				draw_active_player(character, text)
+				return '', false
+			end
 
-						if(did_attack)
-							return text, fury
-						end
-					when 'b'
-						_cls(character)
-						_block(character, opponents)
-					when 'h'
-						_cls(character)
-						did_heal, text = _heal(character, friends)
-						if(did_heal)
-							return text, false
-						end
-				end
+			if(character.current_ob<10)
+				text = _explain_why_not(character, 'take more actions', 'all ob used up!')
+				draw_active_player(character, text)
+				return '', false
+			end	
+
+			draw_active_player(character, 'Choose action:')
+
+			prompt = ' '
+			prompt += "(a)=attack (#{character.current_ob}) " if(can_attack)
+			prompt += '(b)=block  ' if(can_block)
+			prompt += '(h)=heal   ' if(character.can_heal?)
 			
-				_cls(character)
+			draw_active_player(character, prompt)
+
+			cmd = ask_active_player(character, 'sub_round_action')
+
+			case cmd
+				when 'a'
+					_cls(character)
+					player_chosen, _, opponent = _player_choose_opponent(character, opponents)
+					did_attack, mix_attack, mix_damage, opponent, fury = _attack(character, opponents, player_chosen, opponent)
+
+					if(did_attack)
+						return did_attack, mix_attack, mix_damage, opponent, fury
+					end
+				when 'b'
+					_cls(character)
+					_block(character, opponents)
+				when 'h'
+					_cls(character)
+					did_heal, text = _heal(character, friends)
+					if(did_heal)
+						return did_attack, text, false
+					end
+			end
+		
+			_cls(character)
+		}
+	end
+
+	def _player_choose_opponent(character, opponents)
+
+		text='' #TODO
+
+		loop {
+			draw_active_player(character, 'Choose opponent:')
+
+			prompt = ' (a)=Auto target' + "\n "
+
+			opponents.each_with_index { |opponent,i|
+				prompt += "(#{i})" + opponent.name + " "
+				if(i%2==1)
+					prompt += EOL
+				end
 			}
-		end
+			
+			draw_active_player(character, prompt)
 
-		def _sub_round_init(character)
-			draw_all(character.do_bleed)
-			character.recover_from_wounds
-			character.current_ob = character.ob
-			character.current_blocks = Hash.new
-		end
+			cmd = ask_active_player(character, 'attack_option')
 
-		# |play_sub_round
+			if(cmd == 'a')
+				_cls(character)
+				return false, text
+			else
+				_cls(character)
+
+				chosen_opponent = nil
+
+				opponents.each_with_index { |opponent,i|
+					if(cmd == i.to_s)
+						chosen_opponent = opponent
+						break
+					end
+				}
+
+				return true, text, chosen_opponent
+			end
+		
+			_cls(character)
+
+		}
+	end
+
+	def _cls(character)
+		draw_active_player(character, CURSOR_RESTORE)
+		send_active_player(character, 'cursor_clear_rows', 10)
+		draw_active_player(character, CURSOR_RESTORE)
+	end
+
+
+	def _sub_round_init(character)
+		draw_all(character.do_bleed)
+		character.recover_from_wounds
+		character.current_ob = character.ob
+		character.current_blocks = Hash.new
+	end
+
+	def play_sub_round(round, sub_round_number, combatants, friends, enemies, actor )
 
 		if(not opponents_left(enemies))
 			throw :game_over
@@ -467,41 +458,72 @@ module RuleMonsterEngine
 		fury = false
 
 		if(actor.human?) 
-			draw_subround(round, sub_round_number, actor, opponent, fury)
-			text, fury = _prompt_actor_actions(actor, enemies, friends) # in the future the npc:s could use this interface as well
-
+			did_attack, mix_attack, mix_damage, opponent, fury = _prompt_actor_actions(actor, enemies, friends) # in the future the npc:s could use this interface as well
 		else
-			did_attack, text, opponent, fury = _attack(actor, enemies, false, nil)
-			if(did_attack == false) then opponent=nil end
-			draw_subround(round, sub_round_number, actor, opponent, fury)
+			did_attack, mix_attack, mix_damage, opponent, fury = _attack(actor, enemies, false, nil)
+			opponent=nil if did_attack == false
 		end
 
-		if(text)
-			text = row_proper + text
-			draw_all(text)
-		end
+		first_draw = true
+		while(true)
 
-		while(fury)
+			draw_subround(round, sub_round_number, actor, opponent, fury, first_draw)
 
-			prompt_anyone
+			draw_attack(did_attack, mix_attack, mix_damage)	
 
-			did_attack, text, opponent, fury = _attack(actor, enemies, false, nil)
+			if (not fury)
+				break
+			else
+				prompt_anyone
 
-			if(did_attack == false) then opponent=nil end
-
-			draw_subround(round, sub_round_number, actor, opponent, fury)
-
-			if(text)
-				text = row_proper + text
-				draw_all(text)
+				did_attack, mix_attack, mix_damage, opponent, fury = _attack(actor, enemies, false, nil)
+				opponent=nil if did_attack == false
 			end
 
-
-			break
+			first_draw=false
 		end
 
 	end
 	#/play_sub_round
+
+	def draw_attack(did_attack, mix_attack, mix_damage)
+
+		def _draw_strs_and_dice(mix_str_arr)
+			i=0
+			while i < mix_str_arr.length
+
+				if(mix_str_arr[i].is_a? Array)
+					roll_strs = mix_str_arr[i]
+
+					roll_strs.each_with_index {|str,i|
+						p str
+						draw_all(str)
+						if(i<roll_strs.length-1)
+							sleep(ROLL_DELAY)
+						end
+					}
+				else
+					draw_all(mix_str_arr[i])
+				end
+
+				i += 1
+			end
+		end
+
+		if(not did_attack) # 
+			draw_all(row_proper + mix_attack)
+		end
+
+		draw_all(row_proper)
+
+		_draw_strs_and_dice(mix_attack)
+
+		if(mix_damage)
+			_draw_strs_and_dice(mix_damage)
+		end
+
+	end
+
 
 	# normal proper row, for attack etc. text
 	def row_proper()
@@ -511,15 +533,15 @@ module RuleMonsterEngine
 		row = "\033[" + (3+h).to_s + ';H'
 	end
 
-	def draw_subround(rnd, sub_round_number, active_xpc, opponent, fury)
+	def draw_subround(rnd, sub_round_number, active_xpc, opponent, fury, first_draw)
 
-		def _colour_names(xpc, active_xpc, opponent, fury)
+		def _colour_names(xpc, active_xpc, opponent, fury, first_draw)
 		
 			name = xpc.name
 	
 			if(name == active_xpc.name)
 				if(xpc.can_attack_now[0])
-					if(fury)
+					if(fury and not first_draw)
 						name = COLOUR_YELLOW + COLOUR_REVERSE + name + COLOUR_RESET
 					else
 						name = COLOUR_GREEN + COLOUR_REVERSE + name + COLOUR_RESET
@@ -591,7 +613,7 @@ module RuleMonsterEngine
 			row_col = "\033[" + (2+i).to_s + ';' + '0' + 'H'
 			str += row_col
 
-			str += _colour_names(xpc, active_xpc, opponent, fury)
+			str += _colour_names(xpc, active_xpc, opponent, fury, first_draw)
 
 			set_pos_y = "\033[" + '20' + 'G'
 			str += set_pos_y
@@ -604,7 +626,7 @@ module RuleMonsterEngine
 			row_col = "\033[" + (2+i).to_s + ';' + '36' + 'H'
 			str += row_col
 
-			str += _colour_names(xpc, active_xpc, opponent, fury)
+			str += _colour_names(xpc, active_xpc, opponent, fury, first_draw)
 			
 			set_pos_y = "\033[" + (36+20).to_s + 'G'
 			str += set_pos_y
@@ -641,16 +663,11 @@ module RuleMonsterEngine
 	def play_round(round)
 		p '<<<NEW ROUND>>>'
 
-
 		mem_dump
-
 
 		sub_round_number=1
 
-
-		combatants_in_action_order = @combatants.sort { |a,b| a.initiative <=> b.initiative }
-
-		combatants_in_action_order.each { |actor|
+		@combatants.each { |actor|
 
 			friends = ''
 			enemies = '' 
@@ -705,8 +722,10 @@ module RuleMonsterEngine
 				@side1.each { |char| char.roll_initiative }
 				@side2.each { |char| char.roll_initiative }
 
-				@side1.sort { |a,b| a.initiative <=> b.initiative }
-				@side2.sort { |a,b| a.initiative <=> b.initiative }
+				@side1.sort! { |a,b| a.initiative <=> b.initiative }
+				@side2.sort! { |a,b| a.initiative <=> b.initiative }
+
+				@combatants.sort! { |a,b| a.initiative <=> b.initiative }
 
 				play_round(round)
 
