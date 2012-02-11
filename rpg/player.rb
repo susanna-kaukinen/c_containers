@@ -243,7 +243,23 @@ class Player
 	end
 
 	def write(*vargs)
-		@socket.puts(vargs)
+
+		if(vargs[0].is_a? Array)
+			return write(*vargs[0]), write(*vargs[1..(vargs.length)])
+		end
+
+		vargs.each {|v|
+=begin
+			print COLOUR_MAGENTA
+			p v
+			print COLOUR_CYAN
+			v = v.gsub("\n", "\n\r")
+			p v
+			print COLOUR_RESET
+=end
+			@socket.puts(v)
+		}
+		
 		@socket.flush
 	end
 

@@ -5,7 +5,7 @@ def choose_game(games, player)
 		clear_screen(player.method(:write))
 
 		games.get_all.each_with_index { |game,i|
-			player.write "#{i+1}) #{game.name}"
+			player.write "#{i+1}) #{game.name}" + EOR
 		}
 		
 		game_idx = player.read
@@ -30,7 +30,7 @@ def choose_game(games, player)
 		sides = game.get_sides
 
 		sides.each_with_index { |side,i|
-			player.write "#{i+1}) #{side}"
+			player.write "#{i+1}) #{side}" + EOR
 		}
 		
 		side = player.read
@@ -83,9 +83,9 @@ def choose_game(games, player)
 
 		_print_header(write)
 	
-		write COLOUR_YELLOW_BLINK + ' J' + COLOUR_RESET + ' = Join game'
-		write COLOUR_RED_BLINK    + " N" + COLOUR_RESET + ' = New game'
-		write COLOUR_BLUE_BLINK   + ' M' + COLOUR_RESET + ' = back to main Menu'
+		write COLOUR_YELLOW_BLINK + ' J' + COLOUR_RESET + ' = Join game'          + EOR
+		write COLOUR_RED_BLINK    + " N" + COLOUR_RESET + ' = New game'           + EOR 
+		write COLOUR_BLUE_BLINK   + ' M' + COLOUR_RESET + ' = back to main Menu'  + EOR
 
 		if(bottom_text!=nil)
 			# nop			

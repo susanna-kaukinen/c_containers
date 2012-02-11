@@ -1,5 +1,148 @@
 
 
+
+<susanna> mä katon tota krittitablee
+<susanna> ja toi bleed on huono
+<susanna> ku se on niin tehoton
+<susanna> se vois bleedaa joka subround
+<susanna> ni tekiski jotain ennen ku matsin on ohi
+<> no sillon ottelijoiden määrä vaikuttais sen vaarallisuuteen?
+<> ennemmin niin, että se bleedi kasvaa lineaarisesti bleedirundien mukaan
+
+ [ susanna@demeter:/home/susanna/c_containers/rpg ]sf check_hit
+character.rb:288:       def check_hitpoints
+character.rb:318:               check_hitpoints
+character.rb:331:               check_hitpoints
+character.rb:358:               check_hitpoints
+old_last_serv.rb:603:   def check_hitpoints
+old_last_serv.rb:633:           check_hitpoints
+old_last_serv.rb:646:           check_hitpoints
+old_last_serv.rb:673:           check_hitpoints
+old_last_serv.rb:816:                                           opp.check_hitpoints
+old_last_serv.rb:828:                                           opp.check_hitpoints
+rule_monster_engine.rb:39:                                                      opp.check_hitpoints
+rule_monster_engine.rb:51:                                                      opp.check_hitpoints
+
+
+---
+
+<> anyway, musta se, että natural tasaluvuilla tulee erikoiscrittejä on hauskaa
+
+--
+
+
+<> mut joku block 100% olis hyvä näihin stunneihin
+
+---
+
+<> Ai stunnissa ei voi tehdä mitään?
+<susanna> => resolve_critical
+<> cannot do anything, reason: is incapacitated
+<susanna> hmm
+<> luulin jo et joku tyrmäs mut mut oliki vaan stunni
+<susanna> jotain outoa
+
+
+<> nyt sain blockin
+<> edellisellä kiekalla ei ollu
+
+
+---
+
+<> nää hitit tässä on niin tuhovoimaisia, että 1st strike on huomattava etu
+<susanna> jep
+<susanna> onks susta liian?
+<susanna> musta tavallaan on
+<> on
+<> vähentää strategiaa
+<susanna> mut toisaalta se on kiva että ei veny liikaa
+<> ku siis pitäs tulla enemmän niitä mistä tulee damagea mut ei noita kovia side effectejä
+<> crittien pitäs olla harvinaisempia musta
+
+---
+
+<> nyt mulle tuli stunni mitä ei tarvinnu kait kärsiä
+<> loppu jo ennen ku tuli mun vuoro
+
+<> no mut sillon ei joudu kärsii jos on lyöny vuorolla jolla saa stunnin
+<> kai siitä ny yks oma lyöntivuoro pitäs mennä?
+
+---
+
+fury => evil personality
+<> tai jos muuten on targetit loppu ja on furyssa
+
+---
+
+<> kkkkkas, tupla-furytin :D
+<susanna> helmi!
+<> wot?
+<> en saanu toista extra attackkia
+<> suxXx0rs
+<susanna> mitäh?
+
+---
+
+<> no siihen päätty sit saman tien
+<> yhtään vuoroa en ehtinyt pelata
+<> tollanen ihme hillokortti sucks bigtime
+<susanna> mm
+<susanna> joo tota voi pohtia tota tasapainoo
+<susanna> ja et pitäiskö fightin loppua ku pc:t delaa
+<susanna> tms
+<> no lähinnä et sais ees kerran tehdä jotain
+<> ettei olis vaan "oho, gods of random decided you die" :)
+
+---
+
+<> Hetkinen, teksti sano musta että toi sai vuoron stunnin.
+<> Mut sit se kuitenkin heti löi mua samalla vuorolla.
+<> Mut ehkä luin väärin.
+
+---
+
+välillä tää syö outputit
+
+
+<> niinku nyt löin tota Gurlaria, mut en nähny mitään
+<> jonku mustan rivin
+<susanna> hmm
+<> taisin knockouttaa sen
+<> mut ei voi tietä ku ei tullu mitään outputtia muuta ku musta
+<susanna> näyttäis siltä
+<susanna> serv ruudulta
+<> voi ehkä liittyä siihen, että toi ansi on rukiillaan
+
+--
+
+voiks uncit jo healaa?
+
+---
+
+kuka saa killiexpit jos kohde bleedaa kuoliaaks? nessuno :-(
+
+--
+
+Sun pitää tehä siihen spy mode
+nään vaan auto-target valinnat
+Et voit kattella pelaajan view'ta
+
+---
+
+make class have an effect, proper, on char
+
+---
+
+Muuten new characterissa kantsis heittää automaattinen 'view character' loppuun
+
+---
+
+ansit!
+
+---
+
+login: eka input katoo
+
 --
 
 fury - toinen attack

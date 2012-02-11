@@ -39,6 +39,8 @@ CURSOR_NEXT_LINE  = "\033[1E";
 CURSOR_SAVE       = "\033[s";
 CURSOR_RESTORE    = "\033[u";
 
+EOL = "\n\r"
+EOR = "\r"
 
 def clear_screen (writer)
 	writer.call(SCREEN_CLEAR + CURSOR_UP_LEFT)

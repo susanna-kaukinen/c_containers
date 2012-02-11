@@ -13,7 +13,7 @@ def create_character(player)
 
 		clear_screen (write)
 
-		write "#{COLOUR_RED}Rule Monster#{COLOUR_RESET} v2.0, early beta.              It\'s still 1984.\n\n"
+		write "#{COLOUR_RED}Rule Monster#{COLOUR_RESET} v2.0, early beta.              It\'s still 1984." + EOL + EOL
 	end
 
 	def write_bottom_text(write, *vargs)
@@ -45,15 +45,18 @@ def create_character(player)
 
 		write COLOUR_YELLOW_BLINK    + ' N ' + COLOUR_RESET + ' = New character  '   +
 			COLOUR_BLUE_BLINK    + ' L ' + COLOUR_RESET + ' = Load character '   +
-			COLOUR_GREEN_BLINK   + ' H ' + COLOUR_RESET + ' = Heal character '
+			COLOUR_GREEN_BLINK   + ' H ' + COLOUR_RESET + ' = Heal character '   +
+			EOR
 
 		write COLOUR_WHITE_BLINK     + ' S ' + COLOUR_RESET + ' = Save character '   +
 			COLOUR_CYAN_BLINK    + ' T ' + COLOUR_RESET + ' = Toggle screen  '   +
-			COLOUR_YELLOW_BLINK  + ' C ' + COLOUR_RESET + ' = Character '
+			COLOUR_YELLOW_BLINK  + ' C ' + COLOUR_RESET + ' = Character '        +
+			EOR
 
 		write COLOUR_RED_BLINK       + " Q " + COLOUR_RESET + ' = Quit           '   + 
 			COLOUR_GREEN_BLINK   + ' P ' + COLOUR_RESET + ' = Play (start)   '   +
-			COLOUR_MAGENTA_BLINK + ' X ' + COLOUR_RESET + ' = view eXperience'
+			COLOUR_MAGENTA_BLINK + ' X ' + COLOUR_RESET + ' = view eXperience'   +
+			EOR
 		
 
 		if(bottom_text!=nil)

@@ -36,7 +36,6 @@ require './xp.rb'
 
 Thread.abort_on_exception = true
 
-EOL = "\n\r"
 
 # <def_main>
 def main

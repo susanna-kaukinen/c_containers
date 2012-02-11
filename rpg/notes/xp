@@ -93,9 +93,23 @@ normal unco? y
 normal kill? y
 crit   unco? y
 crit   kill? y
+cumulat xp??????????????/
 
 
 
+---
+
+lvl	xp	fights (siis vaan damagesta)
+1	1000	1
+2	2	2
+3	4	4
+4	8	8
+5	16	16
+6	32	32
+7	64	64
+8	128	128
+9	256	256
+10	512000	512
 
 
 
