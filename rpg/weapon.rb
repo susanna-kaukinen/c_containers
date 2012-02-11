@@ -146,6 +146,7 @@ end
 				target_bonus = 60
 		end
 #wound.dead   = true # test fury
+#wound.unconscious = true
 
 		if(critical.type == 'slash')
 			wound.bleeding = wound.stun
@@ -307,7 +308,7 @@ def resove_attack_effects_and_xp_bookkeep(attacker, defender, hp_damage, defende
 			# def...
 		end
 
-		if(defender.dead and not wound.unconscious)
+		if(defender.dead and not wound.dead)
 			attacker.xp.add_kill(defender_before_wound)
 			# def...
 		end

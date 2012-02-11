@@ -83,7 +83,16 @@ revived = strength/2
 injuries = 100
 hp = 1
 
+--------------------------------
 
+QA
+base damage? y
+comb damage? y
+wounds? y
+normal unco? y
+normal kill? y
+crit   unco? y
+crit   kill? y
 
 
 
