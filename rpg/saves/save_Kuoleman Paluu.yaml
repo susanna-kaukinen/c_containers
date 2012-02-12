@@ -4,11 +4,11 @@ full_name: Kuoleman Paluu
 name: Kuoleman Paluu
 party: pc
 brains: biological
-ob: 143
+ob: 147
 db: 90
 ac: 43
 hp: 120
-quickness: 59
+quickness: 60
 personality: stupid
 profession: warrior monk
 mana: 2
@@ -29,22 +29,22 @@ active_weapon: !ruby/object:Weapon
   name: sword
   fumble: 2
 current_db: 90
-current_ob: 143
+current_ob: 147
 current_mana: 2
 can_attack: true
 cant_attack_text: no reason
 wounds: []
 current_blocks: {}
-current_side: 
+current_side: 1
 kumite_streak: 9
 xp: !ruby/object:XP
-  arms_level: 4
+  arms_level: 5
   body_level: 1
   heal_level: 1
   total_arms_lvl: !ruby/object:ArmsLevel
-    critical_kills: 15
+    critical_kills: 16
     critical_kills_list:
-    - &87066530 !ruby/object:Kobold
+    - &87109500 !ruby/object:Kobold
       id: c69b3756-91ed-4f0b-b145-4985a192f793
       full_name: dummy
       name: Ruuhuu
@@ -80,7 +80,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - &87065250 !ruby/object:Wound
+      - &87108170 !ruby/object:Wound
         damage: 9
         bleeding: 0
         stun: 1
@@ -92,7 +92,7 @@ xp: !ruby/object:XP
         target: throat
         text: Ruuhuu was hit in the throat and was dealt 9 extra damage and is stunned
           for 1 rounds
-      - &87064260 !ruby/object:Wound
+      - &87107090 !ruby/object:Wound
         damage: 0
         bleeding: 0
         stun: 0
@@ -154,7 +154,7 @@ xp: !ruby/object:XP
           healed_injuries: 0
           healed_hp: 0
       initiative_roll_this_round: 31
-    - &87089260 !ruby/object:Kobold
+    - &87131490 !ruby/object:Kobold
       id: 7bed2429-ca18-4494-a72c-b52b6babab09
       full_name: dummy
       name: Buhh
@@ -190,7 +190,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - &87086920 !ruby/object:Wound
+      - &87128970 !ruby/object:Wound
         damage: 0
         bleeding: 0
         stun: 0
@@ -252,7 +252,7 @@ xp: !ruby/object:XP
           healed_injuries: 0
           healed_hp: 0
       initiative_roll_this_round: 40
-    - &87105020 !ruby/object:Kobold
+    - &87157890 !ruby/object:Kobold
       id: d4d8b4e2-de6c-4391-8114-cc2ade1aaf90
       full_name: dummy
       name: Teenee
@@ -299,7 +299,7 @@ xp: !ruby/object:XP
         dead: false
         target: elbow
         text: Teenee was hit in the elbow and was dealt 23 extra damage
-      - &87103180 !ruby/object:Wound
+      - &87155890 !ruby/object:Wound
         damage: 0
         bleeding: 0
         stun: 0
@@ -361,7 +361,7 @@ xp: !ruby/object:XP
           healed_injuries: 0
           healed_hp: 0
       initiative_roll_this_round: 43
-    - &87128710 !ruby/object:Human
+    - &87176470 !ruby/object:Human
       id: 504a8851-6918-4f28-83bd-ed937df3ca71
       full_name: dummy
       name: Aramir the Invincible
@@ -409,7 +409,7 @@ xp: !ruby/object:XP
         target: left leg
         text: Aramir the Invincible was hit in the left leg and was dealt 10 extra
           damage and is stunned for 1 rounds
-      - &87125500 !ruby/object:Wound
+      - &87173040 !ruby/object:Wound
         damage: 0
         bleeding: 0
         stun: 0
@@ -472,7 +472,7 @@ xp: !ruby/object:XP
           healed_injuries: 0
           healed_hp: 0
       initiative_roll_this_round: 95
-    - &87154740 !ruby/object:Troll
+    - &87191530 !ruby/object:Troll
       id: 38e09466-0c4a-470e-bc25-fc2c7b49079a
       full_name: ''
       name: Gargath the Troll
@@ -508,7 +508,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - &87152400 !ruby/object:Wound
+      - &87189050 !ruby/object:Wound
         damage: 0
         bleeding: 0
         stun: 0
@@ -571,7 +571,7 @@ xp: !ruby/object:XP
           healed_injuries: 0
           healed_hp: 0
       initiative_roll_this_round: 80
-    - &87173360 !ruby/object:Human
+    - &87213130 !ruby/object:Human
       id: 8bb207b1-a56b-4938-ab86-9f498a69479d
       full_name: dummy
       name: Ezmu the Small
@@ -607,7 +607,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - &87171020 !ruby/object:Wound
+      - &87210500 !ruby/object:Wound
         damage: 0
         bleeding: 0
         stun: 0
@@ -670,7 +670,7 @@ xp: !ruby/object:XP
           healed_injuries: 0
           healed_hp: 0
       initiative_roll_this_round: 39
-    - &87189990 !ruby/object:Troll
+    - &87229250 !ruby/object:Troll
       id: eb266bf3-3508-48f2-94eb-91d12f431a95
       full_name: ''
       name: Bargunth the Troll
@@ -706,7 +706,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - &87188850 !ruby/object:Wound
+      - &87228020 !ruby/object:Wound
         damage: 12
         bleeding: 0
         stun: 2
@@ -729,7 +729,7 @@ xp: !ruby/object:XP
         dead: false
         target: shoulder
         text: Bargunth the Troll was hit in the shoulder and was dealt 30 extra damage
-      - &87187320 !ruby/object:Wound
+      - &87226260 !ruby/object:Wound
         damage: 0
         bleeding: 0
         stun: 0
@@ -754,7 +754,7 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 2
           wounds_inflicted_list:
-          - &87186160 !ruby/object:Wound
+          - &87225050 !ruby/object:Wound
             damage: 18
             bleeding: 2
             stun: 0
@@ -766,7 +766,7 @@ xp: !ruby/object:XP
             target: back
             text: Bereth the Strong was hit in the back and was dealt 18 extra damage
               and is bleeding 2 hits worth each round
-          - &87215140 !ruby/object:Wound
+          - &87224240 !ruby/object:Wound
             damage: 1
             bleeding: 0
             stun: 0
@@ -781,7 +781,7 @@ xp: !ruby/object:XP
           kills_list: []
           kos_inflicted: 1
           kos_inflicted_list:
-          - &87214310 !ruby/object:Human
+          - &87223320 !ruby/object:Human
             id: e84ec0e5-82d3-4dcc-bd5b-45561a351388
             full_name: dummy
             name: Bereth the Strong
@@ -817,7 +817,7 @@ xp: !ruby/object:XP
             can_attack: true
             cant_attack_text: no reason
             wounds:
-            - &87213250 !ruby/object:Wound
+            - &87253000 !ruby/object:Wound
               damage: 6
               bleeding: 1
               stun: 0
@@ -829,7 +829,7 @@ xp: !ruby/object:XP
               target: groin
               text: Bereth the Strong was hit in the groin and was dealt 6 extra damage
                 and is bleeding 1 hits worth each round
-            - &87212450 !ruby/object:Wound
+            - &87252190 !ruby/object:Wound
               damage: 9
               bleeding: 0
               stun: 1
@@ -841,7 +841,7 @@ xp: !ruby/object:XP
               target: side
               text: Bereth the Strong was hit in the side and was dealt 9 extra damage
                 and is stunned for 1 rounds
-            - *87186160
+            - *87225050
             - !ruby/object:Wound
               damage: 16
               bleeding: 0
@@ -924,13 +924,13 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 2
           wounds_inflicted_list:
-          - *87186160
-          - *87215140
+          - *87225050
+          - *87224240
           kills: 0
           kills_list: []
           kos_inflicted: 1
           kos_inflicted_list:
-          - *87214310
+          - *87223320
           damage_inflicted: 96
         current_body_lvl: !ruby/object:BodyLevel
           deaths: 0
@@ -944,7 +944,7 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 15
       kumite_streak: 0
-    - &87226230 !ruby/object:Orc
+    - &87264150 !ruby/object:Orc
       id: 56518b78-f8e4-41ed-ba1c-a60ebee3734e
       full_name: dummy
       name: Gurlar the Orc
@@ -980,7 +980,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - &87223960 !ruby/object:Wound
+      - &87261520 !ruby/object:Wound
         damage: 2
         bleeding: 1
         stun: 0
@@ -992,7 +992,7 @@ xp: !ruby/object:XP
         target: weapon arm
         text: Gurlar the Orc was hit in the weapon arm and was dealt 2 extra damage
           and is bleeding 1 hits worth each round
-      - &87253970 !ruby/object:Wound
+      - &87291280 !ruby/object:Wound
         damage: 18
         bleeding: 0
         stun: 0
@@ -1003,7 +1003,7 @@ xp: !ruby/object:XP
         dead: false
         target: groin
         text: Gurlar the Orc was hit in the groin and was dealt 18 extra damage
-      - &87253230 !ruby/object:Wound
+      - &87290520 !ruby/object:Wound
         damage: 0
         bleeding: 0
         stun: 0
@@ -1028,7 +1028,7 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 2
           wounds_inflicted_list:
-          - &87252080 !ruby/object:Wound
+          - &87289290 !ruby/object:Wound
             damage: 18
             bleeding: 2
             stun: 0
@@ -1040,7 +1040,7 @@ xp: !ruby/object:XP
             target: groin
             text: Kuoleman Paluu was hit in the groin and was dealt 18 extra damage
               and is bleeding 2 hits worth each round
-          - &87251270 !ruby/object:Wound
+          - &87288540 !ruby/object:Wound
             damage: 6
             bleeding: 1
             stun: 0
@@ -1074,8 +1074,8 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 2
           wounds_inflicted_list:
-          - *87252080
-          - *87251270
+          - *87289290
+          - *87288540
           kills: 0
           kills_list: []
           kos_inflicted: 0
@@ -1093,7 +1093,7 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 42
       kumite_streak: 0
-    - &87246260 !ruby/object:Orc
+    - &87313170 !ruby/object:Orc
       id: 580c23b4-c228-4b74-881e-833b3dccb2ec
       full_name: dummy
       name: Gurlar the Orc
@@ -1129,7 +1129,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - &87267090 !ruby/object:Wound
+      - &87310920 !ruby/object:Wound
         damage: 17
         bleeding: 0
         stun: 3
@@ -1141,7 +1141,7 @@ xp: !ruby/object:XP
         target: groin
         text: Gurlar the Orc was hit in the groin and was dealt 17 extra damage and
           is stunned for 3 rounds and is unable to parry for 2 rounds
-      - &87266320 !ruby/object:Wound
+      - &87310100 !ruby/object:Wound
         damage: 0
         bleeding: 0
         stun: 0
@@ -1166,7 +1166,7 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 2
           wounds_inflicted_list:
-          - &87265210 !ruby/object:Wound
+          - &87308900 !ruby/object:Wound
             damage: 20
             bleeding: 0
             stun: 2
@@ -1178,7 +1178,7 @@ xp: !ruby/object:XP
             target: skull
             text: Kuoleman Paluu was hit in the skull and was dealt 20 extra damage
               and is stunned for 2 rounds and is unable to parry for 1 rounds
-          - &87264400 !ruby/object:Wound
+          - &87308030 !ruby/object:Wound
             damage: 11
             bleeding: 0
             stun: 2
@@ -1212,8 +1212,8 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 2
           wounds_inflicted_list:
-          - *87265210
-          - *87264400
+          - *87308900
+          - *87308030
           kills: 0
           kills_list: []
           kos_inflicted: 0
@@ -1231,7 +1231,7 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 35
       kumite_streak: 0
-    - &87289940 !ruby/object:Troll
+    - &87485720 !ruby/object:Troll
       id: d59c035a-3ab2-4eb5-a0fa-b18c70176cc4
       full_name: dummy
       name: Gargath the Troll
@@ -1267,7 +1267,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - &87288940 !ruby/object:Wound
+      - &87484680 !ruby/object:Wound
         damage: 0
         bleeding: 0
         stun: 0
@@ -1331,7 +1331,7 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 94
       kumite_streak: 0
-    - &87283470 !ruby/object:Troll
+    - &87505950 !ruby/object:Troll
       id: 8e683cbe-8aa0-401b-9786-43e366edd3ba
       full_name: dummy
       name: Gargath the Troll
@@ -1367,7 +1367,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - &87311370 !ruby/object:Wound
+      - &87503710 !ruby/object:Wound
         damage: 18
         bleeding: 0
         stun: 3
@@ -1379,7 +1379,7 @@ xp: !ruby/object:XP
         target: knee
         text: Gargath the Troll was hit in the knee and was dealt 18 extra damage
           and is stunned for 3 rounds and is unable to parry for 2 rounds
-      - &87310550 !ruby/object:Wound
+      - &87502870 !ruby/object:Wound
         damage: 16
         bleeding: 0
         stun: 2
@@ -1391,7 +1391,7 @@ xp: !ruby/object:XP
         target: elbow
         text: Gargath the Troll was hit in the elbow and was dealt 16 extra damage
           and is stunned for 2 rounds and is unable to parry for 1 rounds
-      - &87309780 !ruby/object:Wound
+      - &87502130 !ruby/object:Wound
         damage: 28
         bleeding: 0
         stun: 0
@@ -1402,7 +1402,7 @@ xp: !ruby/object:XP
         dead: false
         target: throat
         text: Gargath the Troll was hit in the throat and was dealt 28 extra damage
-      - &87309020 !ruby/object:Wound
+      - &87501310 !ruby/object:Wound
         damage: 0
         bleeding: 0
         stun: 0
@@ -1427,7 +1427,7 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 1
           wounds_inflicted_list:
-          - &87307780 !ruby/object:Wound
+          - &87500120 !ruby/object:Wound
             damage: 15
             bleeding: 3
             stun: 0
@@ -1462,7 +1462,7 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 1
           wounds_inflicted_list:
-          - *87307780
+          - *87500120
           kills: 0
           kills_list: []
           kos_inflicted: 0
@@ -1480,7 +1480,7 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 19
       kumite_streak: 0
-    - &87485740 !ruby/object:Orc
+    - &87524930 !ruby/object:Orc
       id: 6a90541a-1ddd-4b19-8f63-96d814943bbe
       full_name: dummy
       name: Gurlar the Orc
@@ -1516,7 +1516,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - &87483470 !ruby/object:Wound
+      - &87522650 !ruby/object:Wound
         damage: 17
         bleeding: 0
         stun: 3
@@ -1528,7 +1528,7 @@ xp: !ruby/object:XP
         target: groin
         text: Gurlar the Orc was hit in the groin and was dealt 17 extra damage and
           is stunned for 3 rounds and is unable to parry for 2 rounds
-      - &87482710 !ruby/object:Wound
+      - &87521900 !ruby/object:Wound
         damage: 0
         bleeding: 0
         stun: 0
@@ -1553,7 +1553,7 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 1
           wounds_inflicted_list:
-          - &87481580 !ruby/object:Wound
+          - &87520690 !ruby/object:Wound
             damage: 6
             bleeding: 1
             stun: 0
@@ -1587,7 +1587,7 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 1
           wounds_inflicted_list:
-          - *87481580
+          - *87520690
           kills: 0
           kills_list: []
           kos_inflicted: 0
@@ -1605,7 +1605,7 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 4
       kumite_streak: 0
-    - &87503610 !ruby/object:Orc
+    - &87549110 !ruby/object:Orc
       id: c877377a-710b-4646-b6ec-f4504f808069
       full_name: dummy
       name: Gurlar the Orc
@@ -1641,7 +1641,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - &87502620 !ruby/object:Wound
+      - &87548040 !ruby/object:Wound
         damage: 0
         bleeding: 0
         stun: 0
@@ -1705,7 +1705,7 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 194
       kumite_streak: 0
-    - &87527210 !ruby/object:Kobold
+    - &87576240 !ruby/object:Kobold
       id: 697cc4c0-c9fb-4b3f-a2dd-e8ee8a25c88b
       full_name: dummy
       name: Ruuhuu
@@ -1765,7 +1765,7 @@ xp: !ruby/object:XP
         target: weapon arm
         text: Ruuhuu was hit in the weapon arm and was dealt 13 extra damage and is
           stunned for 2 rounds and is unable to parry for 1 rounds
-      - &87523470 !ruby/object:Wound
+      - &87572500 !ruby/object:Wound
         damage: 0
         bleeding: 0
         stun: 0
@@ -1789,7 +1789,7 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 3
           wounds_inflicted_list:
-          - &87522360 !ruby/object:Wound
+          - &87328480 !ruby/object:Wound
             damage: 18
             bleeding: 0
             stun: 0
@@ -1800,7 +1800,7 @@ xp: !ruby/object:XP
             dead: false
             target: groin
             text: Drendon the Old was hit in the groin and was dealt 18 extra damage
-          - &87521630 !ruby/object:Wound
+          - &87327630 !ruby/object:Wound
             damage: 19
             bleeding: 2
             stun: 0
@@ -1812,7 +1812,7 @@ xp: !ruby/object:XP
             target: stomach
             text: Kuoleman Paluu was hit in the stomach and was dealt 19 extra damage
               and is bleeding 2 hits worth each round
-          - &87520870 !ruby/object:Wound
+          - &87326850 !ruby/object:Wound
             damage: 9
             bleeding: 1
             stun: 0
@@ -1828,7 +1828,7 @@ xp: !ruby/object:XP
           kills_list: []
           kos_inflicted: 1
           kos_inflicted_list:
-          - &87553670 !ruby/object:Human
+          - &87326020 !ruby/object:Human
             id: de1fc1a2-0db0-4bcc-9d02-216f541870da
             full_name: dummy
             name: Drendon the Old
@@ -1875,7 +1875,7 @@ xp: !ruby/object:XP
               dead: false
               target: side
               text: Drendon the Old was hit in the side and was dealt 9 extra damage
-            - *87522360
+            - *87328480
             - !ruby/object:Wound
               damage: 48
               bleeding: 0
@@ -1901,7 +1901,7 @@ xp: !ruby/object:XP
                 critical_kos_inflicted_list: []
                 wounds_inflicted: 1
                 wounds_inflicted_list:
-                - &87550680 !ruby/object:Wound
+                - &87323110 !ruby/object:Wound
                   damage: 27
                   bleeding: 0
                   stun: 0
@@ -1934,7 +1934,7 @@ xp: !ruby/object:XP
                 critical_kos_inflicted_list: []
                 wounds_inflicted: 1
                 wounds_inflicted_list:
-                - *87550680
+                - *87323110
                 kills: 0
                 kills_list: []
                 kos_inflicted: 0
@@ -1970,14 +1970,14 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 3
           wounds_inflicted_list:
-          - *87522360
-          - *87521630
-          - *87520870
+          - *87328480
+          - *87327630
+          - *87326850
           kills: 0
           kills_list: []
           kos_inflicted: 1
           kos_inflicted_list:
-          - *87553670
+          - *87326020
           damage_inflicted: 170
         current_body_lvl: !ruby/object:BodyLevel
           deaths: 0
@@ -1991,7 +1991,7 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 4
       kumite_streak: 0
-    - &87575310 !ruby/object:Orc
+    - &87356160 !ruby/object:Orc
       id: 3eb2130a-0830-48f6-82d3-f140634c3834
       full_name: dummy
       name: Gurlar the Orc
@@ -2027,7 +2027,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - &87573070 !ruby/object:Wound
+      - &87377050 !ruby/object:Wound
         damage: 0
         bleeding: 0
         stun: 0
@@ -2091,9 +2091,129 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 83
       kumite_streak: 0
+    - &87459490 !ruby/object:Kobold
+      id: ef345ef3-9bc0-40ba-a2c7-c12784118895
+      full_name: dummy
+      name: Teenee
+      party: pc
+      brains: artificial
+      ob: 46
+      db: 31
+      ac: 29
+      hp: 56
+      quickness: 82
+      personality: stupid
+      profession: warrior monk
+      mana: 1
+      current_player_id: 
+      stun: 0
+      bleeding: 2
+      uparry: 0
+      downed: 0
+      prone: 0
+      blind: 0
+      penalties: 0
+      unconscious: false
+      unconscious_why: ''
+      dead: true
+      dead_why: ''
+      current_hp: 13
+      active_weapon: !ruby/object:Weapon
+        name: sword
+        fumble: 6
+      current_db: 31
+      current_ob: 46
+      current_mana: 1
+      can_attack: true
+      cant_attack_text: no reason
+      wounds:
+      - &87709040 !ruby/object:Wound
+        damage: 19
+        bleeding: 2
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: false
+        target: elbow
+        text: Teenee was hit in the elbow and was dealt 19 extra damage and is bleeding
+          2 hits worth each round
+      - &87459790 !ruby/object:Wound
+        damage: 0
+        bleeding: 0
+        stun: 0
+        uparry: 0
+        downed: 0
+        prone: 0
+        unconscious: false
+        dead: true
+        target: groin
+        text: Teenee was hit in the groin and was dealt 0 extra damage and is dead
+      current_blocks: {}
+      current_side: 2
+      xp: !ruby/object:XP
+        arms_level: 1
+        body_level: 1
+        heal_level: 1
+        total_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        total_body_lvl: !ruby/object:BodyLevel
+          damage_sustained: 60
+          wounds_sustained: 2
+          wounds_sustained_list:
+          - *87709040
+          - *87459790
+          critical_kos_sustained_list: []
+          critical_kills_sustained_list:
+          - 172
+          ko_sustained_list: []
+          kill_sustained_list: []
+        total_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+        current_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        current_body_lvl: !ruby/object:BodyLevel
+          damage_sustained: 0
+          wounds_sustained: 0
+          wounds_sustained_list: []
+          critical_kos_sustained_list: []
+          critical_kills_sustained_list: []
+          ko_sustained_list: []
+          kill_sustained_list: []
+        current_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+      initiative_roll_this_round: 91
+      kumite_streak: 0
     critical_kos_inflicted: 7
     critical_kos_inflicted_list:
-    - &87324950 !ruby/object:Orc
+    - &87371550 !ruby/object:Orc
       id: 67e9ab53-0391-4074-8acb-6f0c8662604c
       full_name: dummy
       name: Hugnarl the Orc
@@ -2129,7 +2249,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - &87322690 !ruby/object:Wound
+      - &87398440 !ruby/object:Wound
         damage: 50
         bleeding: 0
         stun: 0
@@ -2166,7 +2286,7 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 1
           wounds_inflicted_list:
-          - &87320710 !ruby/object:Wound
+          - &87396470 !ruby/object:Wound
             damage: 17
             bleeding: 0
             stun: 0
@@ -2199,7 +2319,7 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 1
           wounds_inflicted_list:
-          - *87320710
+          - *87396470
           kills: 0
           kills_list: []
           kos_inflicted: 0
@@ -2216,7 +2336,7 @@ xp: !ruby/object:XP
           healed_injuries: 0
           healed_hp: 0
       initiative_roll_this_round: 2
-    - &87358330 !ruby/object:Troll
+    - &87391570 !ruby/object:Troll
       id: 37443f80-f78c-49d2-a9bd-e8d6fe82a548
       full_name: ''
       name: Bargunth the Troll
@@ -2252,7 +2372,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - &87356050 !ruby/object:Wound
+      - &87410300 !ruby/object:Wound
         damage: 12
         bleeding: 0
         stun: 2
@@ -2288,7 +2408,7 @@ xp: !ruby/object:XP
         target: groin
         text: Bargunth the Troll was hit in the groin and was dealt 4 extra damage
           and is stunned for 1 rounds
-      - &87377070 !ruby/object:Wound
+      - &87408020 !ruby/object:Wound
         damage: 58
         bleeding: 0
         stun: 0
@@ -2313,7 +2433,7 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 3
           wounds_inflicted_list:
-          - &87375930 !ruby/object:Wound
+          - &87406830 !ruby/object:Wound
             damage: 16
             bleeding: 3
             stun: 0
@@ -2326,7 +2446,7 @@ xp: !ruby/object:XP
             text: Drendon the Old was hit in the groin and was dealt 16 extra damage
               and is bleeding 3 hits worth each round and is unable to parry for 1
               rounds
-          - &87375210 !ruby/object:Wound
+          - &87406050 !ruby/object:Wound
             damage: 19
             bleeding: 0
             stun: 3
@@ -2338,7 +2458,7 @@ xp: !ruby/object:XP
             target: groin
             text: Ezmu the Small was hit in the groin and was dealt 19 extra damage
               and is stunned for 3 rounds and is unable to parry for 2 rounds
-          - &87374470 !ruby/object:Wound
+          - &87405250 !ruby/object:Wound
             damage: 3
             bleeding: 0
             stun: 1
@@ -2354,7 +2474,7 @@ xp: !ruby/object:XP
           kills_list: []
           kos_inflicted: 3
           kos_inflicted_list:
-          - &87373640 !ruby/object:Human
+          - &87404410 !ruby/object:Human
             id: 5b54ec5c-2379-44c0-a127-2b379cdc24f2
             full_name: dummy
             name: Drendon the Old
@@ -2390,7 +2510,7 @@ xp: !ruby/object:XP
             can_attack: true
             cant_attack_text: no reason
             wounds:
-            - *87375930
+            - *87406830
             - !ruby/object:Wound
               damage: 16
               bleeding: 2
@@ -2416,7 +2536,7 @@ xp: !ruby/object:XP
                 critical_kos_inflicted_list: []
                 wounds_inflicted: 1
                 wounds_inflicted_list:
-                - &87398990 !ruby/object:Wound
+                - &87416650 !ruby/object:Wound
                   damage: 31
                   bleeding: 0
                   stun: 0
@@ -2450,7 +2570,7 @@ xp: !ruby/object:XP
                 critical_kos_inflicted_list: []
                 wounds_inflicted: 1
                 wounds_inflicted_list:
-                - *87398990
+                - *87416650
                 kills: 0
                 kills_list: []
                 kos_inflicted: 0
@@ -2467,7 +2587,7 @@ xp: !ruby/object:XP
                 healed_injuries: 0
                 healed_hp: 0
             initiative_roll_this_round: 30
-          - &87394170 !ruby/object:Human
+          - &87429680 !ruby/object:Human
             id: 77272da7-9076-4497-b483-07c4f398af0d
             full_name: dummy
             name: Ezmu the Small
@@ -2503,7 +2623,7 @@ xp: !ruby/object:XP
             can_attack: true
             cant_attack_text: no reason
             wounds:
-            - *87375210
+            - *87406050
             - !ruby/object:Wound
               damage: 3
               bleeding: 1
@@ -2567,7 +2687,7 @@ xp: !ruby/object:XP
                 healed_injuries: 0
                 healed_hp: 0
             initiative_roll_this_round: 79
-          - &87407250 !ruby/object:Human
+          - &87445550 !ruby/object:Human
             id: a318ac1e-dd18-4a21-882c-5783f4abf19c
             full_name: dummy
             name: Beanel the 4th
@@ -2603,7 +2723,7 @@ xp: !ruby/object:XP
             can_attack: true
             cant_attack_text: no reason
             wounds:
-            - *87374470
+            - *87405250
             current_blocks: {}
             current_side: 1
             xp: !ruby/object:XP
@@ -2617,7 +2737,7 @@ xp: !ruby/object:XP
                 critical_kos_inflicted_list: []
                 wounds_inflicted: 2
                 wounds_inflicted_list:
-                - &87405830 !ruby/object:Wound
+                - &87443920 !ruby/object:Wound
                   damage: 6
                   bleeding: 0
                   stun: 0
@@ -2629,7 +2749,7 @@ xp: !ruby/object:XP
                   target: left leg
                   text: Harag the Troll was hit in the left leg and was dealt 6 extra
                     damage
-                - &87405090 !ruby/object:Wound
+                - &87443180 !ruby/object:Wound
                   damage: 14
                   bleeding: 0
                   stun: 3
@@ -2646,7 +2766,7 @@ xp: !ruby/object:XP
                 kills_list: []
                 kos_inflicted: 1
                 kos_inflicted_list:
-                - &87404260 !ruby/object:Troll
+                - &87442380 !ruby/object:Troll
                   id: c770b0d4-ac4f-486a-a3fb-9bb7d47adb33
                   full_name: ''
                   name: Harag the Troll
@@ -2694,8 +2814,8 @@ xp: !ruby/object:XP
                     target: elbow
                     text: Harag the Troll was hit in the elbow and was dealt 4 extra
                       damage and is stunned for 1 rounds
-                  - *87398990
-                  - *87405830
+                  - *87416650
+                  - *87443920
                   - !ruby/object:Wound
                     damage: 17
                     bleeding: 0
@@ -2709,7 +2829,7 @@ xp: !ruby/object:XP
                     text: Harag the Troll was hit in the knee and was dealt 17 extra
                       damage and is stunned for 2 rounds and is unable to parry for
                       1 rounds
-                  - *87405090
+                  - *87443180
                   current_blocks: {}
                   current_side: 2
                   xp: !ruby/object:XP
@@ -2779,13 +2899,13 @@ xp: !ruby/object:XP
                 critical_kos_inflicted_list: []
                 wounds_inflicted: 2
                 wounds_inflicted_list:
-                - *87405830
-                - *87405090
+                - *87443920
+                - *87443180
                 kills: 0
                 kills_list: []
                 kos_inflicted: 1
                 kos_inflicted_list:
-                - *87404260
+                - *87442380
                 damage_inflicted: 131
               current_body_lvl: !ruby/object:BodyLevel
                 deaths: 0
@@ -2816,16 +2936,16 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 3
           wounds_inflicted_list:
-          - *87375930
-          - *87375210
-          - *87374470
+          - *87406830
+          - *87406050
+          - *87405250
           kills: 0
           kills_list: []
           kos_inflicted: 3
           kos_inflicted_list:
-          - *87373640
-          - *87394170
-          - *87407250
+          - *87404410
+          - *87429680
+          - *87445550
           damage_inflicted: 283
         current_body_lvl: !ruby/object:BodyLevel
           deaths: 0
@@ -2838,7 +2958,7 @@ xp: !ruby/object:XP
           healed_injuries: 0
           healed_hp: 0
       initiative_roll_this_round: 84
-    - &87423580 !ruby/object:Human
+    - &85585670 !ruby/object:Human
       id: fc580e44-d7bb-44b9-a028-aa15eb81f231
       full_name: dummy
       name: Aramir the Invincible
@@ -2874,7 +2994,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - &87422590 !ruby/object:Wound
+      - &85584630 !ruby/object:Wound
         damage: 7
         bleeding: 0
         stun: 0
@@ -2886,7 +3006,7 @@ xp: !ruby/object:XP
         target: left leg
         text: Aramir the Invincible was hit in the left leg and was dealt 7 extra
           damage
-      - &87446080 !ruby/object:Wound
+      - &85583890 !ruby/object:Wound
         damage: 14
         bleeding: 3
         stun: 0
@@ -2898,7 +3018,7 @@ xp: !ruby/object:XP
         target: elbow
         text: Aramir the Invincible was hit in the elbow and was dealt 14 extra damage
           and is bleeding 3 hits worth each round and is unable to parry for 1 rounds
-      - &87445290 !ruby/object:Wound
+      - &85583140 !ruby/object:Wound
         damage: 57
         bleeding: 0
         stun: 0
@@ -2921,7 +3041,7 @@ xp: !ruby/object:XP
           critical_kills_list: []
           critical_kos_inflicted: 1
           critical_kos_inflicted_list:
-          - &87444130 !ruby/object:Troll
+          - &85581980 !ruby/object:Troll
             id: 89a83d53-37f8-42f8-95d5-abc2503c55ad
             full_name: dummy
             name: Bargunth the Troll
@@ -2970,7 +3090,7 @@ xp: !ruby/object:XP
               text: Bargunth the Troll was hit in the right leg and was dealt 19 extra
                 damage and is bleeding 3 hits worth each round and is unable to parry
                 for 1 rounds
-            - &87440600 !ruby/object:Wound
+            - &85604800 !ruby/object:Wound
               damage: 3
               bleeding: 0
               stun: 1
@@ -2982,7 +3102,7 @@ xp: !ruby/object:XP
               target: elbow
               text: Bargunth the Troll was hit in the elbow and was dealt 3 extra
                 damage and is stunned for 1 rounds
-            - &87439850 !ruby/object:Wound
+            - &85604060 !ruby/object:Wound
               damage: 45
               bleeding: 0
               stun: 0
@@ -3007,7 +3127,7 @@ xp: !ruby/object:XP
                 critical_kos_inflicted_list: []
                 wounds_inflicted: 1
                 wounds_inflicted_list:
-                - &87438650 !ruby/object:Wound
+                - &85602890 !ruby/object:Wound
                   damage: 27
                   bleeding: 0
                   stun: 0
@@ -3023,7 +3143,7 @@ xp: !ruby/object:XP
                 kills_list: []
                 kos_inflicted: 1
                 kos_inflicted_list:
-                - &87460400 !ruby/object:Human
+                - &85602030 !ruby/object:Human
                   id: 51cdc75c-4ed2-467d-8302-564d251a651a
                   full_name: dummy
                   name: Ezmu the Small
@@ -3059,7 +3179,7 @@ xp: !ruby/object:XP
                   can_attack: true
                   cant_attack_text: no reason
                   wounds:
-                  - *87438650
+                  - *85602890
                   - !ruby/object:Wound
                     damage: 10
                     bleeding: 0
@@ -3154,12 +3274,12 @@ xp: !ruby/object:XP
                 critical_kos_inflicted_list: []
                 wounds_inflicted: 1
                 wounds_inflicted_list:
-                - *87438650
+                - *85602890
                 kills: 0
                 kills_list: []
                 kos_inflicted: 1
                 kos_inflicted_list:
-                - *87460400
+                - *85602030
                 damage_inflicted: 104
               current_body_lvl: !ruby/object:BodyLevel
                 deaths: 0
@@ -3174,8 +3294,8 @@ xp: !ruby/object:XP
             initiative_roll_this_round: 38
           wounds_inflicted: 2
           wounds_inflicted_list:
-          - *87440600
-          - *87439850
+          - *85604800
+          - *85604060
           kills: 0
           kills_list: []
           kos_inflicted: 0
@@ -3196,11 +3316,11 @@ xp: !ruby/object:XP
           critical_kills_list: []
           critical_kos_inflicted: 1
           critical_kos_inflicted_list:
-          - *87444130
+          - *85581980
           wounds_inflicted: 2
           wounds_inflicted_list:
-          - *87440600
-          - *87439850
+          - *85604800
+          - *85604060
           kills: 0
           kills_list: []
           kos_inflicted: 0
@@ -3217,7 +3337,7 @@ xp: !ruby/object:XP
           healed_injuries: 0
           healed_hp: 0
       initiative_roll_this_round: 46
-    - &85605760 !ruby/object:Kobold
+    - &85638510 !ruby/object:Kobold
       id: 0bd6b0c4-ebd4-4529-9c49-0615c1f8558a
       full_name: dummy
       name: Fiiu
@@ -3253,7 +3373,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - &85603550 !ruby/object:Wound
+      - &85664860 !ruby/object:Wound
         damage: 16
         bleeding: 0
         stun: 2
@@ -3265,7 +3385,7 @@ xp: !ruby/object:XP
         target: knee
         text: Fiiu was hit in the knee and was dealt 16 extra damage and is stunned
           for 2 rounds and is unable to parry for 1 rounds
-      - &85602820 !ruby/object:Wound
+      - &85664100 !ruby/object:Wound
         damage: 49
         bleeding: 0
         stun: 0
@@ -3328,7 +3448,7 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 54
       kumite_streak: 0
-    - &85627400 !ruby/object:Orc
+    - &85658470 !ruby/object:Orc
       id: 1136e158-7779-456b-836d-779468b9787b
       full_name: dummy
       name: Gurlar the Orc
@@ -3364,7 +3484,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - &85625110 !ruby/object:Wound
+      - &85686650 !ruby/object:Wound
         damage: 2
         bleeding: 1
         stun: 0
@@ -3376,7 +3496,7 @@ xp: !ruby/object:XP
         target: side
         text: Gurlar the Orc was hit in the side and was dealt 2 extra damage and
           is bleeding 1 hits worth each round
-      - &85624370 !ruby/object:Wound
+      - &85685870 !ruby/object:Wound
         damage: 59
         bleeding: 0
         stun: 0
@@ -3440,7 +3560,7 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 21
       kumite_streak: 0
-    - &85644250 !ruby/object:Troll
+    - &85710290 !ruby/object:Troll
       id: d29c863f-5c17-4b29-ad71-d0a0f01cb1c7
       full_name: dummy
       name: Gargath the Troll
@@ -3476,7 +3596,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - &85643260 !ruby/object:Wound
+      - &85709270 !ruby/object:Wound
         damage: 31
         bleeding: 0
         stun: 0
@@ -3488,7 +3608,7 @@ xp: !ruby/object:XP
         target: groin
         text: Gargath the Troll was hit in the groin and was dealt 31 extra damage
           and is prone for 3 rounds
-      - &85642520 !ruby/object:Wound
+      - &85708440 !ruby/object:Wound
         damage: 1
         bleeding: 1
         stun: 0
@@ -3500,7 +3620,7 @@ xp: !ruby/object:XP
         target: side
         text: Gargath the Troll was hit in the side and was dealt 1 extra damage and
           is bleeding 1 hits worth each round
-      - &85641720 !ruby/object:Wound
+      - &85707680 !ruby/object:Wound
         damage: 39
         bleeding: 0
         stun: 0
@@ -3564,7 +3684,7 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 92
       kumite_streak: 0
-    - &85665020 !ruby/object:Kobold
+    - &85732260 !ruby/object:Kobold
       id: b095774f-516e-4805-b064-46a3e8152071
       full_name: dummy
       name: Fiiu
@@ -3600,7 +3720,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - &85664030 !ruby/object:Wound
+      - &85731260 !ruby/object:Wound
         damage: 50
         bleeding: 0
         stun: 0
@@ -3664,10 +3784,10 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 68
       kumite_streak: 0
-    wounds_inflicted: 102
+    wounds_inflicted: 106
     wounds_inflicted_list:
-    - *87322690
-    - &85658590 !ruby/object:Wound
+    - *87398440
+    - &85725670 !ruby/object:Wound
       damage: 11
       bleeding: 2
       stun: 0
@@ -3679,7 +3799,7 @@ xp: !ruby/object:XP
       target: throat
       text: Visnasch the Orc was hit in the throat and was dealt 11 extra damage and
         is bleeding 2 hits worth each round
-    - &85688380 !ruby/object:Wound
+    - &85724930 !ruby/object:Wound
       damage: 10
       bleeding: 1
       stun: 0
@@ -3691,7 +3811,7 @@ xp: !ruby/object:XP
       target: neck
       text: Gurlar the Orc was hit in the neck and was dealt 10 extra damage and is
         bleeding 1 hits worth each round
-    - &85687590 !ruby/object:Wound
+    - &85750150 !ruby/object:Wound
       damage: 6
       bleeding: 0
       stun: 1
@@ -3703,7 +3823,7 @@ xp: !ruby/object:XP
       target: neck
       text: Bronthor the Orc was hit in the neck and was dealt 6 extra damage and
         is stunned for 1 rounds
-    - &85686790 !ruby/object:Wound
+    - &85749410 !ruby/object:Wound
       damage: 10
       bleeding: 1
       stun: 0
@@ -3715,7 +3835,7 @@ xp: !ruby/object:XP
       target: skull
       text: Bronthor the Orc was hit in the skull and was dealt 10 extra damage and
         is bleeding 1 hits worth each round
-    - &85686040 !ruby/object:Wound
+    - &85748660 !ruby/object:Wound
       damage: 18
       bleeding: 0
       stun: 2
@@ -3727,7 +3847,7 @@ xp: !ruby/object:XP
       target: stomach
       text: Unknown4 the Orc was hit in the stomach and was dealt 18 extra damage
         and is stunned for 2 rounds and is unable to parry for 1 rounds
-    - &85685300 !ruby/object:Wound
+    - &85747820 !ruby/object:Wound
       damage: 23
       bleeding: 0
       stun: 0
@@ -3738,11 +3858,11 @@ xp: !ruby/object:XP
       dead: false
       target: knee
       text: Unknown4 the Orc was hit in the knee and was dealt 23 extra damage
-    - *87065250
-    - *87064260
-    - *87086920
-    - *87103180
-    - &85684520 !ruby/object:Wound
+    - *87108170
+    - *87107090
+    - *87128970
+    - *87155890
+    - &85747060 !ruby/object:Wound
       damage: 16
       bleeding: 2
       stun: 0
@@ -3754,9 +3874,9 @@ xp: !ruby/object:XP
       target: right leg
       text: Gargath the Troll was hit in the right leg and was dealt 16 extra damage
         and is bleeding 2 hits worth each round
-    - *87356050
-    - *87377070
-    - &85683780 !ruby/object:Wound
+    - *87410300
+    - *87408020
+    - &85746250 !ruby/object:Wound
       damage: 17
       bleeding: 2
       stun: 0
@@ -3768,7 +3888,7 @@ xp: !ruby/object:XP
       target: back
       text: Hugnarl the Orc was hit in the back and was dealt 17 extra damage and
         is bleeding 2 hits worth each round
-    - &85683060 !ruby/object:Wound
+    - &85745500 !ruby/object:Wound
       damage: 25
       bleeding: 0
       stun: 3
@@ -3780,7 +3900,7 @@ xp: !ruby/object:XP
       target: groin
       text: Visnasch the Orc was hit in the groin and was dealt 25 extra damage and
         is stunned for 3 rounds and is unable to parry for 2 rounds
-    - &85682340 !ruby/object:Wound
+    - &85744760 !ruby/object:Wound
       damage: 20
       bleeding: 2
       stun: 0
@@ -3792,7 +3912,7 @@ xp: !ruby/object:XP
       target: groin
       text: Gurlar the Orc was hit in the groin and was dealt 20 extra damage and
         is bleeding 2 hits worth each round
-    - &85681600 !ruby/object:Wound
+    - &85744000 !ruby/object:Wound
       damage: 9
       bleeding: 0
       stun: 1
@@ -3804,11 +3924,11 @@ xp: !ruby/object:XP
       target: back
       text: Drendon the Old was hit in the back and was dealt 9 extra damage and is
         stunned for 1 rounds
-    - *87422590
-    - *87446080
-    - *87445290
-    - *87125500
-    - &85680880 !ruby/object:Wound
+    - *85584630
+    - *85583890
+    - *85583140
+    - *87173040
+    - &85743260 !ruby/object:Wound
       damage: 25
       bleeding: 3
       stun: 0
@@ -3820,7 +3940,7 @@ xp: !ruby/object:XP
       target: groin
       text: Drendon the Old was hit in the groin and was dealt 25 extra damage and
         is bleeding 3 hits worth each round and is unable to parry for 1 rounds
-    - &85710010 !ruby/object:Wound
+    - &85742520 !ruby/object:Wound
       damage: 18
       bleeding: 2
       stun: 0
@@ -3832,7 +3952,7 @@ xp: !ruby/object:XP
       target: shoulder
       text: Hugnarl the Orc was hit in the shoulder and was dealt 18 extra damage
         and is bleeding 2 hits worth each round
-    - &85709260 !ruby/object:Wound
+    - &85775930 !ruby/object:Wound
       damage: 2
       bleeding: 0
       stun: 0
@@ -3843,7 +3963,7 @@ xp: !ruby/object:XP
       dead: false
       target: groin
       text: Visnasch the Orc was hit in the groin and was dealt 2 extra damage
-    - &85708460 !ruby/object:Wound
+    - &85775130 !ruby/object:Wound
       damage: 26
       bleeding: 0
       stun: 0
@@ -3854,7 +3974,7 @@ xp: !ruby/object:XP
       dead: false
       target: groin
       text: Visnasch the Orc was hit in the groin and was dealt 26 extra damage
-    - &85707720 !ruby/object:Wound
+    - &85774320 !ruby/object:Wound
       damage: 25
       bleeding: 3
       stun: 0
@@ -3866,7 +3986,7 @@ xp: !ruby/object:XP
       target: groin
       text: Unknown4 the Orc was hit in the groin and was dealt 25 extra damage and
         is bleeding 3 hits worth each round and is unable to parry for 1 rounds
-    - &85706930 !ruby/object:Wound
+    - &85773560 !ruby/object:Wound
       damage: 19
       bleeding: 0
       stun: 3
@@ -3878,8 +3998,8 @@ xp: !ruby/object:XP
       target: right leg
       text: Unknown4 the Orc was hit in the right leg and was dealt 19 extra damage
         and is stunned for 3 rounds and is unable to parry for 2 rounds
-    - *87152400
-    - &85706200 !ruby/object:Wound
+    - *87189050
+    - &85772820 !ruby/object:Wound
       damage: 31
       bleeding: 0
       stun: 0
@@ -3891,7 +4011,7 @@ xp: !ruby/object:XP
       target: groin
       text: Bargunth the Troll was hit in the groin and was dealt 31 extra damage
         and is prone for 3 rounds
-    - &85705480 !ruby/object:Wound
+    - &85772080 !ruby/object:Wound
       damage: 14
       bleeding: 3
       stun: 0
@@ -3903,7 +4023,7 @@ xp: !ruby/object:XP
       target: elbow
       text: Harag the Troll was hit in the elbow and was dealt 14 extra damage and
         is bleeding 3 hits worth each round and is unable to parry for 1 rounds
-    - &85704750 !ruby/object:Wound
+    - &85771320 !ruby/object:Wound
       damage: 19
       bleeding: 0
       stun: 2
@@ -3915,7 +4035,7 @@ xp: !ruby/object:XP
       target: groin
       text: Gargath the Troll was hit in the groin and was dealt 19 extra damage and
         is stunned for 2 rounds and is unable to parry for 1 rounds
-    - &85704020 !ruby/object:Wound
+    - &85770530 !ruby/object:Wound
       damage: 22
       bleeding: 3
       stun: 0
@@ -3927,7 +4047,7 @@ xp: !ruby/object:XP
       target: knee
       text: Gargath the Troll was hit in the knee and was dealt 22 extra damage and
         is bleeding 3 hits worth each round and is unable to parry for 1 rounds
-    - &85703300 !ruby/object:Wound
+    - &85769740 !ruby/object:Wound
       damage: 31
       bleeding: 0
       stun: 0
@@ -3939,7 +4059,7 @@ xp: !ruby/object:XP
       target: groin
       text: Gargath the Troll was hit in the groin and was dealt 31 extra damage and
         is prone for 3 rounds
-    - &85702580 !ruby/object:Wound
+    - &85769000 !ruby/object:Wound
       damage: 13
       bleeding: 0
       stun: 2
@@ -3951,7 +4071,7 @@ xp: !ruby/object:XP
       target: right leg
       text: Gargath the Troll was hit in the right leg and was dealt 13 extra damage
         and is stunned for 2 rounds and is unable to parry for 1 rounds
-    - &85731870 !ruby/object:Wound
+    - &85768190 !ruby/object:Wound
       damage: 20
       bleeding: 0
       stun: 0
@@ -3962,7 +4082,7 @@ xp: !ruby/object:XP
       dead: false
       target: side
       text: Ruuhuu was hit in the side and was dealt 20 extra damage
-    - &85731130 !ruby/object:Wound
+    - &85790640 !ruby/object:Wound
       damage: 19
       bleeding: 0
       stun: 2
@@ -3974,7 +4094,7 @@ xp: !ruby/object:XP
       target: skull
       text: Beuo was hit in the skull and was dealt 19 extra damage and is stunned
         for 2 rounds and is unable to parry for 1 rounds
-    - &85730390 !ruby/object:Wound
+    - &85789890 !ruby/object:Wound
       damage: 16
       bleeding: 3
       stun: 0
@@ -3986,7 +4106,7 @@ xp: !ruby/object:XP
       target: neck
       text: Beuo was hit in the neck and was dealt 16 extra damage and is bleeding
         3 hits worth each round and is unable to parry for 1 rounds
-    - &85729660 !ruby/object:Wound
+    - &85789150 !ruby/object:Wound
       damage: 4
       bleeding: 0
       stun: 1
@@ -3998,7 +4118,7 @@ xp: !ruby/object:XP
       target: knee
       text: Banza was hit in the knee and was dealt 4 extra damage and is stunned
         for 1 rounds
-    - &85728900 !ruby/object:Wound
+    - &85788390 !ruby/object:Wound
       damage: 22
       bleeding: 0
       stun: 0
@@ -4009,7 +4129,7 @@ xp: !ruby/object:XP
       dead: false
       target: throat
       text: Teenee was hit in the throat and was dealt 22 extra damage
-    - &85728120 !ruby/object:Wound
+    - &85787650 !ruby/object:Wound
       damage: 3
       bleeding: 0
       stun: 1
@@ -4021,7 +4141,7 @@ xp: !ruby/object:XP
       target: elbow
       text: Teenee was hit in the elbow and was dealt 3 extra damage and is stunned
         for 1 rounds
-    - &85727330 !ruby/object:Wound
+    - &85786900 !ruby/object:Wound
       damage: 15
       bleeding: 0
       stun: 3
@@ -4033,7 +4153,7 @@ xp: !ruby/object:XP
       target: elbow
       text: Buhh was hit in the elbow and was dealt 15 extra damage and is stunned
         for 3 rounds and is unable to parry for 2 rounds
-    - &85726600 !ruby/object:Wound
+    - &85786070 !ruby/object:Wound
       damage: 18
       bleeding: 0
       stun: 2
@@ -4045,8 +4165,8 @@ xp: !ruby/object:XP
       target: groin
       text: Buhh was hit in the groin and was dealt 18 extra damage and is stunned
         for 2 rounds and is unable to parry for 1 rounds
-    - *87171020
-    - &85725870 !ruby/object:Wound
+    - *87210500
+    - &85785310 !ruby/object:Wound
       damage: 29
       bleeding: 0
       stun: 0
@@ -4057,7 +4177,7 @@ xp: !ruby/object:XP
       dead: false
       target: skull
       text: Aramir the Invincible was hit in the skull and was dealt 29 extra damage
-    - &85725150 !ruby/object:Wound
+    - &85784490 !ruby/object:Wound
       damage: 20
       bleeding: 0
       stun: 0
@@ -4068,12 +4188,12 @@ xp: !ruby/object:XP
       dead: false
       target: back
       text: Harag the Troll was hit in the back and was dealt 20 extra damage
-    - *87188850
-    - *87187320
-    - *87223960
-    - *87253970
-    - *87253230
-    - &85724410 !ruby/object:Wound
+    - *87228020
+    - *87226260
+    - *87261520
+    - *87291280
+    - *87290520
+    - &85783740 !ruby/object:Wound
       damage: 15
       bleeding: 2
       stun: 0
@@ -4085,9 +4205,9 @@ xp: !ruby/object:XP
       target: left leg
       text: Gurlar the Orc was hit in the left leg and was dealt 15 extra damage and
         is bleeding 2 hits worth each round
-    - *87267090
-    - *87266320
-    - &85749710 !ruby/object:Wound
+    - *87310920
+    - *87310100
+    - &85813030 !ruby/object:Wound
       damage: 21
       bleeding: 3
       stun: 0
@@ -4099,7 +4219,7 @@ xp: !ruby/object:XP
       target: skull
       text: Gurlar the Orc was hit in the skull and was dealt 21 extra damage and
         is bleeding 3 hits worth each round and is unable to parry for 1 rounds
-    - &85748990 !ruby/object:Wound
+    - &85812280 !ruby/object:Wound
       damage: 4
       bleeding: 0
       stun: 1
@@ -4111,7 +4231,7 @@ xp: !ruby/object:XP
       target: secondary arm
       text: Gurlar the Orc was hit in the secondary arm and was dealt 4 extra damage
         and is stunned for 1 rounds
-    - &85748190 !ruby/object:Wound
+    - &85811480 !ruby/object:Wound
       damage: 11
       bleeding: 0
       stun: 3
@@ -4123,7 +4243,7 @@ xp: !ruby/object:XP
       target: shoulder
       text: Gurlar the Orc was hit in the shoulder and was dealt 11 extra damage and
         is stunned for 3 rounds and is unable to parry for 2 rounds
-    - &85747440 !ruby/object:Wound
+    - &85810750 !ruby/object:Wound
       damage: 21
       bleeding: 0
       stun: 0
@@ -4134,7 +4254,7 @@ xp: !ruby/object:XP
       dead: false
       target: throat
       text: Gurlar the Orc was hit in the throat and was dealt 21 extra damage
-    - &85746650 !ruby/object:Wound
+    - &85809990 !ruby/object:Wound
       damage: 5
       bleeding: 1
       stun: 0
@@ -4146,7 +4266,7 @@ xp: !ruby/object:XP
       target: knee
       text: Gurlar the Orc was hit in the knee and was dealt 5 extra damage and is
         bleeding 1 hits worth each round
-    - &85745910 !ruby/object:Wound
+    - &85809200 !ruby/object:Wound
       damage: 2
       bleeding: 1
       stun: 0
@@ -4158,8 +4278,8 @@ xp: !ruby/object:XP
       target: knee
       text: Gurlar the Orc was hit in the knee and was dealt 2 extra damage and is
         bleeding 1 hits worth each round
-    - *87288940
-    - &85745190 !ruby/object:Wound
+    - *87484680
+    - &85808380 !ruby/object:Wound
       damage: 21
       bleeding: 3
       stun: 0
@@ -4171,11 +4291,11 @@ xp: !ruby/object:XP
       target: groin
       text: Fiiu was hit in the groin and was dealt 21 extra damage and is bleeding
         3 hits worth each round and is unable to parry for 1 rounds
-    - *87311370
-    - *87310550
-    - *87309780
-    - *87309020
-    - &85744470 !ruby/object:Wound
+    - *87503710
+    - *87502870
+    - *87502130
+    - *87501310
+    - &85807550 !ruby/object:Wound
       damage: 31
       bleeding: 0
       stun: 0
@@ -4187,7 +4307,7 @@ xp: !ruby/object:XP
       target: knee
       text: Fiiu was hit in the knee and was dealt 31 extra damage and is prone for
         3 rounds
-    - &85743730 !ruby/object:Wound
+    - &85806810 !ruby/object:Wound
       damage: 9
       bleeding: 1
       stun: 0
@@ -4199,9 +4319,9 @@ xp: !ruby/object:XP
       target: back
       text: Fiiu was hit in the back and was dealt 9 extra damage and is bleeding
         1 hits worth each round
-    - *85603550
-    - *85602820
-    - &85743010 !ruby/object:Wound
+    - *85664860
+    - *85664100
+    - &85806030 !ruby/object:Wound
       damage: 19
       bleeding: 2
       stun: 0
@@ -4213,7 +4333,7 @@ xp: !ruby/object:XP
       target: elbow
       text: Fiiu was hit in the elbow and was dealt 19 extra damage and is bleeding
         2 hits worth each round
-    - &85742280 !ruby/object:Wound
+    - &85805270 !ruby/object:Wound
       damage: 16
       bleeding: 0
       stun: 2
@@ -4225,9 +4345,9 @@ xp: !ruby/object:XP
       target: back
       text: Fiiu was hit in the back and was dealt 16 extra damage and is stunned
         for 2 rounds and is unable to parry for 1 rounds
-    - *85625110
-    - *85624370
-    - &85775670 !ruby/object:Wound
+    - *85686650
+    - *85685870
+    - &85837650 !ruby/object:Wound
       damage: 11
       bleeding: 0
       stun: 2
@@ -4239,7 +4359,7 @@ xp: !ruby/object:XP
       target: stomach
       text: Gurlar the Orc was hit in the stomach and was dealt 11 extra damage and
         is stunned for 2 rounds and is unable to parry for 1 rounds
-    - &85774930 !ruby/object:Wound
+    - &85836920 !ruby/object:Wound
       damage: 5
       bleeding: 0
       stun: 0
@@ -4250,7 +4370,7 @@ xp: !ruby/object:XP
       dead: false
       target: side
       text: Gurlar the Orc was hit in the side and was dealt 5 extra damage
-    - &85774150 !ruby/object:Wound
+    - &85836090 !ruby/object:Wound
       damage: 25
       bleeding: 3
       stun: 0
@@ -4262,7 +4382,7 @@ xp: !ruby/object:XP
       target: back
       text: Gurlar the Orc was hit in the back and was dealt 25 extra damage and is
         bleeding 3 hits worth each round and is unable to parry for 1 rounds
-    - &85773410 !ruby/object:Wound
+    - &85835340 !ruby/object:Wound
       damage: 17
       bleeding: 0
       stun: 2
@@ -4274,7 +4394,7 @@ xp: !ruby/object:XP
       target: throat
       text: Gurlar the Orc was hit in the throat and was dealt 17 extra damage and
         is stunned for 2 rounds and is unable to parry for 1 rounds
-    - &85772690 !ruby/object:Wound
+    - &85834580 !ruby/object:Wound
       damage: 13
       bleeding: 2
       stun: 0
@@ -4286,9 +4406,9 @@ xp: !ruby/object:XP
       target: elbow
       text: Fiiu was hit in the elbow and was dealt 13 extra damage and is bleeding
         2 hits worth each round
-    - *87483470
-    - *87482710
-    - &85771970 !ruby/object:Wound
+    - *87522650
+    - *87521900
+    - &85833770 !ruby/object:Wound
       damage: 9
       bleeding: 1
       stun: 0
@@ -4300,7 +4420,7 @@ xp: !ruby/object:XP
       target: back
       text: Gurlar the Orc was hit in the back and was dealt 9 extra damage and is
         bleeding 1 hits worth each round
-    - &85771230 !ruby/object:Wound
+    - &85833010 !ruby/object:Wound
       damage: 23
       bleeding: 0
       stun: 3
@@ -4312,8 +4432,8 @@ xp: !ruby/object:XP
       target: right leg
       text: Gurlar the Orc was hit in the right leg and was dealt 23 extra damage
         and is stunned for 3 rounds and is unable to parry for 2 rounds
-    - *87502620
-    - &85770440 !ruby/object:Wound
+    - *87548040
+    - &85832210 !ruby/object:Wound
       damage: 12
       bleeding: 0
       stun: 3
@@ -4325,7 +4445,7 @@ xp: !ruby/object:XP
       target: throat
       text: Gargath the Troll was hit in the throat and was dealt 12 extra damage
         and is stunned for 3 rounds and is unable to parry for 2 rounds
-    - &85769690 !ruby/object:Wound
+    - &85831460 !ruby/object:Wound
       damage: 7
       bleeding: 0
       stun: 1
@@ -4337,7 +4457,7 @@ xp: !ruby/object:XP
       target: secondary arm
       text: Unknown4 the Orc was hit in the secondary arm and was dealt 7 extra damage
         and is stunned for 1 rounds
-    - &85768940 !ruby/object:Wound
+    - &85830670 !ruby/object:Wound
       damage: 12
       bleeding: 2
       stun: 0
@@ -4349,7 +4469,7 @@ xp: !ruby/object:XP
       target: side
       text: Gurlar the Orc was hit in the side and was dealt 12 extra damage and is
         bleeding 2 hits worth each round
-    - &85768150 !ruby/object:Wound
+    - &85863120 !ruby/object:Wound
       damage: 25
       bleeding: 0
       stun: 3
@@ -4361,7 +4481,7 @@ xp: !ruby/object:XP
       target: shoulder
       text: Hugnarl the Orc was hit in the shoulder and was dealt 25 extra damage
         and is stunned for 3 rounds and is unable to parry for 2 rounds
-    - &85790620 !ruby/object:Wound
+    - &85862360 !ruby/object:Wound
       damage: 11
       bleeding: 3
       stun: 0
@@ -4373,7 +4493,7 @@ xp: !ruby/object:XP
       target: neck
       text: Hugnarl the Orc was hit in the neck and was dealt 11 extra damage and
         is bleeding 3 hits worth each round and is unable to parry for 1 rounds
-    - &85789900 !ruby/object:Wound
+    - &85861560 !ruby/object:Wound
       damage: 31
       bleeding: 0
       stun: 0
@@ -4385,10 +4505,10 @@ xp: !ruby/object:XP
       target: elbow
       text: Bargunth the Troll was hit in the elbow and was dealt 31 extra damage
         and is prone for 3 rounds
-    - *85643260
-    - *85642520
-    - *85641720
-    - &85789180 !ruby/object:Wound
+    - *85709270
+    - *85708440
+    - *85707680
+    - &85860740 !ruby/object:Wound
       damage: 25
       bleeding: 3
       stun: 0
@@ -4400,7 +4520,7 @@ xp: !ruby/object:XP
       target: side
       text: Leka was hit in the side and was dealt 25 extra damage and is bleeding
         3 hits worth each round and is unable to parry for 1 rounds
-    - &85788440 !ruby/object:Wound
+    - &85859980 !ruby/object:Wound
       damage: 15
       bleeding: 0
       stun: 2
@@ -4412,8 +4532,8 @@ xp: !ruby/object:XP
       target: skull
       text: Buhh was hit in the skull and was dealt 15 extra damage and is stunned
         for 2 rounds and is unable to parry for 1 rounds
-    - *87523470
-    - &85787720 !ruby/object:Wound
+    - *87572500
+    - &85859170 !ruby/object:Wound
       damage: 12
       bleeding: 0
       stun: 2
@@ -4425,7 +4545,7 @@ xp: !ruby/object:XP
       target: stomach
       text: Banza was hit in the stomach and was dealt 12 extra damage and is stunned
         for 2 rounds and is unable to parry for 1 rounds
-    - &85787000 !ruby/object:Wound
+    - &85858430 !ruby/object:Wound
       damage: 31
       bleeding: 0
       stun: 0
@@ -4437,9 +4557,9 @@ xp: !ruby/object:XP
       target: knee
       text: Teenee was hit in the knee and was dealt 31 extra damage and is prone
         for 3 rounds
-    - *87573070
-    - *85664030
-    - &85786180 !ruby/object:Wound
+    - *87377050
+    - *85731260
+    - &85857630 !ruby/object:Wound
       damage: 12
       bleeding: 0
       stun: 3
@@ -4451,7 +4571,7 @@ xp: !ruby/object:XP
       target: knee
       text: Fiiu was hit in the knee and was dealt 12 extra damage and is stunned
         for 3 rounds and is unable to parry for 2 rounds
-    - &85785450 !ruby/object:Wound
+    - &85856890 !ruby/object:Wound
       damage: 22
       bleeding: 0
       stun: 0
@@ -4462,10 +4582,36 @@ xp: !ruby/object:XP
       dead: false
       target: throat
       text: Fiiu was hit in the throat and was dealt 22 extra damage
+    - &86796850 !ruby/object:Wound
+      damage: 2
+      bleeding: 0
+      stun: 1
+      uparry: 0
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: groin
+      text: Ruuhuu was hit in the groin and was dealt 2 extra damage and is stunned
+        for 1 rounds
+    - *87709040
+    - &87158320 !ruby/object:Wound
+      damage: 15
+      bleeding: 2
+      stun: 0
+      uparry: 0
+      downed: 0
+      prone: 0
+      unconscious: false
+      dead: false
+      target: elbow
+      text: Ruuhuu was hit in the elbow and was dealt 15 extra damage and is bleeding
+        2 hits worth each round
+    - *87459790
     kills: 3
     kills_list:
-    - *85605760
-    - &85784620 !ruby/object:Kobold
+    - *85638510
+    - &85856120 !ruby/object:Kobold
       id: d1fadbdb-d8cd-4683-b965-18e19c793f7a
       full_name: dummy
       name: Fiiu
@@ -4501,8 +4647,8 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - *85743010
-      - *85742280
+      - *85806030
+      - *85805270
       current_blocks: {}
       current_side: 2
       xp: !ruby/object:XP
@@ -4555,7 +4701,7 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 44
       kumite_streak: 0
-    - &85809170 !ruby/object:Kobold
+    - &85880340 !ruby/object:Kobold
       id: c6453d63-6d81-4a0a-a7ed-7318eefb0e40
       full_name: dummy
       name: Fiiu
@@ -4591,7 +4737,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - *85772690
+      - *85834580
       current_blocks: {}
       current_side: 2
       xp: !ruby/object:XP
@@ -4644,9 +4790,9 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 61
       kumite_streak: 0
-    kos_inflicted: 29
+    kos_inflicted: 31
     kos_inflicted_list:
-    - &85836710 !ruby/object:Orc
+    - &85904640 !ruby/object:Orc
       id: 571ff204-29bf-485b-9b20-ca485608fdab
       full_name: dummy
       name: Visnasch the Orc
@@ -4705,7 +4851,7 @@ xp: !ruby/object:XP
         target: stomach
         text: Visnasch the Orc was hit in the stomach and was dealt 22 extra damage
           and is stunned for 3 rounds and is unable to parry for 2 rounds
-      - *85658590
+      - *85725670
       current_blocks: {}
       current_side: 2
       xp: !ruby/object:XP
@@ -4757,7 +4903,7 @@ xp: !ruby/object:XP
           healed_injuries: 0
           healed_hp: 0
       initiative_roll_this_round: 38
-    - &85861570 !ruby/object:Orc
+    - &85926120 !ruby/object:Orc
       id: c47ffa5f-abdf-4b32-a784-9ad906d59505
       full_name: dummy
       name: Unknown4 the Orc
@@ -4793,7 +4939,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - *85686040
+      - *85748660
       - !ruby/object:Wound
         damage: 15
         bleeding: 2
@@ -4806,7 +4952,7 @@ xp: !ruby/object:XP
         target: back
         text: Unknown4 the Orc was hit in the back and was dealt 15 extra damage and
           is bleeding 2 hits worth each round
-      - *85685300
+      - *85747820
       current_blocks: {}
       current_side: 2
       xp: !ruby/object:XP
@@ -4858,9 +5004,9 @@ xp: !ruby/object:XP
           healed_injuries: 0
           healed_hp: 0
       initiative_roll_this_round: 63
-    - *87066530
-    - *87105020
-    - &85855340 !ruby/object:Orc
+    - *87109500
+    - *87157890
+    - &85942850 !ruby/object:Orc
       id: 4775d63f-726a-4196-989f-aed68e3ab73d
       full_name: dummy
       name: Hugnarl the Orc
@@ -4907,7 +5053,7 @@ xp: !ruby/object:XP
         dead: false
         target: groin
         text: Hugnarl the Orc was hit in the groin and was dealt 22 extra damage
-      - *85683780
+      - *85746250
       - !ruby/object:Wound
         damage: 22
         bleeding: 3
@@ -4971,8 +5117,8 @@ xp: !ruby/object:XP
           healed_injuries: 0
           healed_hp: 0
       initiative_roll_this_round: 79
-    - *87128710
-    - &85877130 !ruby/object:Orc
+    - *87176470
+    - &85957460 !ruby/object:Orc
       id: 88d2f5ed-589f-4b6f-bae4-d95a527915c5
       full_name: dummy
       name: Unknown4 the Orc
@@ -5008,8 +5154,8 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - *85707720
-      - *85706930
+      - *85774320
+      - *85773560
       - !ruby/object:Wound
         damage: 31
         bleeding: 0
@@ -5035,7 +5181,7 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 1
           wounds_inflicted_list:
-          - &85903820 !ruby/object:Wound
+          - &85953910 !ruby/object:Wound
             damage: 17
             bleeding: 3
             stun: 0
@@ -5052,7 +5198,7 @@ xp: !ruby/object:XP
           kills_list: []
           kos_inflicted: 1
           kos_inflicted_list:
-          - &85903020 !ruby/object:Human
+          - &85953030 !ruby/object:Human
             id: 3b063bfe-73e0-47d0-b348-f636dae00148
             full_name: dummy
             name: Bereth the Strong
@@ -5100,7 +5246,7 @@ xp: !ruby/object:XP
               target: shoulder
               text: Bereth the Strong was hit in the shoulder and was dealt 2 extra
                 damage and is bleeding 1 hits worth each round
-            - *85903820
+            - *85953910
             - !ruby/object:Wound
               damage: 30
               bleeding: 0
@@ -5126,7 +5272,7 @@ xp: !ruby/object:XP
                 critical_kos_inflicted_list: []
                 wounds_inflicted: 1
                 wounds_inflicted_list:
-                - &85928400 !ruby/object:Wound
+                - &85973690 !ruby/object:Wound
                   damage: 10
                   bleeding: 0
                   stun: 1
@@ -5160,7 +5306,7 @@ xp: !ruby/object:XP
                 critical_kos_inflicted_list: []
                 wounds_inflicted: 1
                 wounds_inflicted_list:
-                - *85928400
+                - *85973690
                 kills: 0
                 kills_list: []
                 kos_inflicted: 0
@@ -5195,12 +5341,12 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 1
           wounds_inflicted_list:
-          - *85903820
+          - *85953910
           kills: 0
           kills_list: []
           kos_inflicted: 1
           kos_inflicted_list:
-          - *85903020
+          - *85953030
           damage_inflicted: 36
         current_body_lvl: !ruby/object:BodyLevel
           deaths: 0
@@ -5213,7 +5359,7 @@ xp: !ruby/object:XP
           healed_injuries: 0
           healed_hp: 0
       initiative_roll_this_round: 43
-    - &85942650 !ruby/object:Kobold
+    - &85990790 !ruby/object:Kobold
       id: 58763e1f-8840-4648-b957-95c8074eb529
       full_name: dummy
       name: Ruuhuu
@@ -5249,7 +5395,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - *85731870
+      - *85768190
       - !ruby/object:Wound
         damage: 14
         bleeding: 0
@@ -5313,7 +5459,7 @@ xp: !ruby/object:XP
           healed_injuries: 0
           healed_hp: 0
       initiative_roll_this_round: 83
-    - &85958310 !ruby/object:Kobold
+    - &86276180 !ruby/object:Kobold
       id: c00e7833-3736-42ed-9a34-a4829fba2450
       full_name: dummy
       name: Beuo
@@ -5349,8 +5495,8 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - *85731130
-      - *85730390
+      - *85790640
+      - *85789890
       - !ruby/object:Wound
         damage: 7
         bleeding: 1
@@ -5414,7 +5560,7 @@ xp: !ruby/object:XP
           healed_injuries: 0
           healed_hp: 0
       initiative_roll_this_round: 42
-    - &85951980 !ruby/object:Kobold
+    - &86291030 !ruby/object:Kobold
       id: 7d828919-a7f2-4ffe-8e45-81cdc966bd9d
       full_name: dummy
       name: Banza
@@ -5462,7 +5608,7 @@ xp: !ruby/object:XP
         target: back
         text: Banza was hit in the back and was dealt 20 extra damage and is stunned
           for 3 rounds and is unable to parry for 2 rounds
-      - *85729660
+      - *85789150
       - !ruby/object:Wound
         damage: 10
         bleeding: 1
@@ -5538,7 +5684,7 @@ xp: !ruby/object:XP
           healed_injuries: 0
           healed_hp: 0
       initiative_roll_this_round: 53
-    - &85968520 !ruby/object:Kobold
+    - &86340190 !ruby/object:Kobold
       id: 9d6da4eb-758b-483c-b7df-62abe1b8a646
       full_name: dummy
       name: Teenee
@@ -5586,8 +5732,8 @@ xp: !ruby/object:XP
         target: back
         text: Teenee was hit in the back and was dealt 3 extra damage and is bleeding
           1 hits worth each round
-      - *85728900
-      - *85728120
+      - *85788390
+      - *85787650
       - !ruby/object:Wound
         damage: 17
         bleeding: 0
@@ -5662,7 +5808,7 @@ xp: !ruby/object:XP
           healed_injuries: 0
           healed_hp: 0
       initiative_roll_this_round: 78
-    - &86278870 !ruby/object:Kobold
+    - &86438590 !ruby/object:Kobold
       id: fd4f2997-3d95-4340-b875-e09116af61ca
       full_name: dummy
       name: Buhh
@@ -5698,8 +5844,8 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - *85727330
-      - *85726600
+      - *85786900
+      - *85786070
       current_blocks: {}
       current_side: 2
       xp: !ruby/object:XP
@@ -5713,7 +5859,7 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 1
           wounds_inflicted_list:
-          - &86277500 !ruby/object:Wound
+          - &86437160 !ruby/object:Wound
             damage: 1
             bleeding: 1
             stun: 0
@@ -5747,7 +5893,7 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 1
           wounds_inflicted_list:
-          - *86277500
+          - *86437160
           kills: 0
           kills_list: []
           kos_inflicted: 0
@@ -5764,7 +5910,7 @@ xp: !ruby/object:XP
           healed_injuries: 0
           healed_hp: 0
       initiative_roll_this_round: 83
-    - &86272760 !ruby/object:Human
+    - &86470810 !ruby/object:Human
       id: 3102cbed-97c8-486b-82e4-5ae7e11e1327
       full_name: dummy
       name: Aramir the Invincible
@@ -5812,7 +5958,7 @@ xp: !ruby/object:XP
         target: groin
         text: Aramir the Invincible was hit in the groin and was dealt 25 extra damage
           and is stunned for 3 rounds and is unable to parry for 2 rounds
-      - *85725870
+      - *85785310
       current_blocks: {}
       current_side: 1
       xp: !ruby/object:XP
@@ -5864,7 +6010,7 @@ xp: !ruby/object:XP
           healed_injuries: 0
           healed_hp: 0
       initiative_roll_this_round: 17
-    - &86286640 !ruby/object:Troll
+    - &86463560 !ruby/object:Troll
       id: 0ce199c9-9e38-4e0b-8963-ff3c51683b1d
       full_name: ''
       name: Harag the Troll
@@ -5947,7 +6093,7 @@ xp: !ruby/object:XP
         target: knee
         text: Harag the Troll was hit in the knee and was dealt 31 extra damage and
           is prone for 3 rounds
-      - *85725150
+      - *85784490
       - !ruby/object:Wound
         damage: 23
         bleeding: 0
@@ -5972,8 +6118,8 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 2
           wounds_inflicted_list:
-          - *87213250
-          - *87212450
+          - *87253000
+          - *87252190
           kills: 0
           kills_list: []
           kos_inflicted: 0
@@ -5996,8 +6142,8 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 2
           wounds_inflicted_list:
-          - *87213250
-          - *87212450
+          - *87253000
+          - *87252190
           kills: 0
           kills_list: []
           kos_inflicted: 0
@@ -6015,7 +6161,7 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 64
       kumite_streak: 0
-    - &86334690 !ruby/object:Orc
+    - &86601410 !ruby/object:Orc
       id: 6cf7646c-6dea-4611-9101-1bb75433597e
       full_name: dummy
       name: Gurlar the Orc
@@ -6051,7 +6197,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - *85724410
+      - *85783740
       current_blocks: {}
       current_side: 2
       xp: !ruby/object:XP
@@ -6104,7 +6250,7 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 7
       kumite_streak: 0
-    - &86435500 !ruby/object:Orc
+    - &87793800 !ruby/object:Orc
       id: 7fd6bf07-f864-4c04-a5bf-11ae329fa868
       full_name: dummy
       name: Gurlar the Orc
@@ -6140,9 +6286,9 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - *85749710
-      - *85748990
-      - *85748190
+      - *85813030
+      - *85812280
+      - *85811480
       current_blocks: {}
       current_side: 2
       xp: !ruby/object:XP
@@ -6195,7 +6341,7 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 76
       kumite_streak: 0
-    - &87065150 !ruby/object:Orc
+    - &87108050 !ruby/object:Orc
       id: baffc935-2455-4360-94ca-af48c34e1b5e
       full_name: dummy
       name: Gurlar the Orc
@@ -6231,9 +6377,9 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - *85747440
-      - *85746650
-      - *85745910
+      - *85810750
+      - *85809990
+      - *85809200
       current_blocks: {}
       current_side: 2
       xp: !ruby/object:XP
@@ -6247,7 +6393,7 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 1
           wounds_inflicted_list:
-          - &87063570 !ruby/object:Wound
+          - &87106370 !ruby/object:Wound
             damage: 20
             bleeding: 0
             stun: 2
@@ -6281,7 +6427,7 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 1
           wounds_inflicted_list:
-          - *87063570
+          - *87106370
           kills: 0
           kills_list: []
           kos_inflicted: 0
@@ -6299,7 +6445,7 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 40
       kumite_streak: 0
-    - &87088760 !ruby/object:Kobold
+    - &87131000 !ruby/object:Kobold
       id: 3c337d05-136d-4688-87c0-dbc836002be8
       full_name: dummy
       name: Fiiu
@@ -6335,7 +6481,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - *85745190
+      - *85808380
       current_blocks: {}
       current_side: 2
       xp: !ruby/object:XP
@@ -6388,7 +6534,7 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 61
       kumite_streak: 0
-    - &87104530 !ruby/object:Kobold
+    - &87157320 !ruby/object:Kobold
       id: 9a98b0c2-44d7-46dd-83f4-f138c3ac4f0c
       full_name: dummy
       name: Fiiu
@@ -6424,8 +6570,8 @@ xp: !ruby/object:XP
       can_attack: false
       cant_attack_text: no reason
       wounds:
-      - *85744470
-      - *85743730
+      - *85807550
+      - *85806810
       current_blocks: {}
       current_side: 2
       xp: !ruby/object:XP
@@ -6478,7 +6624,7 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 76
       kumite_streak: 0
-    - &87127550 !ruby/object:Orc
+    - &87175170 !ruby/object:Orc
       id: 7cf7cb3c-d984-4acb-85ef-3765450bfbe0
       full_name: dummy
       name: Gurlar the Orc
@@ -6514,10 +6660,10 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - *85775670
-      - *85774930
-      - *85774150
-      - *85773410
+      - *85837650
+      - *85836920
+      - *85836090
+      - *85835340
       current_blocks: {}
       current_side: 2
       xp: !ruby/object:XP
@@ -6531,7 +6677,7 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 1
           wounds_inflicted_list:
-          - &87124740 !ruby/object:Wound
+          - &87172280 !ruby/object:Wound
             damage: 12
             bleeding: 2
             stun: 0
@@ -6565,7 +6711,7 @@ xp: !ruby/object:XP
           critical_kos_inflicted_list: []
           wounds_inflicted: 1
           wounds_inflicted_list:
-          - *87124740
+          - *87172280
           kills: 0
           kills_list: []
           kos_inflicted: 0
@@ -6583,7 +6729,7 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 82
       kumite_streak: 0
-    - &87153610 !ruby/object:Orc
+    - &87190380 !ruby/object:Orc
       id: 74a9ea8e-01b6-4482-ad5c-34d167d9049f
       full_name: dummy
       name: Gurlar the Orc
@@ -6619,8 +6765,8 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - *85771970
-      - *85771230
+      - *85833770
+      - *85833010
       current_blocks: {}
       current_side: 2
       xp: !ruby/object:XP
@@ -6673,7 +6819,7 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 26
       kumite_streak: 0
-    - &87172150 !ruby/object:Orc
+    - &87211760 !ruby/object:Orc
       id: 829f19c0-8938-47f6-b270-0e0d35962eb5
       full_name: dummy
       name: Unknown4 the Orc
@@ -6709,7 +6855,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - *85769690
+      - *85831460
       - !ruby/object:Wound
         damage: 25
         bleeding: 0
@@ -6774,7 +6920,7 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 61
       kumite_streak: 0
-    - &87187770 !ruby/object:Orc
+    - &87226810 !ruby/object:Orc
       id: 5282bf03-56f1-4981-a05c-4663267a25d3
       full_name: dummy
       name: Gurlar the Orc
@@ -6810,7 +6956,7 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - *85768940
+      - *85830670
       - !ruby/object:Wound
         damage: 16
         bleeding: 0
@@ -6887,7 +7033,7 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 63
       kumite_streak: 0
-    - &87208020 !ruby/object:Kobold
+    - &87247440 !ruby/object:Kobold
       id: 6927d7e2-6ebe-4286-b722-020748ea8466
       full_name: dummy
       name: Leka
@@ -6935,7 +7081,7 @@ xp: !ruby/object:XP
         target: weapon arm
         text: Leka was hit in the weapon arm and was dealt 11 extra damage and is
           stunned for 2 rounds and is unable to parry for 1 rounds
-      - *85789180
+      - *85860740
       current_blocks: {}
       current_side: 2
       xp: !ruby/object:XP
@@ -6988,7 +7134,7 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 31
       kumite_streak: 0
-    - &87223670 !ruby/object:Kobold
+    - &87261250 !ruby/object:Kobold
       id: dcf060b5-034f-4374-aa38-64ceab59982d
       full_name: dummy
       name: Buhh
@@ -7024,8 +7170,8 @@ xp: !ruby/object:XP
       can_attack: true
       cant_attack_text: no reason
       wounds:
-      - *87550680
-      - *85788440
+      - *87323110
+      - *85859980
       current_blocks: {}
       current_side: 2
       xp: !ruby/object:XP
@@ -7078,8 +7224,8 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 59
       kumite_streak: 0
-    - *87527210
-    - &87248030 !ruby/object:Kobold
+    - *87576240
+    - &87285020 !ruby/object:Kobold
       id: ee0a4bf9-55a8-4fae-b6d0-f1448e22d9a9
       full_name: dummy
       name: Teenee
@@ -7127,7 +7273,7 @@ xp: !ruby/object:XP
         target: knee
         text: Teenee was hit in the knee and was dealt 18 extra damage and is stunned
           for 2 rounds and is unable to parry for 1 rounds
-      - *85787000
+      - *85858430
       current_blocks: {}
       current_side: 2
       xp: !ruby/object:XP
@@ -7180,8 +7326,8 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 39
       kumite_streak: 0
-    - *87575310
-    - &87264320 !ruby/object:Kobold
+    - *87356160
+    - &87307880 !ruby/object:Kobold
       id: df85cce4-5828-4408-a920-88fe6a0c45d4
       full_name: dummy
       name: Fiiu
@@ -7217,8 +7363,8 @@ xp: !ruby/object:XP
       can_attack: false
       cant_attack_text: no reason
       wounds:
-      - *85786180
-      - *85785450
+      - *85857630
+      - *85856890
       current_blocks: {}
       current_side: 2
       xp: !ruby/object:XP
@@ -7271,7 +7417,106 @@ xp: !ruby/object:XP
           healed_hp: 0
       initiative_roll_this_round: 34
       kumite_streak: 0
-    damage_inflicted: 6070
+    - &87158000 !ruby/object:Kobold
+      id: 20033b6e-e38d-4d77-837d-c5566d1fd30c
+      full_name: dummy
+      name: Ruuhuu
+      party: pc
+      brains: artificial
+      ob: 74
+      db: 63
+      ac: 40
+      hp: 45
+      quickness: 30
+      personality: stupid
+      profession: warrior monk
+      mana: 2
+      current_player_id: 
+      stun: 0
+      bleeding: 2
+      uparry: 0
+      downed: 0
+      prone: 0
+      blind: 0
+      penalties: 0
+      unconscious: false
+      unconscious_why: ''
+      dead: false
+      dead_why: ''
+      current_hp: 4
+      active_weapon: !ruby/object:Weapon
+        name: sword
+        fumble: 3
+      current_db: 43
+      current_ob: 74
+      current_mana: 2
+      can_attack: true
+      cant_attack_text: no reason
+      wounds:
+      - *86796850
+      - *87158320
+      current_blocks: {}
+      current_side: 2
+      xp: !ruby/object:XP
+        arms_level: 1
+        body_level: 1
+        heal_level: 1
+        total_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        total_body_lvl: !ruby/object:BodyLevel
+          damage_sustained: 76
+          wounds_sustained: 2
+          wounds_sustained_list:
+          - *86796850
+          - *87158320
+          critical_kos_sustained_list: []
+          critical_kills_sustained_list: []
+          ko_sustained_list: []
+          kill_sustained_list: []
+        total_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+        current_arms_lvl: !ruby/object:ArmsLevel
+          critical_kills: 0
+          critical_kills_list: []
+          critical_kos_inflicted: 0
+          critical_kos_inflicted_list: []
+          wounds_inflicted: 0
+          wounds_inflicted_list: []
+          kills: 0
+          kills_list: []
+          kos_inflicted: 0
+          kos_inflicted_list: []
+          damage_inflicted: 0
+        current_body_lvl: !ruby/object:BodyLevel
+          damage_sustained: 0
+          wounds_sustained: 0
+          wounds_sustained_list: []
+          critical_kos_sustained_list: []
+          critical_kills_sustained_list: []
+          ko_sustained_list: []
+          kill_sustained_list: []
+        current_heal_lvl: !ruby/object:HealLevel
+          raised_dead: 0
+          revived: 0
+          healed_injuries: 0
+          healed_hp: 0
+      initiative_roll_this_round: 18
+      kumite_streak: 0
+    - *87459490
+    damage_inflicted: 6206
   total_body_lvl: !ruby/object:BodyLevel
     damage_sustained: 13480
     wounds_sustained: 0
@@ -7286,173 +7531,180 @@ xp: !ruby/object:XP
     healed_injuries: 0
     healed_hp: 0
   current_arms_lvl: !ruby/object:ArmsLevel
-    critical_kills: 15
+    critical_kills: 16
     critical_kills_list:
-    - *87066530
-    - *87089260
-    - *87105020
-    - *87128710
-    - *87154740
-    - *87173360
-    - *87189990
-    - *87226230
-    - *87246260
-    - *87289940
-    - *87283470
-    - *87485740
-    - *87503610
-    - *87527210
-    - *87575310
+    - *87109500
+    - *87131490
+    - *87157890
+    - *87176470
+    - *87191530
+    - *87213130
+    - *87229250
+    - *87264150
+    - *87313170
+    - *87485720
+    - *87505950
+    - *87524930
+    - *87549110
+    - *87576240
+    - *87356160
+    - *87459490
     critical_kos_inflicted: 7
     critical_kos_inflicted_list:
-    - *87324950
-    - *87358330
-    - *87423580
-    - *85605760
-    - *85627400
-    - *85644250
-    - *85665020
-    wounds_inflicted: 102
+    - *87371550
+    - *87391570
+    - *85585670
+    - *85638510
+    - *85658470
+    - *85710290
+    - *85732260
+    wounds_inflicted: 106
     wounds_inflicted_list:
-    - *87322690
-    - *85658590
-    - *85688380
-    - *85687590
-    - *85686790
-    - *85686040
-    - *85685300
-    - *87065250
-    - *87064260
-    - *87086920
-    - *87103180
-    - *85684520
-    - *87356050
-    - *87377070
-    - *85683780
-    - *85683060
-    - *85682340
-    - *85681600
-    - *87422590
-    - *87446080
-    - *87445290
-    - *87125500
-    - *85680880
-    - *85710010
-    - *85709260
-    - *85708460
-    - *85707720
-    - *85706930
-    - *87152400
-    - *85706200
-    - *85705480
-    - *85704750
-    - *85704020
-    - *85703300
-    - *85702580
-    - *85731870
-    - *85731130
-    - *85730390
-    - *85729660
-    - *85728900
-    - *85728120
-    - *85727330
-    - *85726600
-    - *87171020
-    - *85725870
-    - *85725150
-    - *87188850
-    - *87187320
-    - *87223960
-    - *87253970
-    - *87253230
-    - *85724410
-    - *87267090
-    - *87266320
-    - *85749710
-    - *85748990
-    - *85748190
-    - *85747440
-    - *85746650
-    - *85745910
-    - *87288940
-    - *85745190
-    - *87311370
-    - *87310550
-    - *87309780
-    - *87309020
-    - *85744470
-    - *85743730
-    - *85603550
-    - *85602820
-    - *85743010
-    - *85742280
-    - *85625110
-    - *85624370
-    - *85775670
-    - *85774930
-    - *85774150
-    - *85773410
-    - *85772690
-    - *87483470
-    - *87482710
-    - *85771970
-    - *85771230
-    - *87502620
-    - *85770440
-    - *85769690
-    - *85768940
-    - *85768150
-    - *85790620
-    - *85789900
-    - *85643260
-    - *85642520
-    - *85641720
-    - *85789180
-    - *85788440
-    - *87523470
-    - *85787720
-    - *85787000
-    - *87573070
-    - *85664030
-    - *85786180
-    - *85785450
+    - *87398440
+    - *85725670
+    - *85724930
+    - *85750150
+    - *85749410
+    - *85748660
+    - *85747820
+    - *87108170
+    - *87107090
+    - *87128970
+    - *87155890
+    - *85747060
+    - *87410300
+    - *87408020
+    - *85746250
+    - *85745500
+    - *85744760
+    - *85744000
+    - *85584630
+    - *85583890
+    - *85583140
+    - *87173040
+    - *85743260
+    - *85742520
+    - *85775930
+    - *85775130
+    - *85774320
+    - *85773560
+    - *87189050
+    - *85772820
+    - *85772080
+    - *85771320
+    - *85770530
+    - *85769740
+    - *85769000
+    - *85768190
+    - *85790640
+    - *85789890
+    - *85789150
+    - *85788390
+    - *85787650
+    - *85786900
+    - *85786070
+    - *87210500
+    - *85785310
+    - *85784490
+    - *87228020
+    - *87226260
+    - *87261520
+    - *87291280
+    - *87290520
+    - *85783740
+    - *87310920
+    - *87310100
+    - *85813030
+    - *85812280
+    - *85811480
+    - *85810750
+    - *85809990
+    - *85809200
+    - *87484680
+    - *85808380
+    - *87503710
+    - *87502870
+    - *87502130
+    - *87501310
+    - *85807550
+    - *85806810
+    - *85664860
+    - *85664100
+    - *85806030
+    - *85805270
+    - *85686650
+    - *85685870
+    - *85837650
+    - *85836920
+    - *85836090
+    - *85835340
+    - *85834580
+    - *87522650
+    - *87521900
+    - *85833770
+    - *85833010
+    - *87548040
+    - *85832210
+    - *85831460
+    - *85830670
+    - *85863120
+    - *85862360
+    - *85861560
+    - *85709270
+    - *85708440
+    - *85707680
+    - *85860740
+    - *85859980
+    - *87572500
+    - *85859170
+    - *85858430
+    - *87377050
+    - *85731260
+    - *85857630
+    - *85856890
+    - *86796850
+    - *87709040
+    - *87158320
+    - *87459790
     kills: 3
     kills_list:
-    - *85605760
-    - *85784620
-    - *85809170
-    kos_inflicted: 29
+    - *85638510
+    - *85856120
+    - *85880340
+    kos_inflicted: 31
     kos_inflicted_list:
-    - *85836710
-    - *85861570
-    - *87066530
-    - *87105020
-    - *85855340
-    - *87128710
-    - *85877130
-    - *85942650
-    - *85958310
-    - *85951980
-    - *85968520
-    - *86278870
-    - *86272760
-    - *86286640
-    - *86334690
-    - *86435500
-    - *87065150
-    - *87088760
-    - *87104530
-    - *87127550
-    - *87153610
-    - *87172150
-    - *87187770
-    - *87208020
-    - *87223670
-    - *87527210
-    - *87248030
-    - *87575310
-    - *87264320
-    damage_inflicted: 6070
+    - *85904640
+    - *85926120
+    - *87109500
+    - *87157890
+    - *85942850
+    - *87176470
+    - *85957460
+    - *85990790
+    - *86276180
+    - *86291030
+    - *86340190
+    - *86438590
+    - *86470810
+    - *86463560
+    - *86601410
+    - *87793800
+    - *87108050
+    - *87131000
+    - *87157320
+    - *87175170
+    - *87190380
+    - *87211760
+    - *87226810
+    - *87247440
+    - *87261250
+    - *87576240
+    - *87285020
+    - *87356160
+    - *87307880
+    - *87158000
+    - *87459490
+    damage_inflicted: 6206
   current_body_lvl: !ruby/object:BodyLevel
     deaths: 0
     knock_outs_sustained: 0
@@ -7463,4 +7715,4 @@ xp: !ruby/object:XP
     revived: 0
     healed_injuries: 0
     healed_hp: 0
-initiative_roll_this_round: 57
+initiative_roll_this_round: 88

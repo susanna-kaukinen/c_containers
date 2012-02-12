@@ -35,6 +35,8 @@ class Player
 	attr_accessor :character
 	attr_accessor :current_side
 
+	attr_accessor :games #hack for auto
+
 	def initialize(name, socket, games)
 
 		@id = SecureRandom.uuid
@@ -118,6 +120,8 @@ class Player
 
 				rescue Exception => e
 
+					print COLOUR_RED + '<<<PLAYER>>>' + COLOUR_RESET
+
 					p 'Exception:' + e.to_s
 
 					p e.message  
@@ -154,7 +158,7 @@ class Player
 			elsif ( msg[0] == 'join_game')
 
 				game = msg[1]
-				game.join(self)
+				game.join(self, false)
 
 			elsif ( msg[0] == 'waiting_room' )
 

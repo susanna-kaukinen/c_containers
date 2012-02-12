@@ -1,0 +1,6 @@
+
+class Heal < Action
+
+end
+
+

@@ -22,17 +22,25 @@ require './dice.rb'
 require './wound.rb'
 require './mem.rb'
 
+require './character.rb'
 require './xp.rb' 
-	require './character.rb'
-		require './monsters.rb'
-			require './names.rb'
+require './monsters.rb'
+require './names.rb'
 
-	require './rule_monster_engine.rb'
-	require './game_core.rb'
-		require './game_orcs.rb'
-		require './game_trolls.rb'
-		require './game_kobold_ambush.rb'
-		require './game_kumite.rb'
+require './actions.rb'
+require './attack.rb'
+require './block.rb'
+require './attack.rb'
+require './draw.rb'
+require './ai.rb'
+require './rule_monster_engine.rb'
+require './game_core.rb'
+
+
+	require './game_orcs.rb'
+	require './game_trolls.rb'
+	require './game_kobold_ambush.rb'
+	require './game_kumite.rb'
 
 
 Thread.abort_on_exception = true
@@ -51,10 +59,32 @@ def main
 			i += 1
 			socket = server.accept
 
+			socket.write('Welcome, hit enter!')
+			cmd = socket.gets
+
+			auto = false
+			if(cmd[0] == 'a')
+				auto = true
+			end	
+
 			if(socket)
 				p = Player.new("p#{i}", socket, games)
 				p.run(threads)
-				send_msg(p, 'create_character')
+
+				if(not auto)
+					send_msg(p, 'create_character')
+				else
+					p.character = Character.new('testplayer','b', 'biological')
+					p.character.current_side = 1
+					games  = Games.new
+					orcs   = Orcs.new(games)
+					p.games = games
+					orcs.join(p, true)
+					catch (:done) { 
+						send_msg(p, 'clear_screen')
+						orcs.enter(p) 
+					}
+				end
 			end
 
 			sleep 0.5

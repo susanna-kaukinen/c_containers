@@ -47,7 +47,7 @@ class Players
 				return
 			end
 		}
-		raise :could_not_delete_player_not_found
+		#raise :could_not_delete_player_not_found
 	end
 
 	def length
@@ -79,7 +79,7 @@ class Players
 				return
 			end
 		}
-		raise :player_missing
+		#raise Error("can't find player from players")
 	end
 
 	def send_all_but_active_player(character, call, *vargs)
@@ -118,7 +118,7 @@ class Players
 				return
 			end
 		}
-		raise :player_missing
+		#raise :player_missing
 	end
 
 	def ask_all(question, reply_to, *vargs)
@@ -133,7 +133,7 @@ class Players
 				return player
 			end
 		}
-		raise :player_missing
+		#raise :player_missing
 	end
 
 end
@@ -144,7 +144,7 @@ class Game
 
 	attr_accessor :name
 	attr_accessor :instance_id
-	
+
 	def initialize(name, games)
 
 		@games = games # for restructor
@@ -169,12 +169,14 @@ class Game
 		puts COLOR_MAGENTA + "Object #{id} dying at #{Time.new}" + COLOUR_RESET
 	end
 
-	def join(player)
+	def join(player, auto)
 		@players.add(player)
 		@players.write_all("#{player.character.name} entered game #{name}")
 
-		send_msg(player, 'waiting_room', self)
-		throw :done
+		if(not auto) 
+			send_msg(player, 'waiting_room', self)
+			throw :done
+		end
 	end
 
 	def leave(player)
