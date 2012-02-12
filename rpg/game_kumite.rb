@@ -30,16 +30,20 @@ class Kumite < Game
 		}
 
 
-		init_opponents
+		init_opponents(true)
 
 	end
 
-	def init_opponents
+	def init_opponents(first)
 
 		@combatants = Array.new
 		@side2      = Array.new
 
-		opponent = rand(3)	
+		opponent = rand(6)	
+
+		if(first)
+			opponent=1
+		end
 
 		if(opponent==0)
 			char = Troll.new('dummy', 'pc', 'artificial')
@@ -51,11 +55,26 @@ class Kumite < Game
 			char.current_side = 2
 			@side2.push(char)
 			rename_kobolds(@side2)
-		else
+		elsif(opponent ==2)
 			char = Orc.new('dummy', 'pc', 'artificial')
 			char.current_side = 2
 			@side2.push(char)
 			rename_orcs(@side2)
+		elsif(opponent ==3)
+			char = Dwarf.new('dummy', 'pc', 'artificial')
+			char.current_side = 2
+			@side2.push(char)
+			rename_dwarfs(@side2)
+		elsif(opponent ==4)
+			char = Elf.new('dummy', 'pc', 'artificial')
+			char.current_side = 2
+			@side2.push(char)
+			rename_elfs(@side2)
+		else
+			char = Human.new('dummy', 'pc', 'artificial')
+			char.current_side = 2
+			@side2.push(char)
+			rename_humans(@side2)
 		end
 
 		@side1.each  { |xpc| @combatants.push(xpc) }
@@ -85,7 +104,7 @@ class Kumite < Game
 			play_rounds
 
 			if(not character.unconscious and not character.dead)
-				init_opponents
+				init_opponents(false)
 			else
 				break
 			end

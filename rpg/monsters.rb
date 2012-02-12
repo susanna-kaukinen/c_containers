@@ -8,10 +8,46 @@ class Human < Character
 	end
 end
 
+class Elf < Character
+
+
+	def initialize(*args)
+		super(*args)
+
+		@hp = _filter(0.6, @hp)
+		@ob = _filter(1.1, @ob)
+		@db = _filter(1.4, @db)
+		@quickness = _filter(1.4, @quickness)
+
+		heal_self_fully(true)
+	end
+end
+
+class Dwarf < Character
+
+
+	def initialize(*args)
+		super(*args)
+
+		@hp = _filter(1.5, @hp)
+		@ob = _filter(1.2, @ob)
+		@db = _filter(0.9, @db)
+		@quickness = _filter(0.72, @quickness)
+
+		heal_self_fully(true)
+	end
+end
 
 class Orc < Character
 	def initialize(*args)
 		super(*args)
+
+		@hp = _filter(1.2, @hp)
+		@ob = _filter(0.9, @ob)
+		@db = _filter(0.9, @db)
+		@quickness = _filter(0.9, @quickness)
+
+		heal_self_fully(true)
 	end
 end
 
@@ -22,6 +58,7 @@ class Troll < Character
 
 		@hp += 150
 		@ob *= 2
+		@quickness = _filter(0.7, @quickness)
 
 		heal_self_fully(true)
 	end
@@ -36,9 +73,9 @@ class Kobold < Character
 
 		@ob = _filter(ratio ,@ob)
 		@db = _filter(ratio ,@db)
-		@ac = _filter(ratio ,@ac)
 		@hp = _filter(ratio ,@hp)
 
+		@quickness =  _filter(1.2, @quickness)
 
 		heal_self_fully(true)
 	end

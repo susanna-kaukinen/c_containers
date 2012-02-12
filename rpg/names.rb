@@ -115,3 +115,56 @@ def rename_kobolds(npcs)
 	}	
 end
 
+###
+
+def rename_elfs(npcs)
+
+	npcs.each_with_index { |npc , i |
+
+		case npc
+			when Elf
+
+			if (npc.brains == 'artificial')
+				case i
+				
+					when 0
+						npc.name = 'Haeul the Aerie'
+					when 1
+						npc.name = 'Ebel the Swift'
+					when 2
+						npc.name = 'Aelir the Wise'
+					when 3
+						npc.name = 'Inir the Awesome'
+					else
+						npc.name = "Alael the #{i}th"
+				end
+			end
+		end
+	}	
+end
+
+def rename_dwarfs (npcs)
+
+	npcs.each_with_index { |npc , i |
+
+		case npc
+			when Dwarf
+
+			if (npc.brains == 'artificial')
+				case i
+				
+					when 0
+						npc.name = 'Grubun Mountain'
+					when 1
+						npc.name = 'Hergh Hammerfoot'
+					when 2
+						npc.name = 'Grag Greatmace'
+					when 3
+						npc.name = 'Frogr the Anvil'
+					else
+						npc.name = "Gerr the #{i}th"
+				end
+			end
+		end
+	}	
+end

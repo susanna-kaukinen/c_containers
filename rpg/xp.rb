@@ -146,11 +146,10 @@ class BodyLevel
 		attr_accessor :damage_sustained
 		attr_accessor :wounds_sustained
 		attr_accessor :wounds_sustained_list
-		attr_accessor :critical_kos_sustained
 		attr_accessor :critical_kos_sustained_list
-		attr_accessor :critical_kills_sustained
 		attr_accessor :critical_kills_sustained_list
-		attr_accessor :ko_sustained
+		attr_accessor :ko_sustained_list
+		attr_accessor :kill_sustained_list
 
 	def initialize
 		@damage_sustained                  = 0
