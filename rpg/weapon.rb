@@ -276,7 +276,7 @@ def resove_attack_effects_and_xp_bookkeep(attacker, defender, hp_damage, defende
 		# no xp to either
 	else
 		attacker.xp.add_damage_inflicted(hp_damage)
-		#defender.damage_sustained += hp_damage
+		defender.xp.add_damage_sustained(hp_damage)
 
 	end
 
@@ -292,17 +292,17 @@ def resove_attack_effects_and_xp_bookkeep(attacker, defender, hp_damage, defende
 
 			if(wound.damage>0)
 				attacker.xp.add_damage_inflicted(wound.damage)
-				#defender.damage_sustained += wound.damage
+				defender.xp.add_damage_sustained(wound.damage)
 			end
 
 			attacker.xp.add_wound_inflicted(wound)
-			#defender.wounds_sustained += 1
+			defender.xp.add_wound_sustained(wound)
 
-			attacker.xp.add_critical_ko_inflicted(defender_before_wound) if(wound.unconscious)
-			#defender.knock_outs_sustained += 1 if(wound.unconscious)
+			attacker.xp.add_critical_ko_inflicted(defender_before_wound)            if(wound.unconscious)
+			defender.xp.add_critical_ko_sustained(defender_before_wound.strength)   if(wound.unconscious)
 
-			attacker.xp.add_critical_kill(defender_before_wound) if(wound.dead)
-			#defender.deaths     += 1 if(wound.dead)
+			attacker.xp.add_critical_kill(defender_before_wound)                    if(wound.dead)
+			defender.xp.add_critical_kill_sustained(defender_before_wound.strength) if(wound.dead)
 		end
 	end
 
@@ -311,12 +311,12 @@ def resove_attack_effects_and_xp_bookkeep(attacker, defender, hp_damage, defende
 	else
 		if(defender.unconscious and not wound.unconscious)
 			attacker.xp.add_ko_inflicted(defender_before_wound)
-			# def...
+			defender.xp.add_ko_sustained(defender_before_wound.strength)
 		end
 
 		if(defender.dead and not wound.dead)
 			attacker.xp.add_kill(defender_before_wound)
-			# def...
+			defender.xp.add_kill_sustained(defender_before_wound.strength)
 		end
 	end
 

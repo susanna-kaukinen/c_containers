@@ -32,7 +32,7 @@ class Character
 	attr_accessor :current_side
 
 	def strength
-		strength = @current_ob + @current_db + @current_hp + @ac + @quickness - @penalties
+		strength = @current_ob + @current_db + @current_hp + @quickness - @penalties
 		return strength
 	end
 
@@ -249,7 +249,7 @@ class Character
 		elsif(fold=='xp')
 			str = @xp.get_xp_stats
 			str += EOL
-			str += "kumite streak: #{kumite_streak}"
+			str += "\tkumite streak: #{kumite_streak}"
 		else
 			"name:" + @name + 
 			EOL + "\t br: #{@brains}" +

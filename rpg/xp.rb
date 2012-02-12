@@ -143,30 +143,74 @@ end
 
 
 class BodyLevel
+		attr_accessor :damage_sustained
+		attr_accessor :wounds_sustained
+		attr_accessor :wounds_sustained_list
+		attr_accessor :critical_kos_sustained
+		attr_accessor :critical_kos_sustained_list
+		attr_accessor :critical_kills_sustained
+		attr_accessor :critical_kills_sustained_list
+		attr_accessor :ko_sustained
 
 	def initialize
-		@deaths                = 0
-		@knock_outs_sustained  = 0
-		@damage_sustained      = 0
-		@wounds_sustained      = 0
+		@damage_sustained                  = 0
+		@wounds_sustained                  = 0
+		@wounds_sustained_list             = Array.new
+		@critical_kos_sustained_list       = Array.new
+		@critical_kills_sustained_list     = Array.new
+		@ko_sustained_list                 = Array.new
+		@kill_sustained_list               = Array.new
 	end
 
-	#
-	attr_accessor :deaths # if own team loses and unco, that should count
-		attr_accessor :death_list
-	attr_accessor :knock_outs_sustained
-		attr_accessor :sleep_list
-	attr_accessor :damage_sustained
-	attr_accessor :wounds_sustained
-
-	def to_s
-		COLOUR_GREEN +
-		"\ndeaths: #{@deaths}" +
-		"\nknock outs sustained: #{@knock_outs_sustained}" +
-		"\ndamage sustained: #{@damage_sustained}" +
-		"\nwounds sustained: #{@wounds_sustained}" +
-		COLOUR_RESET
+	def get_xp_all
+		xp = 0
+		xp += get_xp('damage_sustained')
+		xp += get_xp('wounds_sustained')
+		xp += get_xp('critical_kos_sustained_list')
+		xp += get_xp('critical_kills_sustained_list')
+		xp += get_xp('ko_sustained_list')
+		xp += get_xp('kill_sustained_list')
+		return xp.to_i
 	end
+
+	def get_xp(what)
+
+		xp = 0
+
+		case what
+			when 'damage_sustained'
+				xp = (damage_sustained*2).to_i
+				p damage_sustained
+				p xp
+				return xp
+			when 'wounds_sustained'
+				xp = (wounds_sustained*300).to_i
+				p wounds_sustained
+				p xp
+				return xp
+
+			when 'critical_kos_sustained_list'
+				@critical_kos_sustained_list.each { |x| xp += (x*0.75)   }
+				p xp
+				return xp
+			when 'critical_kills_sustained_list'
+				@critical_kills_sustained_list.each { |x| xp += x   }
+				p xp
+				return xp
+			when 'ko_sustained_list'
+				@ko_sustained_list.each { |x| xp += (x/4)   }
+				p xp
+				return xp
+			when 'kill_sustained_list'
+				@kill_sustained_list.each { |x| xp += (x/2)   }
+				p xp
+				return xp
+		end
+
+		raise ArgumentError("(body) get_xp : what='#{what}'")
+
+	end 
+
 
 end
 
@@ -275,10 +319,45 @@ class XP
 		@current_arms_lvl.get_xp_all
 	end
 
-	def get_xp_stats # to_s
+	## body:
+
+
+	def add_damage_sustained(hp)
+		@total_body_lvl.damage_sustained += hp
+	end
+
+	def add_wound_sustained(wound)
+		@total_body_lvl.wounds_sustained += 1
+		@total_body_lvl.wounds_sustained_list.push(wound)
+	end
+
+	def add_critical_ko_sustained(str)
+		@total_body_lvl.critical_kos_sustained_list.push(str)
+	end
+
+	def add_critical_kill_sustained(str)
+		@total_body_lvl.critical_kills_sustained_list.push(str)
+	end
+
+	def add_ko_sustained(str)
+		@total_body_lvl.ko_sustained_list.push(str)
+	end
+
+	def add_kill_sustained(str)
+		@total_body_lvl.kill_sustained_list.push(str)
+	end
+
+	def get_total_body_xp
+		@total_body_lvl.get_xp_all
+	end
+
+
+	## alles:
+
+	def get_xp_stats
 		p self
-		"\tarms: #{@arms_level} (#{get_current_arms_xp})/(#{get_total_arms_xp})" #+
-		#EOL + "\tbody: #{@body_level} (not yet)" +
+		EOL + "\tarms: #{@arms_level} (#{get_total_arms_xp})" + 
+		EOL + "\tbody: #{@body_level} (#{get_total_body_xp})"
 		#EOL + "\theal: #{@heal_level} (not yet)"
 	end
 
