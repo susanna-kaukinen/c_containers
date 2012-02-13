@@ -178,6 +178,11 @@ class Player
 
 				write("#{msg[1]}")
 
+			elsif ( msg[0] == 'delayed_draw')
+				
+				sleep(@character.dice_roll_delay_secs)
+				write("#{msg[1]}")
+
 			elsif ( msg[0] == 'cursor_clear_rows' )
 
 				amt_rows = msg[1]

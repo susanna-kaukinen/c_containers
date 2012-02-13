@@ -149,8 +149,12 @@ def create_character(player)
                       COLOUR_YELLOW_BLINK    +  'RR' + COLOUR_RESET + ' = Reroll Stats   ' +
 			COLOUR_BLUE_BLINK    + ' M ' + COLOUR_RESET  + ' = Main menu      ' +
 			COLOUR_GREEN_BLINK   + ' L ' + COLOUR_RESET  + ' = Level character' +
-		     EOL +
-		EOL
+		     EOL
+
+		write COLOUR_YELLOW_BLINK    + ' D ' + COLOUR_RESET + ' = dice roll Delay ' +
+		    EOL
+		
+		write EOL
 
 		player.write player.character.to_str(what) + EOL
 
@@ -187,6 +191,17 @@ def create_character(player)
 			cmd = player.prompt('cmd')
 
 			case cmd
+				when 'd'
+					clear_screen(player.method(:write))
+					player.write("Input new roll delay (current=(#{character.dice_roll_delay_secs}) secs):")
+					new_delay = player.read
+					player.character.dice_roll_delay_secs = new_delay.to_f
+					for i in 1..3 do
+						str_arr = roll_to_s(roll_die('test_die_delay', true), true, true, 5)
+						str = draw_roll(str_arr[3], character.dice_roll_delay_secs)
+						write(str)
+					end
+
 				when 'rr'
 					bottom_text = "?use capital " + COLOUR_REVERSE + COLOUR_YELLOW_BLINK +
 						      "RR"            + COLOUR_RESET   + " to ReRoll"

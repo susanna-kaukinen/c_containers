@@ -10,9 +10,9 @@ class Draw
 		@side2 = side2
 	end
 
-	def set_writers(draw_all)
+	def set_writers(draw_all, draw_all_with_dice_roll_delay)
 		@draw_all = draw_all
-
+		@draw_all_with_dice_roll_delay = draw_all_with_dice_roll_delay
 	end
 
 	# normal proper row, for attack etc. text
@@ -89,7 +89,7 @@ class Draw
 	def draw_subround(active_xpc, targets)
 
 		rnd        = @round
-		opponent   = targets.shift
+		opponent   = targets[0] # TODO
 		fury       = false #TODO
 		first_draw = false #TODO
 
@@ -136,9 +136,18 @@ class Draw
 
 	end
 
+	def draw_all(*vargs)
+		@draw_all.call(*vargs)
+	end	
+
+	def first_draw(actor, targets)
+		str = draw_subround(actor, targets)
+		draw_all(str)
+	end
+
 	def draw_attack(attacker, did_attack, targets, mix_attack, mix_damage)
 	
-		def _draw_strs_and_dice(mix_str_arr)
+		def _draw_strs_and_dice(attacker, mix_str_arr)
 			i=0
 			while i < mix_str_arr.length
 
@@ -146,10 +155,9 @@ class Draw
 					roll_strs = mix_str_arr[i]
 
 					roll_strs.each_with_index {|str,i|
-						p str
-						@draw_all.call(str)
+						#p str
 						if(i<roll_strs.length-1)
-							sleep(ROLL_DELAY)
+							@draw_all_with_dice_roll_delay.call(str)
 						end
 					}
 				else
@@ -172,18 +180,18 @@ class Draw
 
 		str = draw_subround(attacker, targets)
 		p str
-		@draw_all.call(str)
+		draw_all(str)
 
 		if(not did_attack)
-			@draw_all.call(row_proper + mix_attack)
+			draw_all(row_proper)
 		end
 
 		@draw_all.call(row_proper)
 
-		_draw_strs_and_dice(mix_attack)
+		_draw_strs_and_dice(attacker, mix_attack)
 
 		if(mix_damage and not mix_damage == false) # latter is hack, find out where it comes from
-			_draw_strs_and_dice(mix_damage)
+			_draw_strs_and_dice(attacker, mix_damage)
 		end
 	end
 end

@@ -32,30 +32,7 @@ class Action
 		p '>>>' 
 		p @targets
 	end
-	
-	def draw(draw)
 
-=begin
-		p 'XXX'
-		p @active_xpc
-		p @targets
-		p @mix_attack
-		p @mix_damage
-		p 'XXX'
-=end
-
-		p self.class
-
-		if(self.is_a? Attack)
-			draw.draw_attack(@active_xpc, @did_attack, @targets, @mix_attack, @mix_damage )
-		elsif(self.is_a? Block)
-			draw.draw_block
-		elsif(self.is_a? Heal)
-			draw.draw_heal
-		end
-
-		raise ArgumentError.new("self=#{self} not drawable?")
-	end
 
 	def choose_target_menu()
 

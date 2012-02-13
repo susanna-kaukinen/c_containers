@@ -31,6 +31,44 @@ class Character
 	attr_accessor :wounds
 	attr_accessor :current_side
 
+	#configurables
+	attr_accessor :dice_roll_delay_secs
+
+	def initialize(name, party, brains)
+		@id = SecureRandom.uuid
+		@full_name = name
+		@name	= name[0..17] # andromud screen
+		@party  = party
+		@brains = brains
+		@ob	= generate("ob")
+		@db	= generate("db")
+		@ac	= generate("ac")
+		@hp	= generate("hp")
+
+		@quickness   = generate("quickness")
+
+		if(brains == 'artificial')
+			@personality = get_personality
+			@profession  = get_profession
+		else
+			@personality = get_personality # later, let choose alignment
+			@profession  = get_profession
+		end
+
+		@mana = generate('mana')
+
+		@current_player_id = nil
+
+		heal_self_fully(true)
+
+		@kumite_streak = 0
+
+		@xp = XP.new
+
+		@dice_roll_delay_secs = 0.8
+
+	end
+
 	def strength
 		strength = @current_ob + @current_db + @current_hp + @quickness - @penalties
 		return strength
@@ -187,38 +225,6 @@ class Character
 		@current_mana -= 1
 	end
 
-	def initialize(name, party, brains)
-		@id = SecureRandom.uuid
-		@full_name = name
-		@name	= name[0..17] # andromud screen
-		@party  = party
-		@brains = brains
-		@ob	= generate("ob")
-		@db	= generate("db")
-		@ac	= generate("ac")
-		@hp	= generate("hp")
-
-		@quickness   = generate("quickness")
-
-		if(brains == 'artificial')
-			@personality = get_personality
-			@profession  = get_profession
-		else
-			@personality = get_personality # later, let choose alignment
-			@profession  = get_profession
-		end
-
-		@mana = generate('mana')
-
-		@current_player_id = nil
-
-		heal_self_fully(true)
-
-		@kumite_streak = 0
-
-		@xp = XP.new
-
-	end
 
 	def roll_initiative
 		@initiative_roll_this_round , _, _ = roll_die('initiative')
@@ -438,7 +444,6 @@ class Character
 
 		return YAML::load(char_as_yaml)
 	end
-
 
 end
 

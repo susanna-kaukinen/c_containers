@@ -30,8 +30,8 @@ class Attack < Action
 
 		if(not can_attack)
 			text = _explain_why_not(@attacker, 'attack', why_cant)
-			mix_attack = Array.new
-			mix_attack << text
+			@mix_attack = Array.new
+			@mix_attack << text
 			return
 		end
 
@@ -44,7 +44,7 @@ class Attack < Action
 
 		if(@fumble)
 			enemies = Array.new
-			enemies.push(actor)
+			enemies.push(@attacker)
 			new_action = Attack.new(actor, enemies)		
 			new_action.actor_type = 'artificial'
 		end
@@ -57,7 +57,7 @@ class Attack < Action
 
 		p "do_attack: #{@attacker.name} =/=> #{@targets}"
 
-		opponent = @targets.shift # one for now
+		opponent = @targets[0] # one for now
 
 		@mix_attack = Array.new
 
@@ -102,7 +102,7 @@ class Attack < Action
 
 	def _explain_why_not(character, what, why_cant)
 
-		str = COLOUR_WHITE + COLOUR_REVERSE + character.name + COLOUR_RESET + " cannot " + what + ", reason: "
+		str = COLOUR_WHITE + COLOUR_REVERSE + character.name + COLOUR_RESET + " cannot " + what + ", reason: " 
 
 		if    (why_cant == nil)
 			str += COLOR_MAGENTA + 'not able'
@@ -118,10 +118,14 @@ class Attack < Action
 			str += COLOUR_YELLOW
 		end
 
-		str += " " + why_cant + COLOUR_RESET
+		str += " " + why_cant + COLOUR_RESET + EOL
 
 		return str
 
+	end
+
+	def draw(draw)
+		draw.draw_attack(@active_xpc, @did_attack, @targets, @mix_attack, @mix_damage )
 	end
 
 end

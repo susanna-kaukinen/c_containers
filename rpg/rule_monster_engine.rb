@@ -7,127 +7,21 @@ module RuleMonsterEngine
 		restructor
 	end
 
-
 	def get_sides
 		@sides.clone
 	end
 
-	def _heal(character, friends)
-
-		if(not character.can_heal?)
-			text = _explain_why_not(character, 'heal', 'not enough mana?')
-			draw_active_player(character, text)
-			return false
-		end
-
-		text='' #TODO
-
-		loop {
-			draw_active_player(character, 'Choose action:')
-
-			prompt = ' (e)=all Equally' + "\n "
-
-			friends.each_with_index { |opponent,i|
-				prompt += "(#{i})" + opponent.name + " "
-				if(i%2==1)
-					prompt += "\r\n "
-				end
-			}
-			
-			draw_active_player(character, prompt)
-
-			cmd = ask_active_player(character, 'heal_action')
-
-			if(cmd == 'e')
-				_cls(character)
-
-				character.heal(friends)
-
-				draw_active_player(character, "Healing all friends.")
-
-				return true, text
-			else
-				_cls(character)
-
-				friends.each_with_index { |healee,i|
-					if(cmd == i.to_s)
-						character.heal(healee)
-						draw_active_player(character, "Healing " + healee.name)
-					end
-				}
-
-				return true, text
-			end
-		
-			_cls(character)
-
-		}
-
-	end
-
-	def _block(character, opponents)
-	
-		can_block, why_cant = character.can_block_now()
-
-		if(can_block==false)
-			text = _explain_why_not(character, 'block', why_cant)
-			draw_active_player(character, text)
-			return false
-		end
-
-		loop {
-			draw_active_player(character, 'Choose action:')
-
-			prompt = ' (e)=all Equally' + "\n "
-
-			opponents.each_with_index { |opponent,i|
-				prompt += "(#{i})" + opponent.name + " "
-				if(i%2==1)
-					prompt += "\r\n "
-				end
-			}
-			
-			draw_active_player(character, prompt)
-
-			cmd = ask_active_player(character, 'block_action')
-
-			if(cmd == 'e')
-		
-				how_much = character.current_ob / opponents.length
-				
-				opponents.each_with_index { |opponent,i|
-					character.block(opponent.name, how_much)
-				}
-
-				draw_active_player(character, "Blocking w/#{how_much} against all opponents.")
-
-				return true
-			else
-				how_much = character.current_ob / 2
-
-				opponents.each_with_index { |opponent,i|
-					if(cmd == i.to_s)
-						character.block(opponent.name, how_much)
-						draw_active_player(character, "Blocking w/#{how_much} against " + opponent.name)
-					end
-				}
-
-				return true
-			end
-		
-
-		}
-	end
-
 	def prompt_player_action(character, opponents, friends)
+
+		p "prompt_player_action: #{character.name}, #{opponents[0].name}... #{friends[0].name} ..."
 
 		draw_all_but_active_player(character, "#{character.name} ponders action, please wait...")
 
 		can_attack, why_cant_attack = character.can_attack_now()
 		can_block,  why_cant_block  = character.can_block_now()
-
 	
 		draw_active_player(character, CURSOR_SAVE)	
+
 		loop {
 
 			if(can_attack == false and can_block == false)
@@ -151,6 +45,7 @@ module RuleMonsterEngine
 			
 			draw_active_player(character, prompt)
 
+			print "cMD"
 			cmd = ask_active_player(character, 'sub_round_action')
 
 			case cmd
@@ -185,20 +80,20 @@ module RuleMonsterEngine
 	end
 
 
-	def _sub_round_init(character)
-		draw_all(character.do_bleed)
-		character.recover_from_wounds
-		character.current_ob = character.ob
-		character.current_blocks = Hash.new
-	end
 
 	def play_sub_round(round, sub_round, combatants, friends, enemies, actor )
 
 		if(not opponents_left(enemies))
 			throw :game_over
 		end
+			
+		draw = Draw.new(round, sub_round, combatants, @side1, @side2)
+		draw.set_writers(method(:draw_all), method(:draw_all_with_dice_roll_delay))
+		draw.first_draw(actor, enemies)
 
-		_sub_round_init(actor)
+		actor.recover_from_wounds
+		actor.current_ob = actor.ob
+		actor.current_blocks = Hash.new
 
 		actions = Array.new
 
@@ -211,7 +106,7 @@ module RuleMonsterEngine
 			actions.push(action)
 		end
 
-		while(actions.length>0)
+		while(actions.shift != nil)
 
 			new_action = action.resolve()
 
@@ -219,10 +114,9 @@ module RuleMonsterEngine
 				actions.push(action)
 			end
 
-			draw = Draw.new(round, sub_round, combatants, @side1, @side2)
-			draw.set_writers(method(:draw_all))
-
 			action.draw(draw)
+
+			draw_all(actor.do_bleed)
 		end
 
 	end

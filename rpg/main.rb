@@ -76,6 +76,7 @@ def main
 				else
 					p.character = Character.new('testplayer','b', 'biological')
 					p.character.current_side = 1
+					p.character.current_player_id = p.id
 					games  = Games.new
 					orcs   = Orcs.new(games)
 					p.games = games

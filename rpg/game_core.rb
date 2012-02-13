@@ -47,7 +47,7 @@ class Players
 				return
 			end
 		}
-		#raise :could_not_delete_player_not_found
+		raise Error.new("Can't find player.id=#{player.id}")
 	end
 
 	def length
@@ -79,7 +79,7 @@ class Players
 				return
 			end
 		}
-		#raise Error("can't find player from players")
+		raise Error.new("Can't find character.player_id=#{character.player_id}")
 	end
 
 	def send_all_but_active_player(character, call, *vargs)
@@ -118,7 +118,7 @@ class Players
 				return
 			end
 		}
-		#raise :player_missing
+		raise Error.new("Can't find character.player_id=#{character.player_id}")
 	end
 
 	def ask_all(question, reply_to, *vargs)
@@ -133,7 +133,7 @@ class Players
 				return player
 			end
 		}
-		#raise :player_missing
+		raise Error.new("Can't find player_id=#{player_id}")
 	end
 
 end
@@ -241,6 +241,10 @@ class Game
 
 	def draw_all_but_active_player(character, *vargs)
 		@players.send_all_but_active_player(character, 'draw',*vargs)
+	end
+
+	def draw_all_with_dice_roll_delay(*vargs)
+		@players.send_all('delayed_draw', *vargs)
 	end
 
 	def message_push(response)

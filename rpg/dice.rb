@@ -152,16 +152,19 @@ def roll_to_s( die_roll, critical, has_fumble, fumble)
 	return result, rolls, fumbled, text # text is ARRAY
 end
 
-def draw_roll(roll_strs)
+def draw_roll(roll_strs, roll_delay)
+
+	_str = ''
 
 	roll_strs.each_with_index {|str,i|
-		print str
+		_str += str
 		if(i<roll_strs.length-1)
-			sleep(ROLL_DELAY)
+			sleep(roll_delay)
 		end
 	}
-	print EOL
-
+	_str += EOL
+	
+	return _str
 end
 
 
