@@ -291,7 +291,15 @@ class Player
 	end
 
 	def read()
-		return @socket.gets().chomp()
+		read = @socket.gets().chomp()
+		# 
+		# could put some magic in here, e.g. you could get into a player specific config menu
+		# anytime w/some magic combo so that you could adjust your settings like roll delay 
+		#
+		# after the menu just another read that will return whatever was asked - of course
+		# doesn't w/delays, mut anyway. could be short magic, like #- = roll_delay-- and #+ roll_delay++
+		#
+		return read
 	end
 
 	def query(*vargs)

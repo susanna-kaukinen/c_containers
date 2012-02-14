@@ -28,8 +28,8 @@ class Attack < Action
 	attr_accessor :did_attack
 	attr_accessor :mix_damage # uglies, contain both strings and arrays which will be pumped empty
 	attr_accessor :mix_damage #  while drawing. These contain the dice results arrays and then just text.
-	attr_accessor :attackees
 	attr_accessor :fury
+	attr_accessor :reverse
 
 	def initialize(attacker)
 		super(attacker, attacker.brains)
@@ -41,7 +41,6 @@ class Attack < Action
 
 		@mix_damage = Array.new
 		@mix_damage = Array.new
-		@attackees  = Array.new
 
 		@damage_type = ''
 
@@ -49,6 +48,7 @@ class Attack < Action
 		@fumble         = false
 		@counter_strike = false
 		@counter_strike = nil
+		@reverse        = 0
 	end
 
 	def resolve
@@ -62,22 +62,40 @@ class Attack < Action
 			return Array.new
 		end
 
-		attack
+
+		attack # <===
 
 
 		new_actions = Array.new()
 
-		new_actions.push('fury')   if(@fury)
-		new_actions.push('fumble') if(@fumble)
+		if(@fury)
+			new_actions.push('fury')
+			# fury gets <<<FURY>>> text from weapon.rb (2012-02)
+		elsif(@fumble)
+			new_actions.push('fumble')
 
-		if (@counter_strike)
+			@mix_attack << CURSOR_SAVE
+			@mix_attack << COLOUR_YELLOW_BLINK + COLOUR_REVERSE + cursor_to(12, 57) + '<<<FUMBLE>>>' + COLOUR_RESET
+			@mix_attack << CURSOR_RESTORE
+
+		elsif (@counter_strike)
 		
 			counter_strike = Array.new()
 			counter_strike.push('counter_strike')
 			counter_strike.push(@counter_striker)	
 			new_actions.push(counter_strike)
 
-			@mix_attack << COLOUR_YELLOW_BLINK + COLOUR_REVERSE + cursor_to(12, 58) + '<<<COUNTER>>>' + COLOUR_RESET
+			@mix_attack << CURSOR_SAVE
+
+			case @reverse
+				when 0
+					@mix_attack << EOL + COLOUR_YELLOW_BLINK + cursor_to(12, 58) + '<<<COUNTER>>>' + COLOUR_RESET
+				when 1
+					@mix_attack << EOL + COLOUR_YELLOW_BLINK+ COLOUR_REVERSE + cursor_to(12, 58) + '<<<REVERSE>>>' + COLOUR_RESET
+				else
+					#nop
+			end
+			@mix_attack << CURSOR_RESTORE
 		end
 
 		p "return: #{new_actions}"
@@ -119,19 +137,16 @@ class Attack < Action
 		block = opponent.blocks?(@attacker.name)
 
 		if(block>0)
-			@mix_attack << opponent.name + COLOUR_CYAN + ' blocks' + COLOUR_RESET
-			@mix_attack << ' against ' + @attacker.name + " w/#{block}" +
-			EOL
+			@mix_attack << EOL + opponent.name + COLOUR_CYAN + ' blocks' + COLOUR_RESET + ' againts ' + @attacker.name + " w/" + COLOUR_CYAN + "#{block}" + COLOUR_RESET + EOL
 		end
 
 		result = @attacker.current_ob - opponent.current_db - block + roll_result
 
-		@mix_attack << " => result:" + result.to_s() +
-		EOL
+		@mix_attack << " => result:" + result.to_s() + EOL
 
 		@fury, @damage_type, @mix_damage = @attacker.active_weapon.deal_damage(@attacker, opponent, result)
 
-		if(@damage_type=='none' and block>0) # FIXME
+		if(@damage_type=='none' and result<0)
 			@counter_striker = opponent
 			@counter_strike  = true
 		end
@@ -171,7 +186,6 @@ class Attack < Action
 			if(cmd == 'a')
 				draw._cls(@attacker)
 				targets = ai_choose_target(targets, @attacker.personality)
-
 				return targets
 			else
 				draw._cls(@attacker)
@@ -181,14 +195,14 @@ class Attack < Action
 				targets.each_with_index { |target,i|
 					if(cmd == i.to_s)
 						chosen_target = target
-						break
+
+						_targets = Array.new
+						_targets.push(chosen_target)
+
+						return _targets
 					end
 				}
 
-				_targets = Array.new
-				_targets.push(chosen_target)
-
-				return _targets
 			end
 		
 			draw._cls(@attacker)

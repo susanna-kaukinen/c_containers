@@ -1,4 +1,13 @@
 
+
+blocking is based on name, should be id
+
+---
+
+not sure if blocking npc actually gets the db bonus
+
+---
+
 cacheta prev subroudn hitit charruun et saa ne ??? pois sieltä
 
 ---

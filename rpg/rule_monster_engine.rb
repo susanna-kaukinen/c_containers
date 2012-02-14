@@ -42,7 +42,7 @@ module RuleMonsterEngine
 			draw_active_player(character, 'Choose action:')
 
 			prompt = ' '
-			prompt += "(a)=attack (#{character.current_ob}) " if(can_attack)
+			prompt += "(a/A)=attack (#{character.current_ob}) " if(can_attack)
 			prompt += '(b)=block  ' if(can_block)
 			prompt += '(h)=heal   ' if(character.can_heal?)
 			
@@ -57,6 +57,11 @@ module RuleMonsterEngine
 
 					attack = Attack.new(character)
 					attack.choose_target(draw, attack, opponents, 'manual')
+					return attack
+				when 'A'
+					_cls.call(character)
+					attack = Attack.new(character)
+					attack.choose_target(draw, attack, opponents, 'auto')
 					return attack
 
 				when 'b'
@@ -103,7 +108,7 @@ module RuleMonsterEngine
 			draw.draw_all(SCREEN_CLEAR)
 		else
 
-			if((rand(4)>=2))
+			if((rand(4)>=0))
 				action = Block.new(actor)
 				action.choose_target(draw, action, enemies, 'smart')
 				actions.push(action)
@@ -115,6 +120,7 @@ module RuleMonsterEngine
 		end
 
 		i=0
+		counter_strikeS=0
 		while(actions.length > 0)
 
 			throw :game_over if(not opponents_left(enemies))
@@ -148,12 +154,22 @@ module RuleMonsterEngine
 						new_action.choose_target(draw, new_action, enemies, 'smart')
 	
 					when 'counter_strike'
+
+						break if(counter_strikeS>=2)
+
 						new_action = Attack.new(new_action_actor)
 						new_action.actor_type = 'artificial'
+
+						if(counter_strikeS==0)
+							new_action.reverse = 1
+						else
+							new_action.reverse = 2
+						end
 
 						_original_attacker = Array.new
 						_original_attacker.push(action.attacker)
 						new_action.choose_target(draw, new_action, _original_attacker, 'smart')
+						counter_strikeS += 1
 
 					when 'fumble'
 						p "FUMBLE ENABLED"

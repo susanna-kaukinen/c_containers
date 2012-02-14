@@ -31,7 +31,7 @@ class Action
 			raise Error.new("choose_target: #{criteria}, targets=nil!")
 		end
 
-		if(@actor_type == 'biological')
+		if(@actor_type == 'biological' and criteria != 'auto')
 			@targets = choose_target_menu(draw, targets)
 		else
 			@targets = ai_choose_target(targets, criteria)

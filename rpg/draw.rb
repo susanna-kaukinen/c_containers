@@ -292,7 +292,7 @@ class Draw
 	end
 
 	def draw_no_action(non_actor, reason_text)
-		str = draw_subround(2, blocker, targets, 'none')
+		str = draw_subround(2, non_actor, targets, 'none')
 		draw_all(str)
 
 		draw_all row_proper + "#{reason_text}"
