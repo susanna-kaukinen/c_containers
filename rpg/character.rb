@@ -293,9 +293,6 @@ class Character
 	def do_bleed
 		if(@bleeding > 0)
 			@current_hp -= @bleeding
-			CURSOR_PREV_LINE
-			CURSOR_PREV_LINE
-			return COLOUR_RED + COLOUR_REVERSE + @name + ' loses ' + @bleeding.to_s() + ' hits due to bleeding!' + COLOUR_RESET
 		end
 	end
 

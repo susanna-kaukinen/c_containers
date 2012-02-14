@@ -1,4 +1,18 @@
 
+# normal proper row, for attack etc. text
+def row_proper()
+
+	h = (@side1.length > @side2.length) ? @side1.length : @side2.length
+	
+	row = "\033[" + (3+h).to_s + ';H'
+end
+
+def _cls(character)
+	draw_active_player(character, CURSOR_RESTORE)
+	send_active_player(character, 'cursor_clear_rows', 10)
+	draw_active_player(character, CURSOR_RESTORE)
+end
+
 class Draw
 
 	def initialize (round, sub_round, combatants, side1, side2)
@@ -15,15 +29,8 @@ class Draw
 		@draw_all_with_dice_roll_delay = draw_all_with_dice_roll_delay
 	end
 
-	# normal proper row, for attack etc. text
-	def row_proper()
 
-		h = (@side1.length > @side2.length) ? @side1.length : @side2.length
-		
-		row = "\033[" + (3+h).to_s + ';H'
-	end
-
-	def _colour_names(xpc, active_xpc, opponent, fury, first_draw)
+	def _colour_names(draw_number, xpc, active_xpc, opponent, fury, first_draw, damage_type)
 	
 		name = xpc.name
 
@@ -38,7 +45,23 @@ class Draw
 				name = COLOUR_RED   + COLOUR_REVERSE + name + COLOUR_RESET
 			end
 		elsif(opponent and name == opponent.name)
-			name = COLOUR_RED + COLOUR_REVERSE + name + COLOUR_RESET
+
+			case draw_number
+				when 1
+					name = name
+				when 2
+					name = COLOUR_CYAN + COLOUR_REVERSE + name + COLOUR_RESET
+				when 3
+					if(damage_type=='none')
+						name = COLOUR_CYAN + COLOUR_REVERSE + name + COLOUR_RESET
+					elsif(damage_type=='hp')
+						name = COLOUR_RED + name + COLOUR_RESET
+					elsif(damage_type=='critical')
+						name = COLOUR_RED + COLOUR_REVERSE + name + COLOUR_RESET
+					else
+						name = name
+					end
+			end
 		else
 			if(xpc.dead)
 				name = COLOUR_RED    + name + COLOUR_RESET
@@ -54,48 +77,92 @@ class Draw
 		return name
 	end
 
-	def _hp_and_wounds_to_s(xpc)
+	def _hp_and_wounds_to_s(draw_number, active_xpc, xpc, opponent, damage_type)
 
 		str = ''
 
-		curr_hp = xpc.current_hp.to_s
-		while(curr_hp.length<3)
-			curr_hp = ' ' + curr_hp
+		if(draw_number==2 and xpc==opponent)
+			str += COLOUR_CYAN + COLOUR_REVERSE
+			str += ' ? / ? '
+			str += COLOUR_RESET
+			str += '          '
+		else 
+
+			if(draw_number==3 and xpc==opponent)
+				if(damage_type=='none')
+					str += COLOUR_CYAN + COLOUR_REVERSE
+				elsif(damage_type=='hp')
+					str += COLOUR_RED
+				elsif(damage_type=='critical')
+					str += COLOUR_RED + COLOUR_REVERSE
+				else
+					# nop
+				end
+			end
+
+			curr_hp = xpc.current_hp.to_s
+			while(curr_hp.length<3)
+				curr_hp = ' ' + curr_hp
+			end
+
+			if(xpc==active_xpc and xpc.bleeding>0)
+				str += COLOUR_RED + curr_hp.to_s + COLOUR_RESET
+			else
+				str += curr_hp.to_s
+			end
+
+			str += '/'
+
+			hp = xpc.hp.to_s
+
+			while(hp.length<3)
+				hp += ' '
+			end
+
+			str += hp.to_s
+
+			str += ' '
+			str += 'u' if (xpc.unconscious)
+			str += 'D' if (xpc.dead)
+			str += 's' + xpc.stun.to_s       if (xpc.stun>0)
+			str += 'd' + xpc.downed.to_s  	 if (xpc.downed>0)
+			str += 'p' + xpc.prone.to_s      if (xpc.prone>0)
+
+			if(xpc.bleeding>0)
+				if(xpc==active_xpc)
+					str += COLOUR_RED + 'b' + xpc.bleeding.to_s + COLOUR_RESET
+				else
+					str += 'b' + xpc.bleeding.to_s
+				end
+			end
+		
+			if(draw_number==3 and xpc==opponent)
+				str += COLOUR_RESET
+			end
 		end
-
-		str += curr_hp.to_s
-		str += '/'
-
-		hp = xpc.hp.to_s
-		while(hp.length<3)
-			hp += ' '
-		end
-
-		str += hp.to_s
-
-		str += ' '
-		str += 'u' if (xpc.unconscious)
-		str += 'D' if (xpc.dead)
-		str += 's' + xpc.stun.to_s       if (xpc.stun>0)
-		str += 'd' + xpc.downed.to_s  	 if (xpc.downed>0)
-		str += 'p' + xpc.prone.to_s      if (xpc.prone>0)
-		str += 'b' + xpc.bleeding.to_s   if (xpc.bleeding>0)
 
 		return str
 
 	end
 
 
-	def draw_subround(active_xpc, targets)
+	def draw_subround(draw_number, active_xpc, targets, damage_type)
 
 		rnd        = @round
 		opponent   = targets[0] # TODO
 		fury       = false #TODO
 		first_draw = false #TODO
 
-		top_bar = "==================---/--- Round: #" + rnd.to_s + " (" + @sub_round.to_s + "/" + @combatants.length.to_s + ") ===========================\n"
-		
-		str = SCREEN_CLEAR + CURSOR_UP_LEFT
+
+		top_bar = "==================---/--- Round: #" + rnd.to_s + " (" + @sub_round.to_s + "/" + @combatants.length.to_s + ") ==========================#{draw_number}\n"
+
+		str=''
+	
+		if(draw_number==1)	
+			str += SCREEN_CLEAR
+		end
+
+		str += CURSOR_UP_LEFT
 		str += top_bar
 		
 		print top_bar
@@ -104,16 +171,18 @@ class Draw
 
 		names_width = @combatants[idx_longest_name].name.length
 
+
 		@side1.each_with_index { | xpc,i |
 			row_col = "\033[" + (2+i).to_s + ';' + '0' + 'H'
 			str += row_col
 
-			str += _colour_names(xpc, active_xpc, opponent, fury, first_draw)
+			str += _colour_names(draw_number, xpc, active_xpc, opponent, fury, first_draw, damage_type)
 
 			set_pos_y = "\033[" + '20' + 'G'
 			str += set_pos_y
 
-			str += _hp_and_wounds_to_s(xpc)
+			str += _hp_and_wounds_to_s(draw_number, active_xpc, xpc, opponent, damage_type)
+
 		}
 
 		@side2.each_with_index { | xpc,i |
@@ -121,17 +190,16 @@ class Draw
 			row_col = "\033[" + (2+i).to_s + ';' + '36' + 'H'
 			str += row_col
 
-			str += _colour_names(xpc, active_xpc, opponent, fury, first_draw)
+			str += _colour_names(draw_number, xpc, active_xpc, opponent, fury, first_draw, damage_type)
 			
 			set_pos_y = "\033[" + (36+20).to_s + 'G'
 			str += set_pos_y
 
-			str += _hp_and_wounds_to_s(xpc)
+			str += _hp_and_wounds_to_s(draw_number, active_xpc, xpc, opponent, damage_type)
+
 		}
 
 
-		p 'LLL'
-		p str
 		return str
 
 	end
@@ -141,11 +209,11 @@ class Draw
 	end	
 
 	def first_draw(actor, targets)
-		str = draw_subround(actor, targets)
+		str = draw_subround(1, actor, targets, 'none')
 		draw_all(str)
 	end
 
-	def draw_attack(attacker, did_attack, targets, mix_attack, mix_damage)
+	def draw_attack(attacker, did_attack, targets, damage_type, mix_attack, mix_damage)
 	
 		def _draw_strs_and_dice(attacker, mix_str_arr)
 			i=0
@@ -168,31 +236,26 @@ class Draw
 			end
 		end
 
-		p 'DRAW'
-		p 'DRAW'
-		p 'DRAW'
-		p 'TTT'
-		p attacker
-		p targets
-		p mix_attack
-		p mix_damage
-		p 'TTT'
-
-		str = draw_subround(attacker, targets)
-		p str
+		p "draw_attack: #{attacker} #{targets} #{mix_attack} #{mix_damage}"
+		
+		str = draw_subround(2, attacker, targets, damage_type)
 		draw_all(str)
 
 		if(not did_attack)
 			draw_all(row_proper)
 		end
 
-		@draw_all.call(row_proper)
+		draw_all(row_proper)
 
 		_draw_strs_and_dice(attacker, mix_attack)
 
 		if(mix_damage and not mix_damage == false) # latter is hack, find out where it comes from
 			_draw_strs_and_dice(attacker, mix_damage)
 		end
+
+		str = draw_subround(3, attacker, targets, damage_type)
+		draw_all(str)
+
 	end
 end
 

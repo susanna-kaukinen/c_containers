@@ -36,6 +36,7 @@ module RuleMonsterEngine
 				return '', false
 			end	
 
+			draw_active_player(row_proper())
 			draw_active_player(character, 'Choose action:')
 
 			prompt = ' '
@@ -52,7 +53,7 @@ module RuleMonsterEngine
 				when 'a'
 					_cls(character)
 
-					attack = Attack.new(character, opponents)
+					attack = Attack.new(character)
 					attack.choose_target(opponents, 'manual')
 					return 
 
@@ -71,16 +72,6 @@ module RuleMonsterEngine
 		}
 	end
 
-
-
-	def _cls(character)
-		draw_active_player(character, CURSOR_RESTORE)
-		send_active_player(character, 'cursor_clear_rows', 10)
-		draw_active_player(character, CURSOR_RESTORE)
-	end
-
-
-
 	def play_sub_round(round, sub_round, combatants, friends, enemies, actor )
 
 		if(not opponents_left(enemies))
@@ -92,6 +83,7 @@ module RuleMonsterEngine
 		draw.first_draw(actor, enemies)
 
 		actor.recover_from_wounds
+		draw_all(actor.do_bleed)
 		actor.current_ob = actor.ob
 		actor.current_blocks = Hash.new
 
@@ -101,22 +93,50 @@ module RuleMonsterEngine
 			action = prompt_player_action(actor, enemies, friends)
 			actions.push(action)
 		else
-			action = Attack.new(actor, enemies)
+			action = Attack.new(actor)
 			action.choose_target(enemies, actor.personality)
 			actions.push(action)
 		end
 
-		while(actions.shift != nil)
+		i=0
+		while(actions.length > 0)
+
+			action = actions.shift
+
+			if(i>0)
+				prompt_anyone
+				draw.first_draw(actor, enemies)
+			end
 
 			new_action = action.resolve()
 
-			if(new_action)
-				actions.push(action)
+			throw :game_over if(not opponents_left(enemies))
+
+			case new_action
+				when 'fury'
+					p "FURY ENABLED"
+					new_action = Attack.new(action.attacker)
+					new_action.actor_type = 'artificial'
+					new_action.choose_target(enemies, 'smart')
+
+				when 'fumble'
+					p "FUMBLE ENABLED"
+					new_action = Attack.new(action.attacker)
+
+					_self = Array.new
+					_self.push(@attacker)
+
+					new_action.actor_type = 'artificial'
+					new_action.choose_target(_self, 'smart')
+			end
+
+			if(new_action != 'no_new_action')
+				actions.push(new_action)
 			end
 
 			action.draw(draw)
 
-			draw_all(actor.do_bleed)
+			i+=1
 		end
 
 	end

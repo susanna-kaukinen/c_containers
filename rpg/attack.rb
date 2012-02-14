@@ -1,13 +1,14 @@
 
 class Attack < Action
 
+	attr_accessor :attacker
 	attr_accessor :did_attack
 	attr_accessor :mix_damage
 	attr_accessor :mix_damage
 	attr_accessor :attackees
 	attr_accessor :fury
 
-	def initialize(attacker, enemies)
+	def initialize(attacker)
 		super(attacker, attacker.brains)
 
 		@attacker   = attacker
@@ -17,8 +18,9 @@ class Attack < Action
 
 		@mix_damage = Array.new
 		@mix_damage = Array.new
-		@enemies    = Array.new
 		@attackees  = Array.new
+
+		@damage_type = ''
 
 		@fury       = false
 		@fumble     = false
@@ -37,19 +39,9 @@ class Attack < Action
 
 		do_attack
 
-		if(@fury)
-			new_action = Attack.new(actor, enemies)		
-			new_action.actor_type = 'artificial'
-		end
-
-		if(@fumble)
-			enemies = Array.new
-			enemies.push(@attacker)
-			new_action = Attack.new(actor, enemies)		
-			new_action.actor_type = 'artificial'
-		end
-
-		return new_action
+		return 'fury'   if(@fury)
+		return 'fumble' if(@fumble)
+		return 'no_new_action'
 		
 	end
 
@@ -78,7 +70,7 @@ class Attack < Action
 		@mix_attack << attack_dice_array
 
 		if(fumbled==true) # @TODO
-			@mix_attack << "<<<#{@attacker} fumbled>>>" + EOL
+			@mix_attack << "<<<#{@attacker.name} fumbled>>>" + EOL
 			@fumble = true
 			return
 		end 
@@ -96,7 +88,7 @@ class Attack < Action
 		@mix_attack << " => result:" + result.to_s() +
 		EOL
 
-		@fury, @mix_damage = @attacker.active_weapon.deal_damage(@attacker, opponent, result)
+		@fury, @damage_type, @mix_damage = @attacker.active_weapon.deal_damage(@attacker, opponent, result)
 
 	end
 
@@ -124,8 +116,10 @@ class Attack < Action
 
 	end
 
+	# if we have a multi-attack w/many targets, the @damage_type will break, but if we have repetitive
+	# attacks there is no problem
 	def draw(draw)
-		draw.draw_attack(@active_xpc, @did_attack, @targets, @mix_attack, @mix_damage )
+		draw.draw_attack(@active_xpc, @did_attack, @targets, @damage_type, @mix_attack, @mix_damage )
 	end
 
 end

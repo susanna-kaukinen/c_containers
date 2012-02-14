@@ -198,6 +198,8 @@ end
 
 	def deal_damage(attacker, defender, result)
 
+		damage_type = 'none'
+
 		text_dice_mix_arr = Array.new
 
 		already_unco = false
@@ -208,6 +210,9 @@ end
 
 		hp_damage, critical, wound = damage_table(result)
 
+		if(hp_damage>0)
+			damage_type = 'hp'
+		end
 		
 		defender_hp_pre_base_damage = defender.current_hp
 		defender.current_hp       -= hp_damage
@@ -235,6 +240,8 @@ end
 			text_dice_mix_arr << EOL
 			text_dice_mix_arr << crit_text 
 			text_dice_mix_arr << EOL
+
+			damage_type='critical'
 		end
 
 		resove_attack_effects_and_xp_bookkeep(attacker, defender, hp_damage, defender_hp_pre_base_damage, wound, already_dead, already_unco)
@@ -259,7 +266,7 @@ end
 			text_dice_mix_arr << COLOUR_YELLOW_BLINK + COLOUR_REVERSE + cursor_to(12, 61) + '<<<FURY>>>' + COLOUR_RESET
 		end
 
-		return fury, text_dice_mix_arr
+		return fury, damage_type, text_dice_mix_arr
 
 	end #/deal_damage
 

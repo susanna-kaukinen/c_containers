@@ -21,16 +21,23 @@ class Action
 
 	def choose_target(targets, criteria)
 
-		#p "choose_target: #{criteria} => #{targets}"
-		p "choose_target: #{criteria} => #{targets[0].name}, ..."
+		p '~~~'
+		p targets
+		p '/~~~'
+
+		if(targets != nil)
+			p "choose_target: #{criteria} => #{targets[0].name}, n=(#{targets.length})..."
+		else
+			raise Error.new("choose_target: #{criteria}, targets=nil!")
+		end
 
 		if(@actor_type == 'human')
 			choose_target_menu()
 		else
 			@targets = ai_choose_target(targets, criteria)
 		end
-		p '>>>' 
-		p @targets
+		#p '>>>' 
+		#p @targets
 	end
 
 
