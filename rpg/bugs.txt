@@ -1,5 +1,11 @@
 
 
+blocks against uncos
+dead block
+dead unco get initiative
+
+---
+
 blocking is based on name, should be id
 
 ---

@@ -93,14 +93,14 @@ class Draw
 
 		str = ''
 
-		if(draw_number==2 and xpc==opponent)
+		if(draw_number==2 and opponent and xpc==opponent)
 			str += COLOUR_CYAN + COLOUR_REVERSE
 			str += ' ? / ? '
 			str += COLOUR_RESET
 			str += '          '
 		else 
 
-			if(draw_number==3 and xpc==opponent)
+			if(draw_number==3 and opponent and  xpc==opponent)
 				if(damage_type=='none')
 					str += COLOUR_CYAN + COLOUR_REVERSE
 				elsif(damage_type=='hp')
@@ -161,9 +161,15 @@ class Draw
 	def draw_subround(draw_number, active_xpc, targets, damage_type)
 
 		rnd        = @round
-		opponent   = targets[0] # TODO
 		fury       = false #TODO
 		first_draw = false #TODO
+
+		if(targets==nil)
+			opponent=nil
+		else
+			opponent   = targets[0] # TODO
+		end
+
 
 
 		top_bar = "==================---/--- Round: #" + rnd.to_s + " (" + @sub_round.to_s + "/" + @combatants.length.to_s + ") ==========================#{draw_number}\n"
@@ -287,12 +293,30 @@ class Draw
 		draw_all row_proper + "#{blocker.name} blocks against #{str}"
 	end
 
-	def draw_heal()
-		p caller()
+	def draw_heal(healer, targets, num_healed, draw_data)
+		str = draw_subround(2, healer, targets, 'none')
+		draw_all(str)
+
+		print COLOUR_CYAN + "draw_heal: " + COLOUR_RESET
+
+		str = ''
+		targets.each_with_index { |target,i| 
+			str += target.name
+			if(i < targets.length-1)
+				str += ', '
+			end
+		}
+
+		if(num_healed==1)
+			draw_all row_proper + "#{healer.name} heals #{str}" + EOL
+		else
+			draw_all row_proper + "#{healer.name} heals #{num_healed} friends"
+		end
+		draw_all "#{draw_data}"
 	end
 
 	def draw_no_action(non_actor, reason_text)
-		str = draw_subround(2, non_actor, targets, 'none')
+		str = draw_subround(2, non_actor, nil, 'none')
 		draw_all(str)
 
 		draw_all row_proper + "#{reason_text}"

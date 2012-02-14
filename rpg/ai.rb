@@ -126,3 +126,86 @@ def prune_non_targets(criteria, targets)
 	return opps, preference
 end
 
+
+##########
+
+
+def ai_debug(*vargs)
+	print COLOR_BLACK + COLOUR_REVERSE
+	print *vargs
+	print COLOUR_RESET
+end
+
+def ai_ponder_action(draw, actor, enemies, friends)
+
+
+
+	if(actor.can_heal?)
+
+		heal = Heal.new(actor)
+
+		if((actor.current_hp*3) < actor.hp)
+
+			me = Array.new
+			me.push(actor)
+
+			heal.choose_target(draw, heal, me, 'healee')
+
+			return heal
+		end
+
+
+		if(actor.profession == 'healer') # try to raise recently dead
+		
+			friends.each { |friend|
+				if(friend.current_hp>-50 and (friend.dead or friend.unconscious))
+					healee = Array.new
+					healee.push(friend)
+					heal.choose_target(draw, heal, healee, 'healee')
+					return heal
+				end
+			}
+		end
+
+		healeeS = Array.new
+
+		friends.each { |friend|
+		
+			if(not friend.dead and friend.current_hp>-25 and (friend.current_hp * 2) < friend.hp)
+				healeeS.push(friend)
+			end
+		}
+
+		if(healeeS.length>0)
+			heal.choose_target(draw, heal, healeeS, 'healeeS')
+			return heal
+		end
+					
+	end					
+
+	actionS = Array.new
+
+	if(rand(10)>2) # 30% block
+		action = Attack.new(actor)
+		action.choose_target(draw, action, enemies, actor.personality)
+		actionS.push(action)
+	else
+		action = Block.new(actor)
+		action.choose_target(draw, action, enemies, 'smart')
+		actionS.push(action)
+	end
+	
+
+	return action
+end
+
+
+
+
+
+
+
+
+
+
+

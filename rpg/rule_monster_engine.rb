@@ -104,20 +104,12 @@ module RuleMonsterEngine
 
 		if(actor.human?) 
 			action = prompt_player_action(draw, actor, enemies, friends, draw.method(:_cls))
-			actions.push(action)
 			draw.draw_all(SCREEN_CLEAR)
 		else
-
-			if((rand(4)>=0))
-				action = Block.new(actor)
-				action.choose_target(draw, action, enemies, 'smart')
-				actions.push(action)
-			else
-				action = Attack.new(actor)
-				action.choose_target(draw, action, enemies, actor.personality)
-				actions.push(action)
-			end
+			action = ai_ponder_action(draw, actor, enemies, friends)
 		end
+
+		actions.push(action)
 
 		i=0
 		counter_strikeS=0

@@ -34,7 +34,11 @@ class Action
 		if(@actor_type == 'biological' and criteria != 'auto')
 			@targets = choose_target_menu(draw, targets)
 		else
-			@targets = ai_choose_target(targets, criteria)
+			if(criteria=='healee' or criteria=='healeeS')
+				@targets = targets
+			else
+				@targets = ai_choose_target(targets, criteria)
+			end
 		end
 		#p '>>>' 
 		#p @targets

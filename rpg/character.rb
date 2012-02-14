@@ -3,7 +3,7 @@ class Character
 	# :race will be deduced from Class name
 
 	# base, or so
-	attr_accessor :full_name, :name, :party, :brains
+	attr_accessor :full_name, :name, :party, :brains, :profession
 	attr_accessor :personality
 	attr_accessor :ob, :db, :ac, :hp
 	attr_accessor :id
@@ -138,13 +138,11 @@ class Character
 
 	end
 
-	def can_heal?
-		@current_mana>0 ? true : false
-	end
-
 	def _heal(healee, power_modifier)
 
 		def _do_heal(healee, power)
+
+			text = "#{healee.name}"
 
 			result, _, _ = roll_die('heal')
 
@@ -153,12 +151,18 @@ class Character
 				if(result>100)
 					healee.dead        = false
 					healee.unconscious = false
+
+					text += " resurrected "
+
 				#	@raised_dead +=1
 				end
 			elsif(healee.unconscious)
 				result = power - 25 + result
 				if(result>100)
 					healee.unconscious = false
+
+					text += " revived"
+
 				#	@revived += 1
 				end
 			elsif(healee.prone>0 or healee.downed>0 or healee.stun>0 or healee.uparry>0)
@@ -169,6 +173,8 @@ class Character
 				healee.stun     -= 1 if(healee.stun>0)
 				healee.uparry   -= 1 if(healee.uparry>0)
 				healee.bleeding -= 1 if(healee.bleeding>0)
+
+				text += " less wounded"
 
 				#@healed_injuries += 1
 			end
@@ -185,8 +191,34 @@ class Character
 			b = new_hitpoints
 
 			c = (a<b) ? a : b
+	
+			if(c>0)
+				text += " gains #{c} hp"
+			else
+				text += " not better"
+			end
+
+			# TODO
+			#
+			# wake up non-dead char who has positive hit points now if unconscious,
+			# unless unconscious because of a critical hit
+			#
+			# this isn't quite right because a character can be critical caused unconscious
+			# and have their hits below zero, but to fix this I need to separate unconscious
+			# and critically caused unconscious
+			#
+			if(not healee.dead and healee.unconscious)
+				if(healee.current_hp>0 and old_hp<0)
+					healee.unconscious = false
+					text += " revived"
+				end
+			end
 
 			#@healed_hp += c if(c>0)
+
+			text += EOL
+ 
+			return text
 
 		end
 
@@ -204,6 +236,9 @@ class Character
 
 	def heal(healees)
 
+		text = ''
+		num_healees = 0
+
 		p healees
 
 		if(not can_heal?)
@@ -211,18 +246,26 @@ class Character
 		end
 
 		if(healees.is_a? Character) # heal one char vs all
+			
+			num_healees = 1
+
 			power_modifier = 0  # no penalty for healing one char
-			_heal(healees, power_modifier)
+			text += _heal(healees, power_modifier)
+			
 		else
+			num_healees = healees.length
+
 			power_modifier = (healees.length*20)
 			power_modifier *= -1
 
 			healees.each { |healee|
-				_heal(healee, power_modifier)
+				text +=	_heal(healee, power_modifier)
 			}
 		end
 
 		@current_mana -= 1
+
+		return num_healees, text
 	end
 
 
@@ -335,7 +378,19 @@ class Character
 	end
 
 
-	def can_attack_now() # i.e. can this character attack now
+	def can_heal?
+		
+		can, why = can_act
+
+		if(not can)
+			return false
+		end
+
+		@current_mana>0 ? true : false
+	end
+
+
+	def can_act() # i.e. can this character attack now
 
 		def _sub
 			if(@dead)        then return false, "dead"        end
@@ -360,8 +415,14 @@ class Character
 
 		@can_attack, cause = _sub
 
-
 		return @can_attack, cause
+	end
+
+	def can_attack_now
+		
+		can, why = can_act
+
+		return can,why
 
 	end
 

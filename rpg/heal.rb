@@ -1,8 +1,40 @@
 
 class Heal < Action
 
-	def draw(draw)
-		raise Error.new("#{self}.draw NOT IMPLEMENTED")
+	def initialize(healer)
+		super(healer, healer.brains)
+
+		@healer = healer
+
+		@draw_data  = Array.new
+		@num_healed = 0
+	end
+
+	def resolve
+		
+		print COLOUR_CYAN +  "heal: #{@healer.name} =+=> #{@targets[0].name}..." + COLOUR_RESET + EOL
+
+		if(not @healer.can_heal?)
+
+			p 'CANNOT HEAL'
+			p 'CANNOT HEAL'
+			p 'CANNOT HEAL'
+
+			text = 'no mana'
+			@draw_data = Array.new
+			@draw_data << text
+			
+			nop = NoAction.new(@healer, text)
+			_nop = Array.new
+			_nop.push(nop)
+			return _nop
+		end
+
+		@num_healed, @draw_data = @healer.heal(@targets)
+
+		print COLOUR_CYAN +  "heal: #{@healer.name} =+=> #{@targets[0].name}..." + COLOUR_RESET + EOL
+
+		return Array.new
 	end
 
 	def _heal(character, friends)
@@ -56,6 +88,12 @@ class Heal < Action
 
 		}
 
+	end
+
+
+	def draw(draw)
+		print COLOUR_CYAN +  "draw: #{@healer.name} =X=> #{@targets[0].name}..." + COLOUR_RESET + EOL
+		draw.draw_heal(@healer, @targets, @num_healed, @draw_data)
 	end
 
 end

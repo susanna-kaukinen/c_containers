@@ -18,7 +18,7 @@ def rename_orcs(npcs)
 						when 3
 							npc.name = 'Hugnarl'  +  surname
 						else
-							npc.name = 'Unknown'  + i.to_s + surname
+							npc.name = 'Hegzruk '  + i.to_s + "th"
 					end
 				end
 		end

@@ -30,6 +30,7 @@ require './names.rb'
 require './actions.rb'
 require './attack.rb'
 require './block.rb'
+require './heal.rb'
 require './attack.rb'
 require './no_action.rb'
 require './draw.rb'
@@ -79,8 +80,8 @@ def main
 					p.character.current_side = 1
 					p.character.current_player_id = p.id
 					games  = Games.new
-					#xxx    = Orcs.new(games)
-					xxx    = Kumite.new(games)
+					xxx    = Orcs.new(games)
+					#xxx    = Kumite.new(games)
 					p.games = games
 					xxx.join(p, true)
 					catch (:done) { 
