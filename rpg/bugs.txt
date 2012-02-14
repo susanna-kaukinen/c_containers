@@ -1,4 +1,12 @@
 
+cacheta prev subroudn hitit charruun et saa ne ??? pois sieltä
+
+---
+
+Nää dice roll delayt tässä dice roll delay settingissä menee jotenkin kummasti.
+<> Se delayaa koko riviä.
+
+----
 
 
 

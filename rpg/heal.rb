@@ -32,7 +32,7 @@ class Heal < Action
 			cmd = ask_active_player(character, 'heal_action')
 
 			if(cmd == 'e')
-				_cls(character)
+				draw._cls(character)
 
 				character.heal(friends)
 
@@ -40,7 +40,7 @@ class Heal < Action
 
 				return true, text
 			else
-				_cls(character)
+				draw._cls(character)
 
 				friends.each_with_index { |healee,i|
 					if(cmd == i.to_s)
@@ -52,7 +52,7 @@ class Heal < Action
 				return true, text
 			end
 		
-			_cls(character)
+			draw._cls(character)
 
 		}
 

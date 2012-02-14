@@ -13,17 +13,17 @@ class Action
 	attr_accessor :side2
 
 	def initialize(active_xpc, brains)
+
+		p "Action/initialize: caller => #{caller()}"
+
 		@active_xpc = active_xpc
 		@actor_type = brains
-		@actor_type = Array.new
 		@targets    = Array.new
 	end
 
-	def choose_target(targets, criteria)
+	def choose_target(draw, action, targets, criteria)
 
-		p '~~~'
-		p targets
-		p '/~~~'
+		p "choose_target: #{targets[0].name}"
 
 		if(targets != nil)
 			p "choose_target: #{criteria} => #{targets[0].name}, n=(#{targets.length})..."
@@ -31,8 +31,8 @@ class Action
 			raise Error.new("choose_target: #{criteria}, targets=nil!")
 		end
 
-		if(@actor_type == 'human')
-			choose_target_menu()
+		if(@actor_type == 'biological')
+			@targets = choose_target_menu(draw, targets)
 		else
 			@targets = ai_choose_target(targets, criteria)
 		end
@@ -41,47 +41,11 @@ class Action
 	end
 
 
-	def choose_target_menu()
 
-		text='' #TODO
-
-		loop {
-			draw_active_player(character, 'Choose target:')
-
-			prompt = ' (a)=Auto target' + "\n "
-
-			@targets.each_with_index { |target,i|
-				prompt += "(#{i})" + target.name + " "
-				if(i%2==1)
-					prompt += EOL
-				end
-			}
-			
-			draw_active_player(character, prompt)
-
-			cmd = ask_active_player(character, 'attack_option')
-
-			if(cmd == 'a')
-				_cls(character)
-				return false, text
-			else
-				_cls(character)
-
-				chosen_target = nil
-
-				@targets.each_with_index { |target,i|
-					if(cmd == i.to_s)
-						chosen_target = target
-						break
-					end
-				}
-
-				@targets.push(chosen_target)
-			end
-		
-			_cls(character)
-
-		}
+	def first_draw(actor, targets)
+		str = draw_subround(1, actor, targets, 'none')
+		draw_all(str)
 	end
+
 end
 

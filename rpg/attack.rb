@@ -1,3 +1,26 @@
+def _explain_why_not(character, what, why_cant)
+
+	str = COLOUR_WHITE + COLOUR_REVERSE + character.name + COLOUR_RESET + " cannot " + what + ", reason: " 
+
+	if    (why_cant == nil)
+		str += COLOR_MAGENTA + 'not able'
+	elsif (why_cant == 'dead')
+		str += COLOUR_RED + COLOUR_REVERSE
+	elsif (why_cant == 'unconscious')
+		str += COLOUR_RED
+	elsif (why_cant == 'prone')
+		str += COLOUR_YELLOW + COLOUR_REVERSE
+	elsif (why_cant == 'downed')
+		str += COLOUR_YELLOW_BLINK
+	else
+		str += COLOUR_YELLOW
+	end
+
+	str += " " + why_cant + COLOUR_RESET + EOL
+
+	return str
+
+end
 
 class Attack < Action
 
@@ -22,8 +45,10 @@ class Attack < Action
 
 		@damage_type = ''
 
-		@fury       = false
-		@fumble     = false
+		@fury           = false
+		@fumble         = false
+		@counter_strike = false
+		@counter_strike = nil
 	end
 
 	def resolve
@@ -34,20 +59,34 @@ class Attack < Action
 			text = _explain_why_not(@attacker, 'attack', why_cant)
 			@mix_attack = Array.new
 			@mix_attack << text
-			return
+			return Array.new
 		end
 
-		do_attack
+		attack
 
-		return 'fury'   if(@fury)
-		return 'fumble' if(@fumble)
-		return 'no_new_action'
+
+		new_actions = Array.new()
+
+		new_actions.push('fury')   if(@fury)
+		new_actions.push('fumble') if(@fumble)
+
+		if (@counter_strike)
+		
+			counter_strike = Array.new()
+			counter_strike.push('counter_strike')
+			counter_strike.push(@counter_striker)	
+			new_actions.push(counter_strike)
+		end
+
+		p "return: #{new_actions}"
+
+		return new_actions
 		
 	end
 
-	def do_attack()
+	def attack()
 
-		p "do_attack: #{@attacker.name} =/=> #{@targets}"
+		print COLOUR_CYAN +  "attack: #{@attacker.name} =/=> #{@targets[0].name}..." + COLOUR_RESET + EOL
 
 		opponent = @targets[0] # one for now
 
@@ -70,7 +109,7 @@ class Attack < Action
 		@mix_attack << attack_dice_array
 
 		if(fumbled==true) # @TODO
-			@mix_attack << "<<<#{@attacker.name} fumbled>>>" + EOL
+			@mix_attack << EOL + "<<<#{@attacker.name} fumbled>>>" + EOL
 			@fumble = true
 			return
 		end 
@@ -90,37 +129,66 @@ class Attack < Action
 
 		@fury, @damage_type, @mix_damage = @attacker.active_weapon.deal_damage(@attacker, opponent, result)
 
-	end
-
-	def _explain_why_not(character, what, why_cant)
-
-		str = COLOUR_WHITE + COLOUR_REVERSE + character.name + COLOUR_RESET + " cannot " + what + ", reason: " 
-
-		if    (why_cant == nil)
-			str += COLOR_MAGENTA + 'not able'
-		elsif (why_cant == 'dead')
-			str += COLOUR_RED + COLOUR_REVERSE
-		elsif (why_cant == 'unconscious')
-			str += COLOUR_RED
-		elsif (why_cant == 'prone')
-			str += COLOUR_YELLOW + COLOUR_REVERSE
-		elsif (why_cant == 'downed')
-			str += COLOUR_YELLOW_BLINK
-		else
-			str += COLOUR_YELLOW
+		if(@damage_type=='none' and block>0) # FIXME
+			@counter_striker = opponent
+			@counter_strike  = true
 		end
 
-		str += " " + why_cant + COLOUR_RESET + EOL
-
-		return str
-
 	end
+
+
 
 	# if we have a multi-attack w/many targets, the @damage_type will break, but if we have repetitive
 	# attacks there is no problem
 	def draw(draw)
 		draw.draw_attack(@active_xpc, @did_attack, @targets, @damage_type, @mix_attack, @mix_damage )
 	end
+
+	def choose_target_menu(draw, targets)
+
+		text='' #TODO
+
+		loop {
+			draw.draw_active_player(@attacker, 'Choose target:')
+
+
+			prompt = "\n\n"
+			prompt += ' (a)=Auto target' + "\n "
+
+			targets.each_with_index { |target,i|
+				prompt += "(#{i})" + target.name + " "
+				if(i%2==1)
+					prompt += EOL
+				end
+			}
+			
+			draw.draw_active_player(@attacker, prompt)
+
+			cmd = draw.ask_active_player(@attacker, 'attack_option')
+
+			if(cmd == 'a')
+				draw._cls(@attacker)
+				targets = ai_choose_target(targets, @attacker.personality)
+			else
+				draw._cls(@attacker)
+
+				chosen_target = nil
+
+				targets.each_with_index { |target,i|
+					if(cmd == i.to_s)
+						chosen_target = target
+						break
+					end
+				}
+
+				return chosen_target
+			end
+		
+			draw._cls(@attacker)
+
+		}
+	end
+
 
 end
 

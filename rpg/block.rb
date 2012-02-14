@@ -1,53 +1,88 @@
 class Block < Action
 
-	def draw(draw)
-		raise Error.new("#{self}.draw NOT IMPLEMENTED")
+	attr_accessor :blocker
+
+	def initialize(blocker)
+		super(blocker, blocker.brains)
+
+		@blocker   = blocker
+		@manner     = @blocker.personality
+
+		@did_attack = false
+
+		@mix_damage = Array.new
+		@mix_damage = Array.new
+		@attackees  = Array.new
+
+		@damage_type = ''
+
+		@fury       = false
+		@fumble     = false
+
+		@draw_data  = Array.new
 	end
 
-	def _block(character, opponents)
-	
-		can_block, why_cant = character.can_block_now()
+
+	def resolve
+
+		can_block, why_cant = @blocker.can_block_now()
+
+		if(not can_block)
+			text = _explain_why_not(@blocker, 'block', why_cant)
+			@draw_data = Array.new
+			@draw_data << text
+			return
+		end
+
+		print COLOUR_CYAN +  "block: #{@blocker.name} =X=> #{@targets[0].name}..." + COLOUR_RESET + EOL
+
+		return Array.new
+	end
+
+	def choose_target_menu(draw, targets)
+
+		can_block, why_cant = @blocker.can_block_now()
 
 		if(can_block==false)
-			text = _explain_why_not(character, 'block', why_cant)
-			draw_active_player(character, text)
+			text = _explain_why_not(@blocker, 'block', why_cant)
+			draw.draw_active_player(@blocker, text)
 			return false
 		end
 
 		loop {
-			draw_active_player(character, 'Choose action:')
+			draw.draw_active_player(@blocker, 'Choose action:')
 
 			prompt = ' (e)=all Equally' + "\n "
 
-			opponents.each_with_index { |opponent,i|
+			targets.each_with_index { |opponent,i|
 				prompt += "(#{i})" + opponent.name + " "
 				if(i%2==1)
 					prompt += "\r\n "
 				end
 			}
 			
-			draw_active_player(character, prompt)
+			draw.draw_active_player(@blocker, prompt)
 
-			cmd = ask_active_player(character, 'block_action')
+			cmd = draw.ask_active_player(@blocker, 'block_action')
 
 			if(cmd == 'e')
 		
-				how_much = character.current_ob / opponents.length
+				how_much = @blocker.current_ob / targets.length
 				
-				opponents.each_with_index { |opponent,i|
-					character.block(opponent.name, how_much)
+				targets.each_with_index { |opponent,i|
+					@blocker.block(opponent.name, how_much)
 				}
 
-				draw_active_player(character, "Blocking w/#{how_much} against all opponents.")
+				draw.draw_active_player(@blocker, "Blocking w/#{how_much} against all targets.")
 
 				return true
 			else
-				how_much = character.current_ob / 2
+				how_much = @blocker.current_ob / 2
 
-				opponents.each_with_index { |opponent,i|
+				targets.each_with_index { |opponent,i|
 					if(cmd == i.to_s)
-						character.block(opponent.name, how_much)
-						draw_active_player(character, "Blocking w/#{how_much} against " + opponent.name)
+						@blocker.block(opponent.name, how_much)
+						draw.draw_active_player(@blocker, "Blocking w/#{how_much} against " + opponent.name)
 					end
 				}
 
@@ -57,5 +92,11 @@ class Block < Action
 
 		}
 	end
+
+	def draw(draw)
+		print COLOUR_CYAN +  "draw: #{@blocker.name} =X=> #{@targets[0].name}..." + COLOUR_RESET + EOL
+		draw.draw_block(@blocker, @targets)
+	end
+
 end
 

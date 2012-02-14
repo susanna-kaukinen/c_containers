@@ -7,12 +7,6 @@ def row_proper()
 	row = "\033[" + (3+h).to_s + ';H'
 end
 
-def _cls(character)
-	draw_active_player(character, CURSOR_RESTORE)
-	send_active_player(character, 'cursor_clear_rows', 10)
-	draw_active_player(character, CURSOR_RESTORE)
-end
-
 class Draw
 
 	def initialize (round, sub_round, combatants, side1, side2)
@@ -24,11 +18,25 @@ class Draw
 		@side2 = side2
 	end
 
-	def set_writers(draw_all, draw_all_with_dice_roll_delay)
-		@draw_all = draw_all
+	def set_writers(draw_all, draw_all_with_dice_roll_delay, draw_active_player, ask_active_player, send_active_player)
+		@draw_all                      = draw_all
 		@draw_all_with_dice_roll_delay = draw_all_with_dice_roll_delay
+		@draw_active_player            = draw_active_player
+		@ask_active_player             = ask_active_player
+		@send_active_player	       = send_active_player
 	end
 
+	def draw_active_player(actor, *vargs)
+		@draw_active_player.call(actor, *vargs)
+	end
+
+	def ask_active_player(blocker, *vargs)
+		@ask_active_player.call(blocker, *vargs)
+	end
+
+	def send_active_player(actor, cmd, *vargs)
+		@ask_active_player.call(actor, cmd, *vargs)
+	end
 
 	def _colour_names(draw_number, xpc, active_xpc, opponent, fury, first_draw, damage_type)
 	
@@ -257,5 +265,29 @@ class Draw
 		draw_all(str)
 
 	end
+
+	def draw_block(blocker, targets)
+		str = draw_subround(2, blocker, targets, 'none')
+		draw_all(str)
+
+		print COLOUR_CYAN + "draw_block: " + COLOUR_RESET
+
+		str = ''
+		targets.each_with_index { |target,i| 
+			str += target.name
+			if(i < targets.length-1)
+				str += ', '
+			end
+		}
+
+		draw_all row_proper + "#{blocker.name} blocks against #{str}"
+	end
+
+	def _cls(character)
+		@draw_active_player.call(character, CURSOR_RESTORE)
+		@send_active_player.call(character, 'cursor_clear_rows', 10)
+		@draw_active_player.call(character, CURSOR_RESTORE)
+	end
+
 end
 
