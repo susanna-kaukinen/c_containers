@@ -316,7 +316,7 @@ def resove_attack_effects_and_xp_bookkeep(attacker, defender, hp_damage, defende
 	if(already_unco or already_dead)
 		# no xp
 	else
-		if(defender.unconscious and not wound.unconscious)
+		if(defender.unconscious and (wound and not wound.unconscious))
 			attacker.xp.add_ko_inflicted(defender_before_wound)
 			defender.xp.add_ko_sustained(defender_before_wound.strength)
 		end

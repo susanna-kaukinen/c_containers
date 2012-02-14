@@ -26,14 +26,16 @@ module RuleMonsterEngine
 
 			if(can_attack == false and can_block == false)
 				text = _explain_why_not(character, 'do anything', 'is incapacitated')
+				text += EOL
 				draw_active_player(character, text)
-				return '', false
+				return NoAction.new(character, text)
 			end
 
 			if(character.current_ob<10)
 				text = _explain_why_not(character, 'take more actions', 'all ob used up!')
+				text += EOL
 				draw_active_player(character, text)
-				return '', false
+				return NoAction.new(character, text)
 			end	
 
 			draw_active_player(character, row_proper())
@@ -98,6 +100,7 @@ module RuleMonsterEngine
 		if(actor.human?) 
 			action = prompt_player_action(draw, actor, enemies, friends, draw.method(:_cls))
 			actions.push(action)
+			draw.draw_all(SCREEN_CLEAR)
 		else
 
 			if((rand(4)>=2))
@@ -114,6 +117,8 @@ module RuleMonsterEngine
 		i=0
 		while(actions.length > 0)
 
+			throw :game_over if(not opponents_left(enemies))
+
 			action = actions.shift
 
 			if(i>0)
@@ -121,11 +126,8 @@ module RuleMonsterEngine
 				draw.first_draw(actor, enemies)
 			end
 
-
 			p "action.class=#{action.class}"
 			new_actions = action.resolve()
-
-			throw :game_over if(not opponents_left(enemies))
 
 			while(new_actions.length>0)
 
@@ -148,7 +150,10 @@ module RuleMonsterEngine
 					when 'counter_strike'
 						new_action = Attack.new(new_action_actor)
 						new_action.actor_type = 'artificial'
-						new_action.choose_target(draw, new_action, action.attacker, 'smart')
+
+						_original_attacker = Array.new
+						_original_attacker.push(action.attacker)
+						new_action.choose_target(draw, new_action, _original_attacker, 'smart')
 
 					when 'fumble'
 						p "FUMBLE ENABLED"
@@ -226,12 +231,13 @@ module RuleMonsterEngine
 
 			rescue Exception => e
 	
-				print COLOUR_RED + '<<<SUB ROUND ERR HANDLER>>>' + COLOUR_RESET
+				print COLOUR_RED + '<<<SUB ROUND ERR HANDLER>>>'
 
 				p "#{e}"
 				p e.message  
 				p e.backtrace.inspect
 
+				p COLOUR_RESET
 			end
 
 			prompt_anyone

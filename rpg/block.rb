@@ -31,7 +31,7 @@ class Block < Action
 			text = _explain_why_not(@blocker, 'block', why_cant)
 			@draw_data = Array.new
 			@draw_data << text
-			return
+			return NoAction.new(@blocker, text)
 		end
 
 		print COLOUR_CYAN +  "block: #{@blocker.name} =X=> #{@targets[0].name}..." + COLOUR_RESET + EOL
@@ -75,7 +75,7 @@ class Block < Action
 
 				draw.draw_active_player(@blocker, "Blocking w/#{how_much} against all targets.")
 
-				return true
+				return targets
 			else
 				how_much = @blocker.current_ob / 2
 
@@ -83,10 +83,14 @@ class Block < Action
 					if(cmd == i.to_s)
 						@blocker.block(opponent.name, how_much)
 						draw.draw_active_player(@blocker, "Blocking w/#{how_much} against " + opponent.name)
+						_targets = Array.new
+						_targets.push(opponent)
+						return _targets
 					end
 				}
 
-				return true
+				raise Error("block/choose_target_menu: did not find opponent index=#{index}, targets=#{targets}")
+
 			end
 		
 

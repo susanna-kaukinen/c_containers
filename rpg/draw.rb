@@ -26,6 +26,10 @@ class Draw
 		@send_active_player	       = send_active_player
 	end
 
+	def draw_all(*vargs)
+		@draw_all.call(*vargs)
+	end
+
 	def draw_active_player(actor, *vargs)
 		@draw_active_player.call(actor, *vargs)
 	end
@@ -281,6 +285,17 @@ class Draw
 		}
 
 		draw_all row_proper + "#{blocker.name} blocks against #{str}"
+	end
+
+	def draw_heal()
+		p caller()
+	end
+
+	def draw_no_action(non_actor, reason_text)
+		str = draw_subround(2, blocker, targets, 'none')
+		draw_all(str)
+
+		draw_all row_proper + "#{reason_text}"
 	end
 
 	def _cls(character)

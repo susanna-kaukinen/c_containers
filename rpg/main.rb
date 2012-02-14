@@ -31,6 +31,7 @@ require './actions.rb'
 require './attack.rb'
 require './block.rb'
 require './attack.rb'
+require './no_action.rb'
 require './draw.rb'
 require './ai.rb'
 require './rule_monster_engine.rb'
@@ -78,12 +79,13 @@ def main
 					p.character.current_side = 1
 					p.character.current_player_id = p.id
 					games  = Games.new
-					orcs   = Orcs.new(games)
+					#xxx    = Orcs.new(games)
+					xxx    = Kumite.new(games)
 					p.games = games
-					orcs.join(p, true)
+					xxx.join(p, true)
 					catch (:done) { 
 						send_msg(p, 'clear_screen')
-						orcs.enter(p) 
+						xxx.enter(p) 
 					}
 				end
 			end

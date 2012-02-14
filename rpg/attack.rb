@@ -26,8 +26,8 @@ class Attack < Action
 
 	attr_accessor :attacker
 	attr_accessor :did_attack
-	attr_accessor :mix_damage
-	attr_accessor :mix_damage
+	attr_accessor :mix_damage # uglies, contain both strings and arrays which will be pumped empty
+	attr_accessor :mix_damage #  while drawing. These contain the dice results arrays and then just text.
 	attr_accessor :attackees
 	attr_accessor :fury
 
@@ -76,6 +76,8 @@ class Attack < Action
 			counter_strike.push('counter_strike')
 			counter_strike.push(@counter_striker)	
 			new_actions.push(counter_strike)
+
+			@mix_attack << COLOUR_YELLOW_BLINK + COLOUR_REVERSE + cursor_to(12, 58) + '<<<COUNTER>>>' + COLOUR_RESET
 		end
 
 		p "return: #{new_actions}"
@@ -169,6 +171,8 @@ class Attack < Action
 			if(cmd == 'a')
 				draw._cls(@attacker)
 				targets = ai_choose_target(targets, @attacker.personality)
+
+				return targets
 			else
 				draw._cls(@attacker)
 
@@ -181,7 +185,10 @@ class Attack < Action
 					end
 				}
 
-				return chosen_target
+				_targets = Array.new
+				_targets.push(chosen_target)
+
+				return _targets
 			end
 		
 			draw._cls(@attacker)
