@@ -106,7 +106,8 @@ module RuleMonsterEngine
 			action = prompt_player_action(draw, actor, enemies, friends, draw.method(:_cls))
 			draw.draw_all(SCREEN_CLEAR)
 		else
-			action = ai_ponder_action(draw, actor, enemies, friends)
+			ai = AI.new(draw, actor, enemies, friends)
+			action = ai.ponder_action
 		end
 
 		actions.push(action)

@@ -106,7 +106,11 @@ class Attack < Action
 
 	def attack()
 
-		print COLOUR_CYAN +  "attack: #{@attacker.name} =/=> #{@targets[0].name}..." + COLOUR_RESET + EOL
+		if(@targets and @targets.length>0)
+			print COLOUR_CYAN +  "attack: #{@attacker.name} =/=> #{@targets[0].name}..." + COLOUR_RESET + EOL
+		else
+			print COLOUR_CYAN +  "attack: #{@attacker.name} =/=> <<<NO TARGETS>>>" + COLOUR_RESET + EOL
+		end
 
 		opponent = @targets[0] # one for now
 

@@ -47,6 +47,19 @@ require './game_core.rb'
 
 Thread.abort_on_exception = true
 
+# probably totally useless to add there here
+def create_games 
+	games  = Games.new
+	orcs   = Orcs.new(games)
+	troll  = Trolls.new(games)
+	kobls  = KoboldAmbush.new(games)
+	kumite = Kumite.new(games)
+
+	games.add_games(orcs, troll, kobls, kumite)
+
+	return games
+end
+
 
 # <def_main>
 def main
@@ -76,13 +89,14 @@ def main
 				if(not auto)
 					send_msg(p, 'create_character')
 				else
-					p.character = Character.new('testplayer','b', 'biological')
+					#p.character = Character.new('testplayer','b', 'biological')
+					p.character = Character.load('Rage')
 					p.character.current_side = 1
 					p.character.current_player_id = p.id
-					games  = Games.new
-					xxx    = Orcs.new(games)
-					#xxx    = Kumite.new(games)
 					p.games = games
+					xxx    = Kumite.new(games)
+					games.add_games(xxx)
+					#xxx    = Orcs.new(games)
 					xxx.join(p, true)
 					catch (:done) { 
 						send_msg(p, 'clear_screen')
@@ -97,13 +111,7 @@ def main
 
 	port   = ARGV[0].to_i
 
-	games  = Games.new
-	orcs   = Orcs.new(games)
-	troll  = Trolls.new(games)
-	kobls  = KoboldAmbush.new(games)
-	kumite = Kumite.new(games)
-
-	games.add_games(orcs, troll, kobls, kumite)
+	games = create_games
 
 	_connector_loop(port, games)
 

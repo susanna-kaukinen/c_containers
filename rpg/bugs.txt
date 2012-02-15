@@ -1,5 +1,22 @@
 
 
+fury when last opponent is dead excepts
+
+"action.class=Attack"
+<<<SUB ROUND ERR HANDLER>>>"undefined method `name' for nil:NilClass"
+"undefined method `name' for nil:NilClass"
+"[\"/home/susanna/devel/c_containers/rpg/attack.rb:110:in `attack'\", \"/home/susanna/devel/c_containers/rpg/attack.rb:66:in `resolve'\", \"/home/susanna/devel/c_containers/rpg/rule_monster_engine.rb:129:in `play_sub_round'\", \"/home/susanna/devel/c_containers/rpg/rule_monster_engine.rb:239:in `block in play_round'\", \"/home/susanna/devel/c_containers/rpg/rule_monster_engine.rb:220:in `each'\", \"/home/susanna/devel/c_containers/rpg/rule_monster_engine.rb:220:in `play_round'\", \"/home/susanna/devel/c_containers/rpg/game_kumite.rb:141:in `block in play_rounds'\", \"/home/susanna/devel/c_containers/rpg/game_kumite.rb:130:in `catch'\", \"/home/susanna/devel/c_containers/rpg/game_kumite.rb:130:in `play_rounds'\", \"/home/susanna/devel/c_containers/rpg/game_kumite.rb:104:in `fight'\", \"/home/susanna/devel/c_containers/rpg/game_core.rb:206:in `block in enter'\"]"
+"\e[0m"
+<<<<<ASK'D: prompt_anyone /ASK'D>>>>>
+
+
+--
+
+s1 stun still visible on players own turn
+npc stunned, should block
+
+--
+
 blocks against uncos
 dead block
 dead unco get initiative

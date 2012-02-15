@@ -129,39 +129,82 @@ end
 
 ##########
 
+class AI
 
-def ai_debug(*vargs)
-	print COLOR_BLACK + COLOUR_REVERSE
-	print *vargs
-	print COLOUR_RESET
-end
+	def ai_debug(*vargs)
+		print COLOR_BLACK + COLOUR_REVERSE
+		print *vargs
+		print COLOUR_RESET
+	end
 
-def ai_ponder_action(draw, actor, enemies, friends)
+	def initialize(draw, actor, enemies, friends)
+		@draw    = draw
+		@actor   = actor 
+		@enemies = enemies
+		@friends = friends
+	end
 
+	def ponder_action
 
+		if(@actor.stun>0)
+			return block()	
+		end
 
-	if(actor.can_heal?)
+		if(@actor.can_heal?)
+			action = heal
+			return action if(action != nil)
+		end
 
-		heal = Heal.new(actor)
+		if(rand(10)>2) # 30% block to grab counters
+			return attack()
+		else
+			return block()
+		end
 
-		if((actor.current_hp*3) < actor.hp)
+		raise Error.new("ai_ponder_action: switch hit default... ;-) :-P")
+	end
+
+	def attack()
+		actionS = Array.new
+
+		action = Attack.new(@actor)
+		action.choose_target(@draw, action, @enemies, @actor.personality)
+		actionS.push(action)
+
+		return action
+	end
+
+	def block()
+		actionS = Array.new
+
+		action = Block.new(@actor)
+		action.choose_target(@draw, action, @enemies, 'smart')
+		actionS.push(action)
+
+		return action
+	end
+
+	def heal
+		heal = Heal.new(@actor)
+
+		if((@actor.current_hp*3) < @actor.hp)
 
 			me = Array.new
-			me.push(actor)
+			me.push(@actor)
 
-			heal.choose_target(draw, heal, me, 'healee')
+			heal.choose_target(@draw, heal, me, 'healee')
 
 			return heal
 		end
 
 
-		if(actor.profession == 'healer') # try to raise recently dead
+		if(@actor.profession == 'healer') # try to raise recently dead
 		
-			friends.each { |friend|
+			@friends.each { |friend|
 				if(friend.current_hp>-50 and (friend.dead or friend.unconscious))
 					healee = Array.new
 					healee.push(friend)
-					heal.choose_target(draw, heal, healee, 'healee')
+					heal.choose_target(@draw, heal, healee, 'healee')
 					return heal
 				end
 			}
@@ -169,7 +212,7 @@ def ai_ponder_action(draw, actor, enemies, friends)
 
 		healeeS = Array.new
 
-		friends.each { |friend|
+		@friends.each { |friend|
 		
 			if(not friend.dead and friend.current_hp>-25 and (friend.current_hp * 2) < friend.hp)
 				healeeS.push(friend)
@@ -177,35 +220,13 @@ def ai_ponder_action(draw, actor, enemies, friends)
 		}
 
 		if(healeeS.length>0)
-			heal.choose_target(draw, heal, healeeS, 'healeeS')
+			heal.choose_target(@draw, heal, healeeS, 'healeeS')
 			return heal
 		end
-					
+
+		return nil					
 	end					
 
-	actionS = Array.new
-
-	if(rand(10)>2) # 30% block
-		action = Attack.new(actor)
-		action.choose_target(draw, action, enemies, actor.personality)
-		actionS.push(action)
-	else
-		action = Block.new(actor)
-		action.choose_target(draw, action, enemies, 'smart')
-		actionS.push(action)
-	end
-	
-
-	return action
 end
-
-
-
-
-
-
-
-
-
 
 
