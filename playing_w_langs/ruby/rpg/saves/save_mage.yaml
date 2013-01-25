@@ -1,0 +1,86 @@
+--- !ruby/object:Character
+id: 2e929f26-fefb-4be7-8aa6-7e1be6e6563e
+full_name: mage
+name: mage
+party: pc
+brains: biological
+ob: 98
+db: 85
+ac: 87
+hp: 91
+quickness: 88
+personality: stupid
+profession: warrior monk
+mana: 2
+current_player_id: ecd6b75a-7963-4745-8cb6-c564ad19b920
+stun: 0
+bleeding: 0
+uparry: 0
+downed: 0
+prone: 0
+blind: 0
+penalties: 0
+unconscious: false
+unconscious_why: ''
+dead: false
+dead_why: ''
+current_hp: 91
+active_weapon: !ruby/object:Weapon
+  name: sword
+  fumble: 5
+current_db: 85
+current_ob: 98
+current_mana: 2
+can_attack: true
+cant_attack_text: no reason
+wounds: []
+current_blocks: {}
+current_side: 
+xp: !ruby/object:XP
+  arms_level: 1
+  body_level: 1
+  heal_level: 1
+  total_arms_lvl: !ruby/object:ArmsLevel
+    critical_kills: 0
+    critical_kills_list: []
+    critical_kos_inflicted: 0
+    critical_kos_inflicted_list: []
+    wounds_inflicted: 0
+    wounds_inflicted_list: []
+    kills: 0
+    kills_list: []
+    kos_inflicted: 0
+    kos_inflicted_list: []
+    damage_inflicted: 0
+  total_body_lvl: !ruby/object:BodyLevel
+    deaths: 0
+    knock_outs_sustained: 0
+    damage_sustained: 0
+    wounds_sustained: 0
+  total_heal_lvl: !ruby/object:HealLevel
+    raised_dead: 0
+    revived: 0
+    healed_injuries: 0
+    healed_hp: 0
+  current_arms_lvl: !ruby/object:ArmsLevel
+    critical_kills: 0
+    critical_kills_list: []
+    critical_kos_inflicted: 0
+    critical_kos_inflicted_list: []
+    wounds_inflicted: 0
+    wounds_inflicted_list: []
+    kills: 0
+    kills_list: []
+    kos_inflicted: 0
+    kos_inflicted_list: []
+    damage_inflicted: 0
+  current_body_lvl: !ruby/object:BodyLevel
+    deaths: 0
+    knock_outs_sustained: 0
+    damage_sustained: 0
+    wounds_sustained: 0
+  current_heal_lvl: !ruby/object:HealLevel
+    raised_dead: 0
+    revived: 0
+    healed_injuries: 0
+    healed_hp: 0

@@ -1,0 +1,33 @@
+--- !ruby/object:Character
+id: 22148fee-82cb-43d0-a011-47d3f52a09a7
+full_name: mursu
+name: mursu
+party: pc
+brains: biological
+ob: 112
+db: 81
+ac: 77
+hp: 100
+quickness: 39
+personality: stupid
+stun: 0
+bleeding: 0
+uparry: 0
+downed: 0
+prone: 0
+blind: 0
+penalties: 0
+unconscious: false
+unconscious_why: ''
+dead: false
+dead_why: ''
+current_hp: 100
+active_weapon: !ruby/object:Weapon
+  name: sword
+  fumble: 6
+current_db: 81
+current_ob: 112
+can_attack: true
+cant_attack_text: no reason
+wounds: []
+current_blocks: {}

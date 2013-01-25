@@ -1,0 +1,400 @@
+
+
+fury when last opponent is dead excepts
+
+"action.class=Attack"
+<<<SUB ROUND ERR HANDLER>>>"undefined method `name' for nil:NilClass"
+"undefined method `name' for nil:NilClass"
+"[\"/home/susanna/devel/c_containers/rpg/attack.rb:110:in `attack'\", \"/home/susanna/devel/c_containers/rpg/attack.rb:66:in `resolve'\", \"/home/susanna/devel/c_containers/rpg/rule_monster_engine.rb:129:in `play_sub_round'\", \"/home/susanna/devel/c_containers/rpg/rule_monster_engine.rb:239:in `block in play_round'\", \"/home/susanna/devel/c_containers/rpg/rule_monster_engine.rb:220:in `each'\", \"/home/susanna/devel/c_containers/rpg/rule_monster_engine.rb:220:in `play_round'\", \"/home/susanna/devel/c_containers/rpg/game_kumite.rb:141:in `block in play_rounds'\", \"/home/susanna/devel/c_containers/rpg/game_kumite.rb:130:in `catch'\", \"/home/susanna/devel/c_containers/rpg/game_kumite.rb:130:in `play_rounds'\", \"/home/susanna/devel/c_containers/rpg/game_kumite.rb:104:in `fight'\", \"/home/susanna/devel/c_containers/rpg/game_core.rb:206:in `block in enter'\"]"
+"\e[0m"
+<<<<<ASK'D: prompt_anyone /ASK'D>>>>>
+
+
+--
+
+s1 stun still visible on players own turn
+npc stunned, should block
+
+--
+
+blocks against uncos
+dead block
+dead unco get initiative
+
+---
+
+blocking is based on name, should be id
+
+---
+
+not sure if blocking npc actually gets the db bonus
+
+---
+
+cacheta prev subroudn hitit charruun et saa ne ??? pois sieltä
+
+---
+
+Nää dice roll delayt tässä dice roll delay settingissä menee jotenkin kummasti.
+<> Se delayaa koko riviä.
+
+----
+
+
+
+<> se on vähän hassua, että jos tappelee ihmisten puolella ni on yksi viidestä
+<susanna> ku alkaa tulla expoo
+<> mut jos vastustajien, ni menee niille lisäksi
+
+---
+
+number(100)
+<susanna> end
+<> joo, tossa piirrossa on joku update bugi
+<> taas juuttu siihen critin rolliin
+<susanna> ok
+<> ja jos critti zippaa koko rollia ei näy
+<> ainoostaan Zip
+<susanna> aa!
+
+---
+
+<> olin pos. healthilla ennen rundin vaihtumista
+<> ja sitte unc
+<> ei ollu ees bleedejä, ainoastaan stunni
+
+
+["Banza (evil) chose: Kuoleman Paluu"]
+"<<<SUB ROUND ERR HANDLER>>>"
+"undefined method `unconscious' for nil:NilClass"
+"undefined method `unconscious' for nil:NilClass"
+"[\"/home/susanna/c_containers/rpg/weapon.rb:312:in `resove_attack_effects_and_xp_bookkeep'\", \"/home/susanna/c_containers/rpg/weapon.rb:240:in `deal_damage'\", \"/home/susanna/c_containers/rpg/rule_monster_engine.rb:63:in `do_attack'\", \"/home/susanna/c_containers/rpg/rule_monster_engine.rb:81:in `_attack'\", \"/home/susanna/c_containers/rpg/rule_monster_engine.rb:463:in `play_sub_round'\", \"/home/susanna/c_containers/rpg/rule_monster_engine.rb:689:in `block in play_round'\", \"/home/susanna/c_containers/rpg/rule_monster_engine.rb:670:in `each'\", \"/home/susanna/c_containers/rpg/rule_monster_engine.rb:670:in `play_round'\", \"/home/susanna/c_containers/rpg/rule_monster_engine.rb:730:in `block in play_rounds'\", \"/home/susanna/c_containers/rpg/rule_monster_engine.rb:719:in `catch'\", \"/home/susanna/c_containers/rpg/rule_monster_engine.rb:719:in `play_rounds'\", \"/home/susanna/c_containers/rpg/rule_monster_engine.rb:6:in `fight'\", \"/home/susanna/c_containers/rpg/game_core.rb:204:in `block in enter'\"]"
+
+---
+
+
+
+<susanna> mä katon tota krittitablee
+<susanna> ja toi bleed on huono
+<susanna> ku se on niin tehoton
+<susanna> se vois bleedaa joka subround
+<susanna> ni tekiski jotain ennen ku matsin on ohi
+<> no sillon ottelijoiden määrä vaikuttais sen vaarallisuuteen?
+<> ennemmin niin, että se bleedi kasvaa lineaarisesti bleedirundien mukaan
+
+ [ susanna@demeter:/home/susanna/c_containers/rpg ]sf check_hit
+character.rb:288:       def check_hitpoints
+character.rb:318:               check_hitpoints
+character.rb:331:               check_hitpoints
+character.rb:358:               check_hitpoints
+old_last_serv.rb:603:   def check_hitpoints
+old_last_serv.rb:633:           check_hitpoints
+old_last_serv.rb:646:           check_hitpoints
+old_last_serv.rb:673:           check_hitpoints
+old_last_serv.rb:816:                                           opp.check_hitpoints
+old_last_serv.rb:828:                                           opp.check_hitpoints
+rule_monster_engine.rb:39:                                                      opp.check_hitpoints
+rule_monster_engine.rb:51:                                                      opp.check_hitpoints
+
+
+---
+
+<> anyway, musta se, että natural tasaluvuilla tulee erikoiscrittejä on hauskaa
+
+--
+
+
+<> mut joku block 100% olis hyvä näihin stunneihin
+
+---
+
+<> Ai stunnissa ei voi tehdä mitään?
+<susanna> => resolve_critical
+<> cannot do anything, reason: is incapacitated
+<susanna> hmm
+<> luulin jo et joku tyrmäs mut mut oliki vaan stunni
+<susanna> jotain outoa
+
+
+<> nyt sain blockin
+<> edellisellä kiekalla ei ollu
+
+
+---
+
+<> nää hitit tässä on niin tuhovoimaisia, että 1st strike on huomattava etu
+<susanna> jep
+<susanna> onks susta liian?
+<susanna> musta tavallaan on
+<> on
+<> vähentää strategiaa
+<susanna> mut toisaalta se on kiva että ei veny liikaa
+<> ku siis pitäs tulla enemmän niitä mistä tulee damagea mut ei noita kovia side effectejä
+<> crittien pitäs olla harvinaisempia musta
+
+---
+
+<> nyt mulle tuli stunni mitä ei tarvinnu kait kärsiä
+<> loppu jo ennen ku tuli mun vuoro
+
+<> no mut sillon ei joudu kärsii jos on lyöny vuorolla jolla saa stunnin
+<> kai siitä ny yks oma lyöntivuoro pitäs mennä?
+
+---
+
+fury => evil personality
+<> tai jos muuten on targetit loppu ja on furyssa
+
+---
+
+<> kkkkkas, tupla-furytin :D
+<susanna> helmi!
+<> wot?
+<> en saanu toista extra attackkia
+<> suxXx0rs
+<susanna> mitäh?
+
+---
+
+<> no siihen päätty sit saman tien
+<> yhtään vuoroa en ehtinyt pelata
+<> tollanen ihme hillokortti sucks bigtime
+<susanna> mm
+<susanna> joo tota voi pohtia tota tasapainoo
+<susanna> ja et pitäiskö fightin loppua ku pc:t delaa
+<susanna> tms
+<> no lähinnä et sais ees kerran tehdä jotain
+<> ettei olis vaan "oho, gods of random decided you die" :)
+
+---
+
+<> Hetkinen, teksti sano musta että toi sai vuoron stunnin.
+<> Mut sit se kuitenkin heti löi mua samalla vuorolla.
+<> Mut ehkä luin väärin.
+
+---
+
+välillä tää syö outputit
+
+
+<> niinku nyt löin tota Gurlaria, mut en nähny mitään
+<> jonku mustan rivin
+<susanna> hmm
+<> taisin knockouttaa sen
+<> mut ei voi tietä ku ei tullu mitään outputtia muuta ku musta
+<susanna> näyttäis siltä
+<susanna> serv ruudulta
+<> voi ehkä liittyä siihen, että toi ansi on rukiillaan
+
+--
+
+voiks uncit jo healaa?
+
+---
+
+kuka saa killiexpit jos kohde bleedaa kuoliaaks? nessuno :-(
+
+--
+
+Sun pitää tehä siihen spy mode
+nään vaan auto-target valinnat
+Et voit kattella pelaajan view'ta
+
+---
+
+make class have an effect, proper, on char
+
+---
+
+Muuten new characterissa kantsis heittää automaattinen 'view character' loppuun
+
+---
+
+ansit!
+
+---
+
+login: eka input katoo
+
+--
+
+fury - toinen attack
+
+---
+
+
+
+<> mut se pitää balansoida
+<> mut sen voi tehdä helposti kuhan vaan kerää statteja
+<> rullaa logiin kamaa ja analysoi sieltä
+--
+
+<> mut siihen expiin ni se vois mennä ton strengthin perusteella
+
+---
+ ja siis yks mikä on must on kill countterit eri vihollistyypeille
+
+---
+
+ vois kattoo jos alkais käyttää tota securerandomia nopassa
+
+---
+
+ Mörköjen eka lyönti ei näy ollenkaan.
+
+---
+
+tarkasta KO inflicted:
+
+---
+
+ vois sen saven disabloida jos on pukilla
+
+---
+
+<> Ezmulla säily unc flagi vaikka healasin sen takas plussalle?
+
+
+> ku siinä pitää huomioida se että jos se tuli se uncci kritikaalista
+> jep
+> ni sitä ei saa ottaa pois hipareiden perusteella
+
+---
+
+fix \r
+
+---
+
+2 players:
+	
+
+must target messages from game to player and back to know who choce what
+
+
+---
+
+blocking all equally should only target against standing opponents
+also, choosing who to block is confusing
+
+---
+
+fumble -> fumble ?
+
+--
+
+Scands:
+
+server> Exception:"\xF6" from ASCII-8BIT to UTF-8
+"\xF6" from ASCII-8BIT to UTF-8
+
+--
+
+human can choose to block npc that cannot attack
+
+---
+
+
+---
+
+run until damage
+
+--
+
+näytä lopuks jotain
+
+---
+
+PRUNE:
+
+Q from admin console doesn't take instant effect when in a fight
+
+evils attack dead people
+
+smart attack dead people
+
+fumble on fumble could be upwards open-ended
+
+
+
+===
+
+
+server> ==================---/--- Round: #2 (1/10) ===========================
+server> 2          123/136 s1      Visnasch the Orc     65/65  
+server> Bereth the  80/80          Unknown4 the Orc     92/92  
+server> 1           21/77  s2      Gurlar the Orc       41/77  D
+server> Ezmu the Sm142/142         Bronthor the Orc    -51/51  u
+server> Beanel the  30/65  s1      Hugnarl the Orc      76/83  
+server> 
+server> Exception:undefined method `puts_others' for #<Hash:0x972fea8>
+undefined method `puts_others' for #<Hash:0x972fea8>
+["./server.rb:1050:in `_prompt_pc_actions'", "./server.rb:1121:in `sub_round'", "./server.rb:1914:in `_sub_round'", "./server.rb:1939:in `block (3 levels) in fight_all_rounds'", "./server.rb:1936:in `each'", "./server.rb:1936:in `block (2 levels) in fight_all_rounds'", "/home/susanna/.rvm/rubies/ruby-1.9.3-p0/lib/ruby/1.9.1/monitor.rb:211:in `mon_synchronize'", "./server.rb:1926:in `block in fight_all_rounds'", "./server.rb:1924:in `catch'", "./server.rb:1924:in `fight_all_rounds'", "./server.rb:2058:in `block (2 levels) in server_loop'", "./server.rb:2047:in `loop'", "./server.rb:2047:in `block in server_loop'"]
+
+
+<= crash w/2 players, one exited
+
+ - should still remove the on-screen player
+ - should not prompt for gone player to play
+ - last player exits => server blocks
+
+
+	<= now lives nicely through one exitting player during game, at least in 5x5 and 2 humans, where 1 human exits while the other human ponders
+
+--- jos tekee toisin päin, niin tulee looping death:
+
+:in `block (2 levels) in server_loop'", "./server.rb:2076:in `loop'", "./server.rb:2076:in `block in server_loop'"]
+server> Exception:private method `putc' called for nil:NilClass
+server> private method `putc' called for nil:NilClass
+server> ["./server.rb:1156:in `block in sock_io'", "/home/susanna/.rvm/rubies/ruby-1.9.3-p0/lib/ruby/1.9.1/monitor.rb:211:in `mon_synchronize'", "./server.rb:1148:in `sock_io'", "./server.rb:1242:in `sock_puts'", "./server.rb:1500:in `puts_me'", "./server.rb:1093:in `block in _prompt_pc_actions'", "./server.rb:1057:in `loop'", "./server.rb:1057:in `_prompt_pc_actions'", "./server.rb:1121:in `sub_round'", "./server.rb:1919:in `_sub_round'", "./server.rb:1965:in `block (3 levels) in fight_all_rounds'", "./server.rb:1941:in `each'", "./server.rb:1941:in `block (2 levels) in fight_all_rounds'", "/home/susanna/.rvm/rubies/ruby-1.9.3-p0/lib/ruby/1.9.1/monitor.rb:211:in `mon_synchronize'", "./server.rb:1931:in `block in fight_all_rounds'", "./server.rb:1929:in `catch'", "./server.rb:1929:in `fight_all_rounds'", "./server.rb:2087:in `block (2 levels) in server_loop'", "./server.rb:2076:in `loop'", "./server.rb:2076:in `block in server_loop'"]
+^Cserver> Server exiting, cause = manual shutdown
+server> Exception:exit
+exit
+
+
+
+---
+
+Toi new character jostain syystä aina feilaa ekalla.
+---
+
+blokkaa valittu määrä vs all
+
+---
+
+Mä oon listalla ennen sua ja silti lyön jälkeen.
+ => only 3rd player gets to hit before 2nd, otherwise sort ok, only affects humans?
+
+--
+
+dead unc, skip action
+
+--
+
+no text when unco, last subrounds, but prompts for enter
+
+---
+
+ "waiting for others" e
+
+---
+
+name => id hash
+
+---
+
+eka attack syödään
+
+---
+
+highlightaa lyöntikohde
+
+---
+
+
+
+<> noiden RNG-nimien pitäs kyllä ehdottomasti hookkautua statseihin jotenkin
+<susanna> joo-o
+<> et tietäs vähän ketkä on kovempia jne.
+
+
+

@@ -1,0 +1,451 @@
+
+
+
+eli vois toimia jotenkin niin, että kun tulee uus thread,
+
+	sock
+	thread
+
+ne laitetaan heti johonkin objektiin, jonka kautta niitä
+käytetään ja etenkin read/write ja tää osasto hoidetaan
+kokonaan siellä sisällä, jos tulee jotain faultteja konnujen
+kanssa tai muuta
+
+
+tolla objektilla vois sit päästä char creationiin, jossa voi rakentaa
+hahmon, toi vois olla vaikka
+
+	player
+		sock
+		thread
+		character
+
+mut itsellinen instanssi kaiken kaikkiaan
+
+sit playerit vois neuvotella jossain lobbyssa, että ketä
+kaikkia tulee yhteen peliin ja kun se on tehty, ne playerit
+pistetään sit mukaan kyytiin yhteen gameen, joka potkastaan
+käyntiin
+
+	game
+		player
+		player
+		player...
+
+jopa npc:t tommosina playereina, mutta ne vois hoitaan i/o:n
+jonkun logiikkamodulin kautta, joku ai-funkkari tai muuta,
+joka voi sit pohtia mitä kussakin tilanteessa halutaan tehdä
+
+
+
+
+ite pelissä sitten jokaiselle playerille koettaan broadcastata
+yhteiset asiat ja promptata niitä tarpeen tullen niiden omien
+rajapintojen kautta
+
+jos joku player on pukilla, se vaan irrotetaan niistä pelin
+datarakenteista ja se saa itekseen pohtia, miten selviää
+siitä loppuun - mitään sidoksia ei sais olla muualle
+
+eli pelissä jokaista playeria pitää accessoida siten dynaamisesti
+että aina flushataan se players structure, ennenkun niille aletana
+hölisemään - tällä kurin ei koskaan tule sitä tilannetta, että
+koetataan huudella kaverille jota ei ole - teoriassa...
+
+käytännössä käy niin, että ku odotetaan inputtia clientilta, se
+panee socketin kiinni ja sieltä lentää exceptioni. Tää exceptioni
+pitää hoitua sen player objektin sisäisessä handlingissa ja
+se voi vaan passata sieltä että player exited
+
+ja voi olla että tohon pitää rakentaa timeoutit päälle kuitenkin
+
+et jotain
+
+players.write('foo')
+
+ja sisällä
+
+timeout = timeout(5)
+begin
+	foreach player
+		player.write('foo')
+rescue
+	timeout
+end
+
+ja player.write jotain
+
+
+begin
+	socket.write('foo')
+rescue
+	player.destroy
+end
+
+ja player.destroy on jotain
+
+players.deregister
+sock.close
+sock.nil
+thread.current.exit
+
+
+ja seuraavan kerran ku writetään, niin
+
+players.write('foo') jättää välistä ton kaverin joka keräilee
+keskenään
+
+inputti about samoin, on pakko ottaa huomioon, että pelaaja
+voi vaikka kuolla koneen ääreen ja sitä inputtia ei tuu koskaan
+
+etenkin tää on paha ku on prompt one player tilanne
+
+sillon pitää timeouttaa ja vetää sille pakasta se vastaus siihen
+mitä siltä odotettiin
+
+esim.
+
+choice = players.active.prompt('(a) attack (b) block')
+
+niin sen pitää toimia jotenkin niin, että toi voi timeouttaa ja
+se player itte hoitelee ittensä pois, jos tulee järkiinsä
+niin joutuu takas lobbyyn tai menuun, jos ei niin sitten ei, mutta
+timeoutti tai connun katkeus johtaa siihen että on pelistä
+ulkona
+
+
+ja toi choice - sen voi jotenkin defaulttaa tai sit voi pistää
+niin, että, että jos pelaaja katoaa, niin sen tilalla jatkaa AI
+
+
+eli tosta suoraan niin, että
+
+def prompt
+
+	begin
+		timeout = timeout(n)
+
+		if(AI)
+			choice = AI.prompt(prompt)
+		else 
+			sock.puts (prompt)
+			choice = sock.gets
+		end
+	rescue
+
+		if(not AI)
+			startAI	
+			prompt(prompt)
+		else
+			derigester_player
+		end
+	end
+
+jotain tällasta
+
+
+
+
+
+Eli:
+
+
+
+Game
+
+	Ruleset
+		hp based
+		rule monster based
+
+
+	Players
+		Player
+		Player
+		Player
+			internal
+				sock
+				thread
+				character
+					
+					kills
+					damage inflicted
+					crits inflicted
+			api
+				write
+				read
+				answer = prompt(question)
+
+
+
+---init----
+
+Game(ruleset)
+
+---connect--
+
+player(thread, socket)
+
+---create_char---
+
+player.character = menu()
+
+----view_games---
+
+foreach(Game)
+	show Game
+	show Players
+
+join game/new game ---> new ...
+
+---join---------
+
+Game.join(player)
+
+--negotiate_pcs_and_npcs-
+
+--negotiate-start-
+
+Game.start
+
+while not victory
+	Game.round
+		Game.subround
+
+---
+
+
+
+
+new Game
+-------
+
+Game()
+
+new
+	new thread
+
+		i/o loop wait
+			get ruleset, store
+				victory conds	
+			get players, store
+			get start conds, store
+
+
+		when start conds start game:
+
+			run rounds in own thread
+				run subrounds in own thread
+
+					talk to players through i/o w/timeout
+					
+					access players always through players-array so
+					that if someone drops, we automatically respond to it
+
+					however, AI-replace for players should make sure no-one
+					ever drops
+
+new Player
+--------
+
+
+accept
+	new thread
+		new player
+			store thread_id
+			store socket
+
+			read/write through methods
+
+			create char in menu, store
+
+		go lobby
+
+		choose game
+
+		join game
+			i/o loop
+				listen/write socket safely until game over
+				game tells game is over when it is
+				if you exit during the game, sockets will
+				be closed and an AI will replace you
+				when the game over comes, if AI, then
+				destory object
+		
+		forever
+			choose lobby/game
+				
+
+new NPC Player
+--------------
+
+
+new
+	new thread
+		no thread_id/socket 		
+		read/write will go to AI
+
+		create char w/AI
+
+		join game
+			i/o loop as above
+
+
+
+
+
+-------------------
+
+
+screens 
+
+-------------------
+
+char
+
+ load
+ save
+ new
+ view
+ game
+ quit
+
+-------------------
+
+game
+
+ new 
+
+------------------- ----------------
+
+new game             game
+
+ hp based            wait
+ rm based            new
+
+------------------- ----------------
+
+game
+
+ new
+ join game #1
+
+-------------------
+
+join game
+
+ have n players
+
+ vote start
+ vote wait      
+
+-------------------
+
+waiting...
+
+ have n players
+
+ vote start
+
+-------------------
+
+start
+
+ game starting...
+
+
+-------------------
+
+<<<game screens>>>
+
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+
+
+
+
+
+
+
+
+
+			
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
